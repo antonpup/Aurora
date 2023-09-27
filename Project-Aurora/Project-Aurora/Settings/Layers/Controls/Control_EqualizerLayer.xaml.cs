@@ -10,7 +10,6 @@ using Aurora.EffectsEngine;
 using Aurora.Utils;
 using ColorBox;
 using Xceed.Wpf.Toolkit;
-using Brush = System.Windows.Media.Brush;
 using Color = System.Windows.Media.Color;
 using Image = System.Windows.Controls.Image;
 using MessageBox = System.Windows.MessageBox;

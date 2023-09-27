@@ -66,6 +66,7 @@ partial class ConfigUI : INotifyPropertyChanged
     private readonly Task<AuroraHttpListener?> _httpListener;
     private readonly Task<IpcListener?> _ipcListener;
     private readonly Task<LightingStateManager> _lightingStateManager;
+    private readonly Task<DeviceManager> _deviceManager;
 
     private readonly TransparencyComponent _transparencyComponent;
 
@@ -116,6 +117,7 @@ partial class ConfigUI : INotifyPropertyChanged
         _httpListener = httpListener;
         _layoutManager = layoutManager;
         _ipcListener = ipcListener;
+        _deviceManager = deviceManager;
         _lightingStateManager = lightingStateManager;
         _settingsControl = new(rzSdkManager, pluginManager, layoutManager, httpListener, deviceManager);
         
@@ -221,6 +223,9 @@ partial class ConfigUI : INotifyPropertyChanged
 
     private void Restart()
     {
+        //so that we don't restart device manager
+        _deviceManager.Result.Detach();
+
         var auroraPath = Path.Combine(Global.ExecutingDirectory, "Aurora.exe");
 
         var currentProcess = Environment.ProcessId;
@@ -228,7 +233,7 @@ partial class ConfigUI : INotifyPropertyChanged
         Process.Start(new ProcessStartInfo
         {
             FileName = auroraPath,
-            Arguments = "-restart " + currentProcess + minimizedArg
+            Arguments = $"-restart {currentProcess}{minimizedArg}"
         });
 
         ExitApp();
@@ -322,9 +327,19 @@ partial class ConfigUI : INotifyPropertyChanged
         Display();
     }
 
-    private void trayicon_menu_restart_Click(object? sender, RoutedEventArgs e)
+    private void trayicon_menu_restart_aurora_Click(object? sender, RoutedEventArgs e)
     {
         Restart();
+    }
+
+    private async void trayicon_menu_restart_devices_Click(object? sender, RoutedEventArgs e)
+    {
+        await (await _deviceManager).ResetDevices();
+    }
+
+    private async void trayicon_menu_quit_devices_Click(object? sender, RoutedEventArgs e)
+    {
+        await (await _deviceManager).ShutdownDevices();
     }
 
     private void Window_Initialized(object? sender, EventArgs e)
@@ -363,7 +378,7 @@ partial class ConfigUI : INotifyPropertyChanged
         }
     }
 
-    private void ExitApp()
+    internal void ExitApp()
     {
         trayicon.Visibility = Visibility.Hidden;
         _virtualKeyboardTimer.Stop();

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+        <LangVersion>11</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Common</RootNamespace>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="IronPython" Version="3.4.1" />
+        <PackageReference Include="Microsoft.Win32.SystemEvents" Version="7.0.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="RGB.NET.Devices.Logitech" Version="2.0.0-prerelease.111" />
+        <PackageReference Include="RGB.NET.Devices.CorsairLegacy" Version="2.0.0-prerelease.111" />
+        <PackageReference Include="System.Threading.AccessControl" Version="7.0.1" />
+    </ItemGroup>
+
+
+
+</Project>

@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Aurora.Utils;
 
 namespace Aurora.Profiles.Payday_2.Layers
 {
@@ -39,7 +40,7 @@ namespace Aurora.Profiles.Payday_2.Layers
         {
             if (this.DataContext is PD2FlashbangLayerHandler && !settingsset)
             {
-                this.ColorPicker_Flashbang.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as PD2FlashbangLayerHandler).Properties._FlashbangColor ?? System.Drawing.Color.Empty);
+                this.ColorPicker_Flashbang.SelectedColor = ColorUtils.DrawingColorToMediaColor((this.DataContext as PD2FlashbangLayerHandler).Properties._FlashbangColor ?? System.Drawing.Color.Empty);
 
                 settingsset = true;
             }
@@ -59,7 +60,7 @@ namespace Aurora.Profiles.Payday_2.Layers
         private void ColorPicker_Flashbang_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is PD2FlashbangLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as PD2FlashbangLayerHandler).Properties._FlashbangColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as PD2FlashbangLayerHandler).Properties._FlashbangColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
     }
 }

@@ -9,6 +9,7 @@ using Aurora.Profiles.CSGO.GSI.Nodes;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Aurora.Utils;
+using Common.Devices;
 using Newtonsoft.Json;
 
 namespace Aurora.Profiles.CSGO.Layers;

@@ -1,10 +1,8 @@
-﻿using Aurora.Devices;
-using Aurora.EffectsEngine;
+﻿using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
 using Aurora.Settings.Overrides.Logic;
-using Aurora.Utils;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,6 +12,7 @@ using System.Linq;
 using System.Windows.Controls;
 using Aurora.Modules.Inputs;
 using Aurora.Settings.Layers.Controls;
+using Common.Devices;
 
 namespace Aurora.Settings.Layers
 {

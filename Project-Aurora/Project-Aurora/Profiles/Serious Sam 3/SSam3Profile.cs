@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
+using Common.Devices;
 
 namespace Aurora.Profiles.Serious_Sam_3
 {
@@ -31,7 +32,7 @@ namespace Aurora.Profiles.Serious_Sam_3
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.DarkRed,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.SPACE })
+                        _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.W, DeviceKeys.A, DeviceKeys.S, DeviceKeys.D, DeviceKeys.SPACE })
                     }
                 }
                 ),
@@ -40,7 +41,7 @@ namespace Aurora.Profiles.Serious_Sam_3
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Orange,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.LEFT_CONTROL, Devices.DeviceKeys.R, Devices.DeviceKeys.Q, Devices.DeviceKeys.E, Devices.DeviceKeys.LEFT_SHIFT })
+                        _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.LEFT_CONTROL, DeviceKeys.R, DeviceKeys.Q, DeviceKeys.E, DeviceKeys.LEFT_SHIFT })
                     }
                 }),
                 new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()),

@@ -10,7 +10,7 @@ public class CSGO : Application
             Name = "CS:GO",
             ID = "csgo",
             AppID = "730",
-            ProcessNames = new[] { "csgo.exe" },
+            ProcessNames = new[] { "csgo.exe", "cs2.exe" },
             SettingsType = typeof(FirstTimeApplicationSettings),
             ProfileType = typeof(CSGOProfile),
             OverviewControlType = typeof(Control_CSGO),

@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Controls;
 using Aurora.Settings.Layers.Controls;
+using Common.Utils;
 
 namespace Aurora.Settings.Layers
 {
@@ -25,7 +26,7 @@ namespace Aurora.Settings.Layers
         public override void Default()
         {
             base.Default();
-            _GradientConfig = new LayerEffectConfig(Utils.ColorUtils.GenerateRandomColor(), Utils.ColorUtils.GenerateRandomColor()) { AnimationType = AnimationType.None };
+            _GradientConfig = new LayerEffectConfig(CommonColorUtils.GenerateRandomColor(), CommonColorUtils.GenerateRandomColor()) { AnimationType = AnimationType.None };
         }
     }
 

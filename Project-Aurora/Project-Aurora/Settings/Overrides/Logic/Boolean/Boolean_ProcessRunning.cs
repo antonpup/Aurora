@@ -1,11 +1,10 @@
 ﻿using Aurora.Profiles;
-using Aurora.Utils;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using Aurora.Modules.ProcessMonitor;
+using Aurora.Utils;
 
 namespace Aurora.Settings.Overrides.Logic {
 

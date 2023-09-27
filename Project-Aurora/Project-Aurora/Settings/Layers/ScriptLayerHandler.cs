@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Newtonsoft.Json;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Aurora.Settings.Layers.Controls;
 using Aurora.Settings.Overrides;
 
@@ -98,8 +93,8 @@ namespace Aurora.Settings.Layers
         public void OnScriptChanged()
         {
             var varRegistry = GetScriptPropertyRegistry();
-            if (varRegistry != null)
-                Properties.ScriptProperties.Combine(varRegistry, true);
+            //if (varRegistry != null) TODO
+            //    Properties.ScriptProperties.Combine(varRegistry, true);
         }
 
         [JsonIgnore]

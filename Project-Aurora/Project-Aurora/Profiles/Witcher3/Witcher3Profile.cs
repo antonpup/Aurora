@@ -4,6 +4,7 @@ using Aurora.Devices;
 using Aurora.Profiles.Witcher3.Layers;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
+using Common.Devices;
 
 namespace Aurora.Profiles.Witcher3;
 

@@ -2,14 +2,15 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using Aurora.Devices;
 using Aurora.Modules.Logitech.Enums;
 using Aurora.Modules.Logitech.Structs;
 using Aurora.Modules.ProcessMonitor;
-using Aurora.Utils;
+using Common.Devices;
+using Common.Utils;
 using Microsoft.Win32;
 using RGB.NET.Devices.Logitech;
 using Color = System.Drawing.Color;
@@ -249,7 +250,7 @@ public class LogitechSdkListener
             LogiDeviceType.Mousemat => LedMapping.MousepadZoneKeys,
             LogiDeviceType.Headset => LedMapping.HeadsetZoneKeys,
             LogiDeviceType.Speaker => LedMapping.SpeakerZoneKeys,
-            _ => null
+            LogiDeviceType.Keyboard => null, //Let Per-Key commands handle this
         };
         if (ledMappings == null)
             return;
@@ -271,6 +272,14 @@ public class LogitechSdkListener
         {
             _pipeListener.Disconnect();
         }
+
+        foreach (var key in Enum.GetValues(typeof(DeviceKeys)).Cast<DeviceKeys>())
+        {
+            _colors[key] = Color.Transparent;
+        }
+        
+        _excluded.Clear();
+        
         ApplicationChanged?.Invoke(this, name);
     }
 
@@ -290,10 +299,7 @@ public class LogitechSdkListener
                 _colors[key] = color;
             }
         }
-        else
-        {
-            BackgroundColor = color;
-        }
+        BackgroundColor = color;
 
         ColorsUpdated?.Invoke(this, EventArgs.Empty);
     }

@@ -18,6 +18,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Include="..\.editorconfig" Link=".editorconfig" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="CS-Script" Version="4.6.2" />
     </ItemGroup>
 </Project>

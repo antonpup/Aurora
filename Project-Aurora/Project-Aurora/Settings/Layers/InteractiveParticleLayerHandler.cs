@@ -1,8 +1,7 @@
 using System.Collections.Concurrent;
-using Aurora.Devices;
 using Aurora.Modules.Inputs;
 using Aurora.Profiles;
-using Aurora.Utils;
+using Common.Devices;
 
 namespace Aurora.Settings.Layers;
 

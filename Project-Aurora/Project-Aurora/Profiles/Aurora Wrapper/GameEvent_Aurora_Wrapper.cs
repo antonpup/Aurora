@@ -5,6 +5,8 @@ using System.Linq;
 using Aurora.Devices;
 using Aurora.EffectsEngine;
 using Aurora.Utils;
+using Common.Devices;
+using Common.Utils;
 
 namespace Aurora.Profiles.Aurora_Wrapper;
 
@@ -84,7 +86,7 @@ public class GameEvent_Aurora_Wrapper : LightEvent
             case "LFX_GetNumDevices":
             {
                 //Retain previous lighting
-                var fillColorInt = ColorUtils.GetIntFromColor(_lastFillColor);
+                var fillColorInt = CommonColorUtils.GetIntFromColor(_lastFillColor);
 
                 for (var i = 0; i < _bitmap.Length; i++)
                     _bitmap[i] = fillColorInt;
@@ -96,7 +98,7 @@ public class GameEvent_Aurora_Wrapper : LightEvent
             case "LFX_GetNumLights":
             {
                 //Retain previous lighting
-                var fillColorInt = ColorUtils.GetIntFromColor(_lastFillColor);
+                var fillColorInt = CommonColorUtils.GetIntFromColor(_lastFillColor);
 
                 for (var i = 0; i < _bitmap.Length; i++)
                     _bitmap[i] = fillColorInt;
@@ -108,7 +110,7 @@ public class GameEvent_Aurora_Wrapper : LightEvent
             case "LFX_Light":
             {
                 //Retain previous lighting
-                var fillColorInt = ColorUtils.GetIntFromColor(_lastFillColor);
+                var fillColorInt = CommonColorUtils.GetIntFromColor(_lastFillColor);
 
                 for (var i = 0; i < _bitmap.Length; i++)
                     _bitmap[i] = fillColorInt;
@@ -120,7 +122,7 @@ public class GameEvent_Aurora_Wrapper : LightEvent
             case "LFX_SetLightColor":
             {
                 //Retain previous lighting
-                var fillColorInt = ColorUtils.GetIntFromColor(_lastFillColor);
+                var fillColorInt = CommonColorUtils.GetIntFromColor(_lastFillColor);
 
                 for (var i = 0; i < _bitmap.Length; i++)
                     _bitmap[i] = fillColorInt;

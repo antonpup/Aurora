@@ -5,8 +5,7 @@ using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
-//using Aurora.Profiles.Subnautica.Layers;
-using DK = Aurora.Devices.DeviceKeys;
+using DK = Common.Devices.DeviceKeys;
 
 namespace Aurora.Profiles.Subnautica {
 

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Aurora.Devices;
 using Aurora.Modules.Logitech.Enums;
+using Common.Devices;
 using Microsoft.Collections.Extensions;
 using RGB.NET.Devices.Logitech;
 

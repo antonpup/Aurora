@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Data;
-using Aurora.Devices;
+using Common.Devices;
 
 namespace Aurora.Settings.Layers.Controls;
 

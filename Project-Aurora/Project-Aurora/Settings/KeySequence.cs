@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using Aurora.Devices;
 using Aurora.Utils;
+using Common.Devices;
 using Microsoft.Scripting.Utils;
 using Newtonsoft.Json;
 

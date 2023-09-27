@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Aurora.EffectsEngine;
 using System.Diagnostics;
-using Aurora.Utils;
 using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
 using Aurora.Profiles.ETS2.GSI;

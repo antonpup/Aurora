@@ -1,9 +1,9 @@
 ﻿using Aurora.Controls;
 using Aurora.Profiles;
-using Aurora.Utils;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using Aurora.Utils;
 using Xceed.Wpf.Toolkit;
 
 namespace Aurora.Settings.Overrides.Logic {

@@ -15,16 +15,15 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Aurora.Devices;
 using Aurora.EffectsEngine;
 using Aurora.Modules.ProcessMonitor;
 using Aurora.Profiles;
 using Aurora.Settings;
 using Aurora.Utils;
+using Common.Devices;
+using Common.Utils;
 
 namespace Aurora.Scripts.VoronScripts
 {
@@ -309,7 +308,7 @@ namespace Aurora.Scripts.VoronScripts
 							* (((i + 1) / (float)Keys.Keys.Count - (pingPos - PingSignalWidth)) / PingSignalWidth));
 
 					if (Data.Phase == AnimationPhase.CompletingFailAnimation)
-						keyColor = ColorUtils.AddColors(keyColor, FailAnimationGradient.GetColorAt(
+						keyColor = CommonColorUtils.AddColors(keyColor, FailAnimationGradient.GetColorAt(
 							Math.Min(1, (CurrentTime - Data.FinalAnimationEndTime) / (float)FailAnimationDuration)));
 
 					effectLayer.Set(Keys.Keys[i], keyColor);
@@ -459,13 +458,13 @@ namespace Aurora.Scripts.VoronScripts
 			foreach (var color in spectrum.GetSpectrumColors())
 			{
 				var pos = (color.Key - start) * sizeRatio;
-				overlayed.SetColorAt(color.Key, ColorUtils.AddColors(color.Value, overlayGradient.GetColorAt(pos)));
+				overlayed.SetColorAt(color.Key, CommonColorUtils.AddColors(color.Value, overlayGradient.GetColorAt(pos)));
 			}
 			foreach (var color in overlayGradient.GetSpectrumColors())
 			{
 				var pos = (color.Key / sizeRatio) + start;
 				if (pos >= 0f && pos <= 1f)
-					overlayed.SetColorAt(pos, ColorUtils.AddColors(spectrum.GetColorAt(pos), color.Value));
+					overlayed.SetColorAt(pos, CommonColorUtils.AddColors(spectrum.GetColorAt(pos), color.Value));
 			}
 			return overlayed;
 		}

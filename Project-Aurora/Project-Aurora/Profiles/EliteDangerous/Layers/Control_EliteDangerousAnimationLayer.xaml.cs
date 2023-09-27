@@ -1,18 +1,6 @@
-﻿using Aurora.Settings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Aurora.Profiles.EliteDangerous.Layers
 {
@@ -39,7 +27,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
 //        {
 //            if (this.DataContext is EliteDangerousAnimationLayerHandler && !settingsset)
 //            {
-//                this.ColorPicker_Default.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as EliteDangerousAnimationLayerHandler).Properties._DefaultColor ?? System.Drawing.Color.Empty);
+//                this.ColorPicker_Default.SelectedColor = ColorUtils.DrawingColorToMediaColor((this.DataContext as EliteDangerousAnimationLayerHandler).Properties._DefaultColor ?? System.Drawing.Color.Empty);
 //
 //                settingsset = true;
 //            }
@@ -59,7 +47,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         private void ColorPicker_Default_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
 //            if (IsLoaded && settingsset && this.DataContext is EliteDangerousAnimationLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-//                (this.DataContext as EliteDangerousAnimationLayerHandler).Properties._DefaultColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+//                (this.DataContext as EliteDangerousAnimationLayerHandler).Properties._DefaultColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
     }
 }

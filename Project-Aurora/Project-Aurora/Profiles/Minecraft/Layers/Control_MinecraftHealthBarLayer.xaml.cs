@@ -1,5 +1,4 @@
 ﻿using Aurora.Controls;
-using Aurora.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Aurora.Utils;
 using Xceed.Wpf.Toolkit;
 
 namespace Aurora.Profiles.Minecraft.Layers {

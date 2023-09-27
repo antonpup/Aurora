@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using Aurora.Utils;
+using Common.Utils;
 
 namespace Aurora.EffectsEngine.Animations
 {
@@ -46,8 +47,8 @@ namespace Aurora.EffectsEngine.Animations
         {
             _start_point = new PointF(0, 0);
             _end_point = new PointF(30, 30);
-            _color = ColorUtils.GenerateRandomColor();
-            _end_color = ColorUtils.GenerateRandomColor();
+            _color = CommonColorUtils.GenerateRandomColor();
+            _end_color = CommonColorUtils.GenerateRandomColor();
             _width = 1;
             _duration = 1.0f;
         }
@@ -153,7 +154,12 @@ namespace Aurora.EffectsEngine.Animations
             int newwidth = CalculateNewValue(_width, otherAnim._width, amount);
             float newAngle = CalculateNewValue(_angle, otherAnim._angle, amount);
 
-            return new AnimationLine(newstart, newend, ColorUtils.BlendColors(_color, otherAnim._color, amount), ColorUtils.BlendColors(_end_color, (otherAnim as AnimationLine)._end_color, amount), newwidth).SetAngle(newAngle);
+            return new AnimationLine(
+                    newstart, newend,
+                    ColorUtils.BlendColors(_color, otherAnim._color, amount),
+                    ColorUtils.BlendColors(_end_color, (otherAnim as AnimationLine)._end_color, amount),
+                    newwidth)
+                .SetAngle(newAngle);
         }
 
         public override AnimationFrame GetCopy()
@@ -161,7 +167,13 @@ namespace Aurora.EffectsEngine.Animations
             PointF newstart = new PointF(_start_point.X, _start_point.Y);
             PointF newend = new PointF(_end_point.X, _end_point.Y);
 
-            return new AnimationLine(newstart, newend, Color.FromArgb(_color.A, _color.R, _color.G, _color.B), Color.FromArgb(_end_color.A, _end_color.R, _end_color.G, _end_color.B), _width, _duration).SetAngle(_angle).SetTransitionType(_transitionType);
+            return new AnimationLine(
+                    newstart, newend,
+                    Color.FromArgb(_color.A, _color.R, _color.G, _color.B),
+                    Color.FromArgb(_end_color.A, _end_color.R, _end_color.G, _end_color.B),
+                    _width, _duration
+                ).SetAngle(_angle)
+                .SetTransitionType(_transitionType);
         }
 
         public override bool Equals(object obj)
@@ -200,8 +212,14 @@ namespace Aurora.EffectsEngine.Animations
 
         public override string ToString()
         {
-            return $"AnimationLine [ Start Color: {_color.ToString()} End Color: { _color.ToString()} Start Point: {_start_point.ToString()} End Point: {_end_point.ToString()} Width: {_width} Duration: {_duration} Angle: {_angle} ]";
+            return $"AnimationLine [" +
+                   $" Start Color: {_color.ToString()}" +
+                   $" End Color: { _color.ToString()}" +
+                   $" Start Point: {_start_point.ToString()}" +
+                   $" End Point: {_end_point.ToString()}" +
+                   $" Width: {_width}" +
+                   $" Duration: {_duration}" +
+                   $" Angle: {_angle} ]";
         }
-
     }
 }

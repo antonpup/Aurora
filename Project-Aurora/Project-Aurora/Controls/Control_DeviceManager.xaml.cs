@@ -14,31 +14,42 @@ public partial class Control_DeviceManager
     public Control_DeviceManager(Task<DeviceManager> deviceManager)
     {
         _deviceManager = deviceManager;
-        
+
         InitializeComponent();
     }
 
-    private void UserControl_Loaded(object? sender, RoutedEventArgs e)
+    public async Task Initialize()
     {
-        UpdateControls();
-    }
-
-    private void UpdateControls()
-    {
-        LstDevices.ItemsSource = _deviceManager.Result.DeviceContainers;
-        LstDevices.Items.Refresh();
-    }
-
-        private void btnRestartAll_Click(object? sender, RoutedEventArgs e)
+        var deviceManager = await _deviceManager;
+        await UpdateControls();
+        deviceManager.DevicesUpdated += async (_, _) =>
         {
-            Task.Run(async () =>
-            {
-                var devManager = await _deviceManager;
-                await devManager.ShutdownDevices();
-                await devManager.InitializeDevices();
-                Dispatcher.Invoke(UpdateControls);
-            });
-        }
+            await UpdateControls();
+        };
+    }
+
+    private async void Control_DeviceManager_Loaded(object? sender, RoutedEventArgs e)
+    {
+        await UpdateControls();
+    }
+
+    private async Task UpdateControls()
+    {
+        var deviceContainers = (await _deviceManager).DeviceContainers;
+        Dispatcher.Invoke(() =>
+        {
+            LstDevices.ItemsSource = deviceContainers;
+            LstDevices.Items.Refresh();
+        });
+    }
+
+    private async void btnRestartAll_Click(object? sender, RoutedEventArgs e)
+    {
+        var devManager = await _deviceManager;
+        await devManager.ShutdownDevices();
+        await devManager.InitializeDevices();
+        await UpdateControls();
+    }
 
     private void btnCalibrate_Click(object? sender, RoutedEventArgs e)
     {

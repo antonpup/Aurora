@@ -1,5 +1,4 @@
 ﻿using Aurora.Controls;
-using Aurora.Utils;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -10,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using Aurora.Utils;
 using static Aurora.Settings.Overrides.Logic.EvaluatableHelpers;
 using TemplateContext = System.Collections.Generic.KeyValuePair<string, Aurora.Settings.Overrides.Logic.IEvaluatable>;
 

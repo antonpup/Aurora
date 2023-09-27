@@ -7,6 +7,7 @@ using System;
 using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
+using Aurora.Utils;
 
 namespace Aurora.Profiles.Dota_2.Layers
 {
@@ -565,7 +566,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     var alphaPercent = progress >= 0.90f ? 1.0f + (1.0f - 1.11f * progress) : 1.0f;
                     var fluctuations = (float)Math.Sin(progress * Math.PI * 1.0f) + 0.75f;
 
-                    var color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(0, 205, 255), fluctuations * alphaPercent);
+                    var color = ColorUtils.MultiplyColorByScalar(Color.FromArgb(0, 205, 255), fluctuations * alphaPercent);
 
                     EffectLayer.FillOver(color);
                     break;
@@ -592,7 +593,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     var xOffset = (_abilityEffectKeyframe += GetDeltaTime()) / _abilityEffectTime;
                     var alphaPercent = (xOffset >= 0.85f ? 1.0f + (1.0f - (1.17f) * xOffset) : 1.0f);
 
-                    EffectLayer.FillOver(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(0, 205, 255), alphaPercent));
+                    EffectLayer.FillOver(ColorUtils.MultiplyColorByScalar(Color.FromArgb(0, 205, 255), alphaPercent));
                     break;
                 }
                 case Dota2AbilityEffects.AntimageBlink:
@@ -609,7 +610,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     var xOffset = (_abilityEffectKeyframe += GetDeltaTime()) / _abilityEffectTime;
                     var alphaPercent = (xOffset >= 0.85f ? 1.0f + (1.0f - (1.17f) * xOffset) : 1.0f);
 
-                    EffectLayer.FillOver(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 200, 255), alphaPercent));
+                    EffectLayer.FillOver(ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 200, 255), alphaPercent));
                     break;
                 }
                 case Dota2AbilityEffects.AncientApparitionIceBlast:
@@ -620,7 +621,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 {
                     var alphaPercent = (float)Math.Pow(Math.Sin(((double)_abilityEffectKeyframe / (_abilityEffectTime / 16)) * Math.PI), 2.0);
 
-                    EffectLayer.FillOver(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(140, 160, 0), (alphaPercent < 0.2f ? 0.2f : alphaPercent)));
+                    EffectLayer.FillOver(ColorUtils.MultiplyColorByScalar(Color.FromArgb(140, 160, 0), (alphaPercent < 0.2f ? 0.2f : alphaPercent)));
 
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
@@ -655,7 +656,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     var alphaPercent = progress >= 0.90f ? 1.0f + (1.0f - 1.11f * progress) : 1.0f;
                     var fluctuations = (float)Math.Sin(progress * Math.PI * 1.0f) + 0.75f;
 
-                    Color color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 60, 0), fluctuations * alphaPercent);
+                    Color color = ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 60, 0), fluctuations * alphaPercent);
 
                     EffectLayer.FillOver(color);
                     break;
@@ -670,7 +671,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     var alphaPercent = (progress >= 0.90f ? 1.0f + (1.0f - (1.11f) * progress) : 1.0f);
                     var fluctuations = (float)Math.Sin(progress * Math.PI * 1.0f) + 0.75f;
 
-                    var color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 60, 0), fluctuations * alphaPercent);
+                    var color = ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 60, 0), fluctuations * alphaPercent);
 
                     EffectLayer.FillOver(color);
                     break;
@@ -681,7 +682,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     var alphaPercent = (progress >= 0.90f ? 1.0f + (1.0f - (1.11f) * progress) : 1.0f);
                     var fluctuations = (float)Math.Sin(progress * Math.PI * 1.0f) + 0.75f;
 
-                    var color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 60, 0), fluctuations * alphaPercent);
+                    var color = ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 60, 0), fluctuations * alphaPercent);
 
                     EffectLayer.FillOver(color);
                     break;

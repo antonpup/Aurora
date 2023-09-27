@@ -1,5 +1,4 @@
 ﻿using Aurora.Utils;
-using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers.Controls {
 

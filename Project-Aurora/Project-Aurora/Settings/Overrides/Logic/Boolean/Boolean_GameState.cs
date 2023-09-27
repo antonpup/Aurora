@@ -1,8 +1,7 @@
 ﻿using Aurora.Profiles;
-using Aurora.Utils;
 using System;
-using System.Windows.Controls;
 using System.Windows.Media;
+using Aurora.Utils;
 
 namespace Aurora.Settings.Overrides.Logic {
 

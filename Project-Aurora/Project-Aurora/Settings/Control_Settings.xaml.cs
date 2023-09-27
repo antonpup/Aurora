@@ -11,7 +11,6 @@ using Aurora.Devices.RGBNet.Config;
 using Aurora.Modules;
 using Aurora.Modules.GameStateListen;
 using Aurora.Modules.HardwareMonitor;
-using Aurora.Utils;
 using RazerSdkReader;
 using Button = System.Windows.Controls.Button;
 using MessageBox = System.Windows.MessageBox;
@@ -26,6 +25,7 @@ public partial class Control_Settings
     private readonly Task<PluginManager> _pluginManager;
     private readonly Task<AuroraHttpListener?> _httpListener;
     private readonly Control_SettingsDevicesAndWrappers _devicesAndWrappers;
+    private readonly Control_DeviceManager _controlDeviceManager;
 
     public Control_Settings(Task<ChromaReader?> rzSdkManager, Task<PluginManager> pluginManager,
         Task<KeyboardLayoutManager> layoutManager, Task<AuroraHttpListener?> httpListener, Task<DeviceManager> deviceManager)
@@ -44,21 +44,22 @@ public partial class Control_Settings
         LnkContributors.NavigateUri = new Uri($"https://github.com/{o}/{r}#contributors-");
 
         _devicesAndWrappers = new Control_SettingsDevicesAndWrappers(rzSdkManager, layoutManager, deviceManager);
-        var controlDeviceManager = new Control_DeviceManager(deviceManager);
+        _controlDeviceManager = new Control_DeviceManager(deviceManager);
         var deviceMapping = new DeviceMapping(deviceManager);
         
         DevicesAndWrappersTab.Content = _devicesAndWrappers;
-        DeviceManagerTab.Content = controlDeviceManager;
+        DeviceManagerTab.Content = _controlDeviceManager;
         RemapDevicesTab.Content = deviceMapping;
         
         _devicesAndWrappers.BeginInit();
-        controlDeviceManager.BeginInit();
+        _controlDeviceManager.BeginInit();
         deviceMapping.BeginInit();
     }
 
     public async Task Initialize()
     {
         await _devicesAndWrappers.Initialize();
+        await _controlDeviceManager.Initialize();
     }
 
     private async void UserControl_Loaded(object? sender, RoutedEventArgs e)

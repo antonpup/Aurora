@@ -24,7 +24,6 @@ public sealed class DevicesModule : AuroraModule
         _deviceManager = new DeviceManager(_rzSdkManager);
         _taskSource.SetResult(_deviceManager);
 
-        _deviceManager.RegisterVariables();
         await Task.Run(() =>
         {
             _deviceManager.InitializeDevices().ContinueWith(_ =>

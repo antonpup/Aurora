@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using Aurora.Devices;
 using Aurora.Settings.Keycaps;
 using Aurora.Utils;
+using Common;
+using Common.Devices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RazerSdkReader;
@@ -978,12 +980,13 @@ public class KeyboardLayoutManager
         LayoutKeyConversion = keyboard.KeyConversion ?? new Dictionary<DeviceKeys, DeviceKeys>();
     }
 
-    public void SetKeyboardColors(Dictionary<DeviceKeys, Color> keyLights)
+    public void SetKeyboardColors(Dictionary<DeviceKeys, SimpleColor> keyLights)
     {
         foreach (var (key, value) in _virtualKeyboardMap)
         {
             if (!keyLights.TryGetValue(key, out var keyColor)) continue;
-            var drawingColor = Color.FromArgb(255, ColorUtils.MultiplyColorByScalar(keyColor, keyColor.A / 255.0D));
+            var opaqueColor = ColorUtils.MultiplyColorByScalar(keyColor, keyColor.A / 255.0D);
+            var drawingColor = Color.FromArgb(255, opaqueColor.R, opaqueColor.G, opaqueColor.B);
             value.SetColor(ColorUtils.DrawingColorToMediaColor(drawingColor));
         }
     }

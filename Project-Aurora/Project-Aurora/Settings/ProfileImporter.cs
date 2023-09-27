@@ -8,11 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using Aurora.Devices;
 using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Settings.Layers;
 using Aurora.Utils;
+using Common.Devices;
 using Newtonsoft.Json;
 using RGB.NET.Devices.CorsairLegacy;
 using Application = Aurora.Profiles.Application;
@@ -758,10 +758,10 @@ public static class ProfileImporter
     }
 
     /// <summary>
-    /// Converts CorsairLedId to Devices.DeviceKeys
+    /// Converts CorsairLedId to DeviceKeys
     /// </summary>
     /// <param name="corsairKey">The CorsairLedId to be converted</param>
-    /// <returns>The resulting Devices.DeviceKeys</returns>
+    /// <returns>The resulting DeviceKeys</returns>
     private static DeviceKeys ToDeviceKeys(CorsairLedId corsairKey)
     {
         switch (corsairKey)

@@ -1,10 +1,8 @@
-﻿using Aurora.Devices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Aurora.Utils;
+using Common.Devices;
 
 namespace Aurora.EffectsEngine.Animations
 {
@@ -15,10 +13,7 @@ namespace Aurora.EffectsEngine.Animations
 
         public AnimationFrame SetKeyColor(DeviceKeys Key, Color Color)
         {
-            if (_BitmapColors.ContainsKey(Key))
-                _BitmapColors[Key] = Color;
-            else
-                _BitmapColors.Add(Key, Color);
+            _BitmapColors[Key] = Color;
 
             return this;
         }
@@ -81,11 +76,11 @@ namespace Aurora.EffectsEngine.Animations
             {
                 if ((otherAnim as AnimationManualColorFrame)._BitmapColors.ContainsKey(kvp.Key))
                 {
-                    _combinedBitmapColors.Add(kvp.Key, Utils.ColorUtils.BlendColors(kvp.Value, (otherAnim as AnimationManualColorFrame)._BitmapColors[kvp.Key], amount));
+                    _combinedBitmapColors.Add(kvp.Key, ColorUtils.BlendColors(kvp.Value, (otherAnim as AnimationManualColorFrame)._BitmapColors[kvp.Key], amount));
                 }
                 else
                 {
-                    _combinedBitmapColors.Add(kvp.Key, Utils.ColorUtils.MultiplyColorByScalar(kvp.Value, 1.0 - amount));
+                    _combinedBitmapColors.Add(kvp.Key, ColorUtils.MultiplyColorByScalar(kvp.Value, 1.0 - amount));
                 }
             }
 
@@ -93,7 +88,7 @@ namespace Aurora.EffectsEngine.Animations
             {
                 if (!_BitmapColors.ContainsKey(kvp.Key))
                 {
-                    _combinedBitmapColors.Add(kvp.Key, Utils.ColorUtils.MultiplyColorByScalar(kvp.Value, amount));
+                    _combinedBitmapColors.Add(kvp.Key, ColorUtils.MultiplyColorByScalar(kvp.Value, amount));
                 }
             }
 

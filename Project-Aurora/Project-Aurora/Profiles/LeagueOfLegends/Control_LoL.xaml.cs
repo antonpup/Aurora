@@ -1,10 +1,10 @@
 ﻿using Aurora.Controls;
 using Aurora.Settings;
-using Aurora.Utils;
 using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using Aurora.Utils;
 
 namespace Aurora.Profiles.LeagueOfLegends
 {

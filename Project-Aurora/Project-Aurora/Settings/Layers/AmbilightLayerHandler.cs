@@ -9,7 +9,6 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Amib.Threading;
 using Aurora.EffectsEngine;
@@ -19,6 +18,7 @@ using Aurora.Settings.Layers.Ambilight;
 using Aurora.Settings.Layers.Controls;
 using Aurora.Settings.Overrides;
 using Aurora.Utils;
+using Common.Utils;
 using Newtonsoft.Json;
 using PropertyChanged;
 using Point = System.Drawing.Point;
@@ -283,19 +283,13 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
 
     public override EffectLayer Render(IGameState gamestate)
     {
-        if (_invalidated)
-        {
-            EffectLayer.Clear();
-            _invalidated = false;
-        }
+        if (Properties.Sequence.GetAffectedRegion().IsEmpty)
+            return EffectLayer.EmptyLayer;
 
         if (_captureWorker.WaitingCallbacks < 1)
         {
             _captureWorker.QueueWorkItem(_screenshotWork);
         }
-
-        if (Properties.Sequence.GetAffectedRegion().IsEmpty)
-            return EffectLayer.EmptyLayer;
 
         //This is needed to prevent the layer from disappearing
         //for a frame when the user alt-tabs with the foregroundapp option selected
@@ -308,7 +302,13 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
         }
         //and because of that, this should never happen 
         if (_cropRegion.IsEmpty)
-            return EffectLayer.EmptyLayer;
+            return EffectLayer;
+
+        if (_invalidated)
+        {
+            EffectLayer.Clear();
+            _invalidated = false;
+        }
 
         if (!_brushChanged)
         {
@@ -401,11 +401,11 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
                 var average = BitmapUtils.GetRegionColor(screenCapture, new Rectangle(Point.Empty, cropRegion.Size), ColorData);
 
                 if (Properties.BrightenImage)
-                    average = ColorUtils.ChangeBrightness(average, Properties.BrightnessChange);
+                    average = CommonColorUtils.ChangeBrightness(average, Properties.BrightnessChange);
                 if (Properties.SaturateImage)
-                    average = ColorUtils.ChangeSaturation(average, Properties.SaturationChange);
+                    average = CommonColorUtils.ChangeSaturation(average, Properties.SaturationChange);
                 if (Properties.HueShiftImage)
-                    average = ColorUtils.ChangeHue(average, Properties.HueShiftAngle);
+                    average = CommonColorUtils.ChangeHue(average, Properties.HueShiftAngle);
 
                 lock (_screenBrush)
                 {

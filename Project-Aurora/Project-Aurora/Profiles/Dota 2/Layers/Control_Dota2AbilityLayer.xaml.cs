@@ -1,6 +1,5 @@
 ﻿using Aurora.Devices;
 using Aurora.Settings;
-using Aurora.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +14,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using Aurora.Modules.Inputs;
+using Aurora.Utils;
+using Common.Devices;
 
 namespace Aurora.Profiles.Dota_2.Layers
 {
@@ -42,8 +44,8 @@ namespace Aurora.Profiles.Dota_2.Layers
         {
             if (this.DataContext is Dota2AbilityLayerHandler && !settingsset)
             {
-                this.ColorPicker_CanCastAbility.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2AbilityLayerHandler).Properties._CanCastAbilityColor ?? System.Drawing.Color.Empty);
-                this.ColorPicker_CanNotCastAbility.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2AbilityLayerHandler).Properties._CanNotCastAbilityColor ?? System.Drawing.Color.Empty);
+                this.ColorPicker_CanCastAbility.SelectedColor = ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2AbilityLayerHandler).Properties._CanCastAbilityColor ?? System.Drawing.Color.Empty);
+                this.ColorPicker_CanNotCastAbility.SelectedColor = ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2AbilityLayerHandler).Properties._CanNotCastAbilityColor ?? System.Drawing.Color.Empty);
                 UIUtils.SetSingleKey(this.ability_key1_textblock, (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys, 0);
                 UIUtils.SetSingleKey(this.ability_key2_textblock, (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys, 1);
                 UIUtils.SetSingleKey(this.ability_key3_textblock, (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys, 2);
@@ -69,13 +71,13 @@ namespace Aurora.Profiles.Dota_2.Layers
         private void abilities_canuse_colorpicker_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2AbilityLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2AbilityLayerHandler).Properties._CanCastAbilityColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as Dota2AbilityLayerHandler).Properties._CanCastAbilityColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void abilities_cannotuse_colorpicker_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2AbilityLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2AbilityLayerHandler).Properties._CanNotCastAbilityColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as Dota2AbilityLayerHandler).Properties._CanNotCastAbilityColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void ability_key1_textblock_MouseDown(object? sender, MouseButtonEventArgs e)

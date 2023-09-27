@@ -5,7 +5,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:local="clr-namespace:Aurora.Controls" 
-    mc:Ignorable="d" Loaded="UserControl_Loaded">
+    Loaded="Control_DeviceManager_Loaded"
+    mc:Ignorable="d">
     <Grid x:Name="DeviceManagerParentGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />

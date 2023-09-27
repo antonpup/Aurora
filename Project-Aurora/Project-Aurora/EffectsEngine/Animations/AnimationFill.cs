@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
+using Aurora.Utils;
 
 namespace Aurora.EffectsEngine.Animations
 {
@@ -38,7 +38,7 @@ namespace Aurora.EffectsEngine.Animations
 
             amount = GetTransitionValue(amount);
 
-            return new AnimationFill(Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount));
+            return new AnimationFill(ColorUtils.BlendColors(_color, otherAnim._color, amount));
         }
 
         public override AnimationFrame GetCopy()

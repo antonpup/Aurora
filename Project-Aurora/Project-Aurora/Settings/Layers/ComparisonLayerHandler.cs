@@ -3,11 +3,6 @@ using Aurora.Profiles;
 using Aurora.Settings.Overrides.Logic;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using Aurora.Settings.Layers.Controls;
 

@@ -72,12 +72,12 @@ namespace Aurora.Settings.Layers.Controls {
 
         private void trueColor_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (CanSet && (sender as ColorPicker).SelectedColor.HasValue)
-                Context.Properties._PrimaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
+                Context.Properties._PrimaryColor = ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
         }
 
         private void falseColor_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (CanSet && (sender as ColorPicker).SelectedColor.HasValue)
-                Context.Properties._SecondaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
+                Context.Properties._SecondaryColor = ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
         }
 
         private void keySequence_SequenceUpdated(object? sender, EventArgs e) {

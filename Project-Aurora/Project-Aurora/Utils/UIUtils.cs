@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Aurora.Devices;
+using Common.Devices;
 
 namespace Aurora.Utils
 {

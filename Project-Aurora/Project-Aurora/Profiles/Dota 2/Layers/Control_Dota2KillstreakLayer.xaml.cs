@@ -1,6 +1,5 @@
 ﻿using Aurora.Devices;
 using Aurora.Settings;
-using Aurora.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Aurora.Utils;
 
 namespace Aurora.Profiles.Dota_2.Layers
 {
@@ -41,15 +41,15 @@ namespace Aurora.Profiles.Dota_2.Layers
         {
             if (this.DataContext is Dota2KillstreakLayerHandler && !settingsset)
             {
-                this.ColorPicker_doublekill.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2KillstreakLayerHandler).Properties._DoubleKillstreakColor ?? System.Drawing.Color.Empty);
-                this.ColorPicker_triplekill.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2KillstreakLayerHandler).Properties._TripleKillstreakColor ?? System.Drawing.Color.Empty);
-                this.ColorPicker_quadkill.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2KillstreakLayerHandler).Properties._QuadKillstreakColor ?? System.Drawing.Color.Empty);
-                this.ColorPicker_pentakill.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2KillstreakLayerHandler).Properties._PentaKillstreakColor ?? System.Drawing.Color.Empty);
-                this.ColorPicker_hexakill.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2KillstreakLayerHandler).Properties._HexaKillstreakColor ?? System.Drawing.Color.Empty);
-                this.ColorPicker_septakill.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2KillstreakLayerHandler).Properties._SeptaKillstreakColor ?? System.Drawing.Color.Empty);
-                this.ColorPicker_octakill.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2KillstreakLayerHandler).Properties._OctaKillstreakColor ?? System.Drawing.Color.Empty);
-                this.ColorPicker_nonakill.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2KillstreakLayerHandler).Properties._NonaKillstreakColor ?? System.Drawing.Color.Empty);
-                this.ColorPicker_decakill.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2KillstreakLayerHandler).Properties._DecaKillstreakColor ?? System.Drawing.Color.Empty);
+                this.ColorPicker_doublekill.SelectedColor = ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2KillstreakLayerHandler).Properties._DoubleKillstreakColor ?? System.Drawing.Color.Empty);
+                this.ColorPicker_triplekill.SelectedColor = ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2KillstreakLayerHandler).Properties._TripleKillstreakColor ?? System.Drawing.Color.Empty);
+                this.ColorPicker_quadkill.SelectedColor = ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2KillstreakLayerHandler).Properties._QuadKillstreakColor ?? System.Drawing.Color.Empty);
+                this.ColorPicker_pentakill.SelectedColor = ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2KillstreakLayerHandler).Properties._PentaKillstreakColor ?? System.Drawing.Color.Empty);
+                this.ColorPicker_hexakill.SelectedColor = ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2KillstreakLayerHandler).Properties._HexaKillstreakColor ?? System.Drawing.Color.Empty);
+                this.ColorPicker_septakill.SelectedColor = ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2KillstreakLayerHandler).Properties._SeptaKillstreakColor ?? System.Drawing.Color.Empty);
+                this.ColorPicker_octakill.SelectedColor = ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2KillstreakLayerHandler).Properties._OctaKillstreakColor ?? System.Drawing.Color.Empty);
+                this.ColorPicker_nonakill.SelectedColor = ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2KillstreakLayerHandler).Properties._NonaKillstreakColor ?? System.Drawing.Color.Empty);
+                this.ColorPicker_decakill.SelectedColor = ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2KillstreakLayerHandler).Properties._DecaKillstreakColor ?? System.Drawing.Color.Empty);
 
                 settingsset = true;
             }
@@ -69,67 +69,67 @@ namespace Aurora.Profiles.Dota_2.Layers
         private void abilities_canuse_colorpicker_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2AbilityLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2AbilityLayerHandler).Properties._CanCastAbilityColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as Dota2AbilityLayerHandler).Properties._CanCastAbilityColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void abilities_cannotuse_colorpicker_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2AbilityLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2AbilityLayerHandler).Properties._CanNotCastAbilityColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as Dota2AbilityLayerHandler).Properties._CanNotCastAbilityColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void ColorPicker_doublekill_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2KillstreakLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2KillstreakLayerHandler).Properties._DoubleKillstreakColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as Dota2KillstreakLayerHandler).Properties._DoubleKillstreakColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void ColorPicker_triplekill_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2KillstreakLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2KillstreakLayerHandler).Properties._TripleKillstreakColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as Dota2KillstreakLayerHandler).Properties._TripleKillstreakColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void ColorPicker_quadkill_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2KillstreakLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2KillstreakLayerHandler).Properties._QuadKillstreakColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as Dota2KillstreakLayerHandler).Properties._QuadKillstreakColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void ColorPicker_pentakill_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2KillstreakLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2KillstreakLayerHandler).Properties._PentaKillstreakColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as Dota2KillstreakLayerHandler).Properties._PentaKillstreakColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void ColorPicker_hexakill_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2KillstreakLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2KillstreakLayerHandler).Properties._HexaKillstreakColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as Dota2KillstreakLayerHandler).Properties._HexaKillstreakColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void ColorPicker_septakill_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2KillstreakLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2KillstreakLayerHandler).Properties._SeptaKillstreakColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as Dota2KillstreakLayerHandler).Properties._SeptaKillstreakColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void ColorPicker_octakill_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2KillstreakLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2KillstreakLayerHandler).Properties._OctaKillstreakColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as Dota2KillstreakLayerHandler).Properties._OctaKillstreakColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void ColorPicker_nonakill_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2KillstreakLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2KillstreakLayerHandler).Properties._NonaKillstreakColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as Dota2KillstreakLayerHandler).Properties._NonaKillstreakColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void ColorPicker_decakill_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2KillstreakLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2KillstreakLayerHandler).Properties._DecaKillstreakColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as Dota2KillstreakLayerHandler).Properties._DecaKillstreakColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
     }
 }

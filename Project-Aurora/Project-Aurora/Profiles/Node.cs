@@ -1,8 +1,8 @@
-﻿using Aurora.Utils;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Aurora.Utils;
 using JetBrains.Annotations;
 
 namespace Aurora.Profiles

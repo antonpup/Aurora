@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Aurora.Devices;
+using Common.Devices;
 
 namespace Aurora.Modules.Razer;
 

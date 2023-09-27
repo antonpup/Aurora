@@ -1,11 +1,11 @@
 ﻿using Aurora.Profiles;
-using Aurora.Utils;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using Aurora.Modules.Inputs;
+using Aurora.Utils;
 using Keys = System.Windows.Forms.Keys;
 
 namespace Aurora.Settings.Overrides.Logic {

@@ -5,7 +5,7 @@ using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Aurora.Settings.Overrides.Logic;
 using Aurora.Settings.Overrides.Logic.Builder;
-using DK = Aurora.Devices.DeviceKeys;
+using DK = Common.Devices.DeviceKeys;
 
 namespace MemoryAccessProfiles.Profiles.CloneHero;
 

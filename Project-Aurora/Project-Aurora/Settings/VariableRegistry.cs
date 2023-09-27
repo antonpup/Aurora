@@ -1,243 +1,220 @@
-﻿using Aurora.Utils;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Aurora.Utils;
 
-namespace Aurora.Settings
+namespace Aurora.Settings;
+
+public class VariableRegistryItem
 {
-    public class VariableRegistryItem
+    public object? Value;
+    
+    private object? @default;
+    public object Default
     {
-        public object Value = null;
-        private object @default = null;
-        public object Default { get { return @default?.TryClone(); } set { @default = value?.TryClone(); } }
-        public object Max = null;
-        public object Min = null;
-        public string Title = "";
-        public string Remark = "";
-        public VariableFlags Flags = VariableFlags.None;
+        get => @default?.TryClone();
+        set { @default = value?.TryClone(); }
+    }
 
-        public VariableRegistryItem()
+
+    public object? Max;
+    public object? Min;
+    public string Title = "";
+    public string Remark = "";
+    public VariableFlags Flags = VariableFlags.None;
+
+    public VariableRegistryItem()
+    {
+    }
+
+    public VariableRegistryItem(object? value, object? defaultValue, object? max = null, object? min = null, string title = "",
+        string remark = "", VariableFlags flags = VariableFlags.None)
+    {
+        Value = value ?? defaultValue;
+        Default = defaultValue;
+
+        if (Value != null && max != null && Value.GetType() == max.GetType())
+            Max = max;
+
+        if (Value != null && min != null && Value.GetType() == min.GetType())
+            Min = min;
+
+        Title = title;
+        Remark = remark;
+        Flags = flags;
+    }
+
+    public void SetVariable(object? newvalue)
+    {
+        if (Value != null && newvalue != null && Value.GetType() == newvalue.GetType())
         {
-        }
-
-        public VariableRegistryItem(object defaultValue, object max = null, object min = null, string title = "", string remark = "", VariableFlags flags = VariableFlags.None)
-        {
-            this.Value = defaultValue;
-            this.Default = defaultValue;
-
-            if (this.Value != null && max != null && this.Value.GetType() == max.GetType())
-                this.Max = max;
-
-            if (this.Value != null && min != null && this.Value.GetType() == min.GetType())
-                this.Min = min;
-
-            this.Title = title;
-            this.Remark = remark;
-            this.Flags = flags;
-        }
-
-        public void SetVariable(object newvalue)
-        {
-            if (this.Value != null && newvalue != null && this.Value.GetType() == newvalue.GetType())
-            {
-                this.Value = newvalue;
-            }
-        }
-
-        internal void Merge(VariableRegistryItem variableRegistryItem)
-        {
-            this.Default = variableRegistryItem.Default;
-            this.Title = variableRegistryItem.Title;
-            this.Remark = variableRegistryItem.Remark;
-            this.Min = variableRegistryItem.Min;
-            this.Max = variableRegistryItem.Max;
-            Type typ = this.Value.GetType();
-            Type defaultType = variableRegistryItem.Default.GetType();
-
-            if (!defaultType.Equals(typ) && typ.Equals(typeof(long)) && defaultType.IsEnum)
-                this.Value = Enum.ToObject(defaultType, Value);
-            else if (!defaultType.Equals(typ) && this.Value.GetType().Equals(typeof(long)) && TypeUtils.IsNumericType(defaultType))
-                this.Value = Convert.ChangeType(this.Value, defaultType);
-            else if (this.Value == null && !defaultType.Equals(typ))
-                this.Value = variableRegistryItem.Default;
-            this.Flags = variableRegistryItem.Flags;
+            Value = newvalue;
         }
     }
 
-    public enum VariableFlags
+    internal void Merge(VariableRegistryItem variableRegistryItem)
     {
-        None = 0,
-        UseHEX = 1
+        Default = variableRegistryItem.Default;
+        Title = variableRegistryItem.Title;
+        Remark = variableRegistryItem.Remark;
+        Min = variableRegistryItem.Min;
+        Max = variableRegistryItem.Max;
+        var typ = Value.GetType();
+        var defaultType = variableRegistryItem.Default.GetType();
+
+        if (defaultType != typ && typ == typeof(long) && defaultType.IsEnum)
+            Value = Enum.ToObject(defaultType, Value);
+        else if (defaultType != typ && Value is long && TypeUtils.IsNumericType(defaultType))
+            Value = Convert.ChangeType(Value, defaultType);
+        else if (Value == null && defaultType != typ)
+            Value = variableRegistryItem.Default;
+        Flags = variableRegistryItem.Flags;
     }
+}
 
-    public class VariableRegistry : ICloneable //Might want to implement something like IEnumerable here
+public enum VariableFlags
+{
+    None = 0,
+    UseHEX = 1
+}
+
+public class VariableRegistry : ICloneable //Might want to implement something like IEnumerable here
+{
+    [JsonProperty("Variables")]
+    private Dictionary<string, VariableRegistryItem> _variables = new();
+
+    [JsonIgnore]
+    public int Count => _variables.Count;
+
+    public void Combine(VariableRegistry otherRegistry, bool removeMissing = false)
     {
-        [JsonProperty("Variables")]
-        private Dictionary<string, VariableRegistryItem> _variables;
+        //Below doesn't work for added variables
+        var vars = new Dictionary<string, VariableRegistryItem>();
 
-        [JsonIgnore]
-        public int Count { get { return _variables.Count; } }
-
-        public VariableRegistry()
+        foreach (var variable in otherRegistry._variables)
         {
-            _variables = new Dictionary<string, VariableRegistryItem>();
-        }
-
-        public void Combine(VariableRegistry otherRegistry, bool removeMissing = false)
-        {
-            //Below doesn't work for added variables
-            Dictionary<string, VariableRegistryItem> vars = new Dictionary<string, VariableRegistryItem>();
-
-            foreach (var variable in otherRegistry._variables)
-            {
-                if (removeMissing)
-                {
-                    VariableRegistryItem local = _variables.ContainsKey(variable.Key) ? _variables[variable.Key] : null;
-                    if (local != null)
-                        local.Merge(variable.Value);
-                    else
-                        local = variable.Value;
-
-                    vars.Add(variable.Key, local);
-                }
-                else
-                    Register(variable.Key, variable.Value);
-            }
-
             if (removeMissing)
-                _variables = vars;
-            
-        }
+            {
+                if (_variables.TryGetValue(variable.Key, out var local))
+                    local.Merge(variable.Value);
+                else
+                    local = variable.Value;
 
-        public string[] GetRegisteredVariableKeys()
-        {
-            return _variables.Keys.ToArray();
-        }
-
-        public void Register(string name, object defaultValue, string title = "", object max = null, object min = null, string remark = "", VariableFlags flags = VariableFlags.None)
-        {
-            if (!_variables.ContainsKey(name))
-                _variables.Add(name, new VariableRegistryItem(defaultValue, max, min, title, remark, flags));
-        }
-
-        public void Register(string name, VariableRegistryItem varItem)
-        {
-            if (!_variables.ContainsKey(name))
-                _variables.Add(name, varItem);
+                vars.Add(variable.Key, local);
+            }
             else
-                _variables[name].Merge(varItem);
+                Register(variable.Key, variable.Value);
         }
 
-        public bool SetVariable(string name, object variable)
+        if (removeMissing)
+            _variables = vars;
+    }
+
+    public IEnumerable<string> GetRegisteredVariableKeys()
+    {
+        return _variables.Keys.ToArray();
+    }
+
+    public void Register(string name, object defaultValue, string title = "", object? max = null, object? min = null, string remark = "", VariableFlags flags = VariableFlags.None)
+    {
+        if (!_variables.ContainsKey(name))
+            _variables.Add(name, new VariableRegistryItem(null, defaultValue, max, min, title, remark, flags));
+    }
+
+    public void Register(string name, VariableRegistryItem varItem)
+    {
+        if (!_variables.ContainsKey(name))
+            _variables.Add(name, varItem);
+        else
+            _variables[name].Merge(varItem);
+    }
+
+    public bool SetVariable(string name, object variable)
+    {
+        if (_variables.ContainsKey(name))
         {
-            if (_variables.ContainsKey(name))
-            {
-                _variables[name].SetVariable(variable);
-                return true;
-            }
-
-            return false;
+            _variables[name].SetVariable(variable);
+            return true;
         }
 
-        public void ResetVariable(string name)
+        return false;
+    }
+
+    public void ResetVariable(string name)
+    {
+        if (_variables.ContainsKey(name))
         {
-            if (_variables.ContainsKey(name))
-            {
-                _variables[name].Value = _variables[name].Default;
-            }
+            _variables[name].Value = _variables[name].Default;
         }
+    }
 
-        public T GetVariable<T>(string name)
+    public T GetVariable<T>(string name)
+    {
+        if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Value != null && _variables[name].Value is T)
+            return (T)_variables[name].Value;
+
+        return default;
+    }
+
+    public bool GetVariableMax<T>(string name, out T value)
+    {
+        if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Max != null && _variables[name].Value is T)
         {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Value != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
-                return (T)_variables[name].Value;
-
-            return default(T);
+            value = (T)_variables[name].Max;
+            return true;
         }
 
-        public T GetVariableDefault<T>(string name)
+        value = Activator.CreateInstance<T>();
+        return false;
+    }
+
+    public bool GetVariableMin<T>(string name, out T value)
+    {
+        if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Min != null && _variables[name].Value is T)
         {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Default != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
-                return (T)_variables[name].Default;
-
-            return Activator.CreateInstance<T>();
+            value = (T)_variables[name].Min;
+            return true;
         }
 
-        public bool GetVariableMax<T>(string name, out T value)
-        {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Max != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
-            {
-                value = (T)_variables[name].Max;
-                return true;
-            }
+        value = Activator.CreateInstance<T>();
+        return false;
+    }
 
-            value = Activator.CreateInstance<T>();
-            return false;
-        }
+    public Type GetVariableType(string name)
+    {
+        if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Value != null)
+            return _variables[name].Value.GetType();
 
-        public bool GetVariableMin<T>(string name, out T value)
-        {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Min != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
-            {
-                value = (T)_variables[name].Min;
-                return true;
-            }
+        return typeof(object);
+    }
 
-            value = Activator.CreateInstance<T>();
-            return false;
-        }
+    public string GetTitle(string name)
+    {
+        if (_variables.TryGetValue(name, out var variable))
+            return variable.Title;
 
-        public Type GetVariableType(string name)
-        {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Value != null)
-                return _variables[name].Value.GetType();
+        return "";
+    }
 
-            return typeof(object);
-        }
+    public string GetRemark(string name)
+    {
+        return _variables.TryGetValue(name, out var variable) ? variable.Remark : "";
+    }
 
-        public string GetTitle(string name)
-        {
-            if (_variables.ContainsKey(name))
-                return _variables[name].Title;
+    public VariableFlags GetFlags(string name)
+    {
+        return _variables.TryGetValue(name, out var variable) ? variable.Flags : VariableFlags.None;
+    }
 
-            return "";
-        }
+    public object Clone()
+    {
+        var str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, SerializationBinder = JSONUtils.SerializationBinder });
 
-        public string GetRemark(string name)
-        {
-            if (_variables.ContainsKey(name))
-                return _variables[name].Remark;
-
-            return "";
-        }
-
-        public VariableFlags GetFlags(string name)
-        {
-            if (_variables.ContainsKey(name))
-                return _variables[name].Flags;
-
-            return VariableFlags.None;
-        }
-
-        public void RemoveVariable(string name)
-        {
-            if (_variables.ContainsKey(name))
-                _variables.Remove(name);
-        }
-
-        public object Clone()
-        {
-            string str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, SerializationBinder = JSONUtils.SerializationBinder });
-
-            return JsonConvert.DeserializeObject(
-                    str,
-                    this.GetType(),
-                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, SerializationBinder = JSONUtils.SerializationBinder }
-                    );
-        }
+        return JsonConvert.DeserializeObject(
+            str,
+            GetType(),
+            new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, SerializationBinder = JSONUtils.SerializationBinder }
+        );
     }
 }

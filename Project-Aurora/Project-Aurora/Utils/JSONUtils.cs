@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Aurora.Settings.Overrides.Logic;
+using Common.Devices;
 using Newtonsoft.Json.Linq;
 
 namespace Aurora.Utils;
@@ -31,9 +31,9 @@ public class AuroraSerializationBinder : DefaultSerializationBinder
             case "System.Collections.Generic.Queue`1[[System.Windows.Forms.Keys, System.Windows.Forms]]":
                 return typeof(Queue<System.Windows.Forms.Keys>);
             case
-                "System.Collections.Generic.Dictionary`2[[Aurora.Devices.DeviceKeys, Aurora],[System.Drawing.Color, System.Drawing]]"
+                "System.Collections.Generic.Dictionary`2[[Aurora.DeviceKeys, Aurora],[System.Drawing.Color, System.Drawing]]"
                 :
-                return typeof(Dictionary<Devices.DeviceKeys, Color>);
+                return typeof(Dictionary<DeviceKeys, Color>);
             //Resolve typo'd AbilityLayerHandler type
             case "Aurora.Profiles.Dota_2.Layers.Dota2AbiltiyLayerHandler":
                 return typeof(Profiles.Dota_2.Layers.Dota2AbilityLayerHandler);
@@ -49,10 +49,6 @@ public class AuroraSerializationBinder : DefaultSerializationBinder
             case "Aurora.Profiles.Magic_Duels_2012.MagicDuels2012Profile":
             case "Aurora.Profiles.ColorEnhanceProfile":
                 return typeof(Profiles.WrapperProfile);
-            case "Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice":
-                return typeof(Devices.UnifiedHID.UnifiedHIDDevice);
-            case "Aurora.Devices.Corsair.CorsairDevice":
-                return typeof(Devices.RGBNet.CorsairRgbNetDevice);
             case "Aurora.Settings.Overrides.Logic.IEvaluatableBoolean":
             case "Aurora.Settings.Overrides.Logic.IEvaluatable`1[[System.Boolean, mscorlib]]":
                 return typeof(Evaluatable<bool>);

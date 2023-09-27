@@ -24,18 +24,18 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using Aurora.Devices;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Scripts.VoronScripts.OpenHardwareMonitor.Collections;
 using Aurora.Scripts.VoronScripts.OpenHardwareMonitor.Hardware.ATI;
 using Aurora.Scripts.VoronScripts.OpenHardwareMonitor.Hardware.Nvidia;
 using Aurora.Settings;
-using Aurora.Utils;
 using CircleGradientStateKey =
 	System.Tuple<Aurora.EffectsEngine.ColorSpectrum, Aurora.Scripts.VoronScripts.PerformanceCounterManager.IntervalPerformanceCounter, float, float>;
 using CircleGradientState = System.Collections.Generic.KeyValuePair<float, long>;
 using Aurora.Scripts.VoronScripts.Mathos.Parser;
+using Aurora.Utils;
+using Common.Devices;
 
 namespace Aurora.Scripts.VoronScripts
 {

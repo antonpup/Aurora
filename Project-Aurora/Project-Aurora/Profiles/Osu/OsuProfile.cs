@@ -5,6 +5,7 @@ using Aurora.Settings.Layers;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using Common.Devices;
 
 namespace Aurora.Profiles.Osu {
 

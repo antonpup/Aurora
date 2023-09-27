@@ -8,6 +8,7 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using System.Windows.Controls;
 using Aurora.Settings.Layers.Controls;
+using Common.Utils;
 
 namespace Aurora.Settings.Layers
 {
@@ -80,7 +81,7 @@ namespace Aurora.Settings.Layers
                     }
 
                     foreach (var key in Properties.Sequence.Keys)
-                        image_layer.Set(key, Utils.ColorUtils.AddColors(image_layer.Get(key), temp_layer.Get(key)));
+                        image_layer.Set(key, CommonColorUtils.AddColors(image_layer.Get(key), temp_layer.Get(key)));
                 }
                 else
                 {

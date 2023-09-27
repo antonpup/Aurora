@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Controls;
-using Aurora.Devices;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Layers.Controls;
 using Aurora.Settings.Overrides;
 using Aurora.Utils;
-using LedCSharp;
+using Common.Devices;
+using Common.Devices.Logitech;
+using Common.Utils;
 using Newtonsoft.Json;
 
 namespace Aurora.Settings.Layers;
@@ -76,7 +77,7 @@ public class WrapperLightsLayerHandlerProperties : LayerHandlerProperties<Wrappe
     public override void Default()
     {
         base.Default();
-        _PrimaryColor = ColorUtils.GenerateRandomColor();
+        _PrimaryColor = CommonColorUtils.GenerateRandomColor();
 
         _colorEnhanceEnabled = true;
         _colorEnhanceMode = 0;
@@ -130,18 +131,6 @@ public class WrapperLightsLayerHandler : LayerHandler<WrapperLightsLayerHandlerP
                 // Do the key cloning
                 if (Properties.CloningMap.TryGetValue(key, out var targetKey))
                     EffectLayer.Set(targetKey, GetBoostedColor(_extraKeys[key]));
-            }
-            else
-            {
-                var logiKey = DeviceKeysUtils.ToLogitechBitmap(key);
-
-                if (logiKey == Logitech_keyboardBitmapKeys.UNKNOWN || _bitmap.Length <= 0) continue;
-                var color = GetBoostedColor(ColorUtils.GetColorFromInt(_bitmap[(int)logiKey / 4]));
-                EffectLayer.Set(key, color);
-
-                // Key cloning
-                if (Properties.CloningMap.TryGetValue(key, out var targetKey))
-                    EffectLayer.Set(targetKey, color);
             }
         }
 
@@ -206,7 +195,7 @@ public class WrapperLightsLayerHandler : LayerHandler<WrapperLightsLayerHandlerP
             case "LFX_GetNumDevices":
             {
                 //Retain previous lighting
-                var fillColorInt = ColorUtils.GetIntFromColor(_lastFillColor);
+                var fillColorInt = CommonColorUtils.GetIntFromColor(_lastFillColor);
 
                 for (var i = 0; i < _bitmap.Length; i++)
                     _bitmap[i] = fillColorInt;
@@ -218,7 +207,7 @@ public class WrapperLightsLayerHandler : LayerHandler<WrapperLightsLayerHandlerP
             case "LFX_GetNumLights":
             {
                 //Retain previous lighting
-                var fillColorInt = ColorUtils.GetIntFromColor(_lastFillColor);
+                var fillColorInt = CommonColorUtils.GetIntFromColor(_lastFillColor);
 
                 for (var i = 0; i < _bitmap.Length; i++)
                     _bitmap[i] = fillColorInt;
@@ -230,7 +219,7 @@ public class WrapperLightsLayerHandler : LayerHandler<WrapperLightsLayerHandlerP
             case "LFX_Light":
             {
                 //Retain previous lighting
-                var fillColorInt = ColorUtils.GetIntFromColor(_lastFillColor);
+                var fillColorInt = CommonColorUtils.GetIntFromColor(_lastFillColor);
 
                 for (var i = 0; i < _bitmap.Length; i++)
                     _bitmap[i] = fillColorInt;
@@ -242,7 +231,7 @@ public class WrapperLightsLayerHandler : LayerHandler<WrapperLightsLayerHandlerP
             case "LFX_SetLightColor":
             {
                 //Retain previous lighting
-                var fillColorInt = ColorUtils.GetIntFromColor(_lastFillColor);
+                var fillColorInt = CommonColorUtils.GetIntFromColor(_lastFillColor);
 
                 for (var i = 0; i < _bitmap.Length; i++)
                     _bitmap[i] = fillColorInt;
@@ -331,11 +320,11 @@ public class WrapperLightsLayerHandler : LayerHandler<WrapperLightsLayerHandlerP
                 return ColorUtils.MultiplyColorByScalar(color, boostAmount);
 
             case 1:
-                ColorUtils.ToHsv(color, out var hue, out var saturation, out var value);
+                CommonColorUtils.ToHsv(color, out var hue, out var saturation, out var value);
                 var x = Properties.ColorEnhanceColorHsvSine;
                 var y = 1.0f / Properties.ColorEnhanceColorHsvGamma;
                 value = (float)Math.Min(1, Math.Pow(x * Math.Sin(2 * Math.PI * value) + value, y));
-                return ColorUtils.FromHsv(hue, saturation, value);
+                return CommonColorUtils.FromHsv(hue, saturation, value);
 
             default:
                 return color;

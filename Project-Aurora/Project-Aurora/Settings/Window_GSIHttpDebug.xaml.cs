@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using Aurora.Modules.GameStateListen;
 using Aurora.Profiles;
-using Aurora.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

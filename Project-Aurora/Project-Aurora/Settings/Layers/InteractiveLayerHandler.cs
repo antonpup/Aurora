@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using Aurora.Devices;
 using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Modules.Inputs;
@@ -13,6 +11,8 @@ using Aurora.Profiles.Desktop;
 using Aurora.Settings.Layers.Controls;
 using Aurora.Settings.Overrides;
 using Aurora.Utils;
+using Common.Devices;
+using Common.Utils;
 using Newtonsoft.Json;
 using UserControl = System.Windows.Controls.UserControl;
 
@@ -235,8 +235,8 @@ public sealed class InteractiveLayerHandler : LayerHandler<InteractiveLayerHandl
 
     private InputItem CreateInputItem(DeviceKeys key, PointF origin)
     {
-        var primaryC = Properties.RandomPrimaryColor ? ColorUtils.GenerateRandomColor() : Properties.PrimaryColor;
-        var secondaryC = Properties.RandomSecondaryColor ? ColorUtils.GenerateRandomColor() : Properties.SecondaryColor;
+        var primaryC = Properties.RandomPrimaryColor ? CommonColorUtils.GenerateRandomColor() : Properties.PrimaryColor;
+        var secondaryC = Properties.RandomSecondaryColor ? CommonColorUtils.GenerateRandomColor() : Properties.SecondaryColor;
 
         var animMix = new AnimationMix();
 

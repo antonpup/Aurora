@@ -4,7 +4,7 @@ using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Layers.Controls;
 using Aurora.Settings.Overrides;
-using Aurora.Utils;
+using Common.Utils;
 using Newtonsoft.Json;
 
 namespace Aurora.Settings.Layers;
@@ -60,8 +60,8 @@ public class PercentLayerHandlerProperties<TProperty> : LayerHandlerProperties2C
     public override void Default()
     {
         base.Default();
-        _PrimaryColor = ColorUtils.GenerateRandomColor();
-        _SecondaryColor = ColorUtils.GenerateRandomColor();
+        _PrimaryColor = CommonColorUtils.GenerateRandomColor();
+        _SecondaryColor = CommonColorUtils.GenerateRandomColor();
         _PercentType = PercentEffectType.Progressive_Gradual;
         _BlinkThreshold = 0.0;
         _BlinkDirection = false;
@@ -95,7 +95,7 @@ public class PercentLayerHandler<TProperty> : LayerHandler<TProperty> where TPro
             _value = -1;
         }
         var value = Properties.Logic._Value ?? state.GetNumber(Properties.VariablePath);
-        if (ColorUtils.NearlyEqual(_value, value, 0.000001))
+        if (MathUtils.NearlyEqual(_value, value, 0.000001))
         {
             return EffectLayer;
         }

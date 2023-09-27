@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Aurora.Devices;
 using Aurora.Utils;
+using Common.Devices;
 using JetBrains.Annotations;
 using Linearstar.Windows.RawInput.Native;
-using User32 = Aurora.Utils.User32;
 
 namespace Aurora.Modules.Inputs;
 

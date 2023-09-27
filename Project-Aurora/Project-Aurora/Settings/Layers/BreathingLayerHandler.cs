@@ -6,6 +6,7 @@ using Aurora.Profiles;
 using Aurora.Settings.Layers.Controls;
 using Aurora.Settings.Overrides;
 using Aurora.Utils;
+using Common.Utils;
 using Newtonsoft.Json;
 
 namespace Aurora.Settings.Layers
@@ -61,12 +62,12 @@ namespace Aurora.Settings.Layers
             var currentSine = (float)Math.Pow(Math.Sin((double)(Time.GetMillisecondsSinceEpoch() % 10000L / 10000.0f) * 2 * Math.PI * Properties.EffectSpeed), 2);
 
             if (currentSine <= 0.0025f * Properties.EffectSpeed && Properties.RandomSecondaryColor)
-                _currentSecondaryColor = ColorUtils.GenerateRandomColor();
+                _currentSecondaryColor = CommonColorUtils.GenerateRandomColor();
             else if(!Properties.RandomSecondaryColor)
                 _currentSecondaryColor = Properties.SecondaryColor;
 
             if (currentSine >= 1.0f - 0.0025f * Properties.EffectSpeed && Properties.RandomPrimaryColor)
-                _currentPrimaryColor = ColorUtils.GenerateRandomColor();
+                _currentPrimaryColor = CommonColorUtils.GenerateRandomColor();
             else if (!Properties.RandomPrimaryColor)
                 _currentPrimaryColor = Properties.PrimaryColor;
 

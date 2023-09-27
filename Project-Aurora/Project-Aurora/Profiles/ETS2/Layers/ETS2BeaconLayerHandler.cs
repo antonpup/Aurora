@@ -1,5 +1,4 @@
-﻿using Aurora.Devices;
-using Aurora.EffectsEngine;
+﻿using Aurora.EffectsEngine;
 using Aurora.Profiles.ETS2.GSI;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
@@ -8,9 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
+using Common.Devices;
+using Common.Utils;
 
 namespace Aurora.Profiles.ETS2.Layers {
     public class ETS2BeaconLayerProperties : LayerHandlerProperties<ETS2BeaconLayerProperties> {
@@ -30,10 +29,10 @@ namespace Aurora.Profiles.ETS2.Layers {
         public override void Default() {
             base.Default();
 
-            this._Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.F5, DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8 });
-            this._PrimaryColor = Color.FromArgb(255, 128, 0);
-            this._BeaconStyle = ETS2_BeaconStyle.Fancy_Flash;
-            this._Speed = 1f;
+            _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.F5, DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8 });
+            _PrimaryColor = Color.FromArgb(255, 128, 0);
+            _BeaconStyle = ETS2_BeaconStyle.Fancy_Flash;
+            _Speed = 1f;
         }
     }
 
@@ -47,7 +46,7 @@ namespace Aurora.Profiles.ETS2.Layers {
 
         /// <summary>Multiplies the Primary Color's alpha by this value and returns it.</summary>
         private Color PrimaryColorAlpha(double a) {
-            int alpha = Utils.ColorUtils.ColorByteMultiplication(Properties.PrimaryColor.A, a);
+            int alpha = CommonColorUtils.ColorByteMultiplication(Properties.PrimaryColor.A, a);
             return Color.FromArgb(alpha, Properties.PrimaryColor);
         }
 
@@ -55,7 +54,7 @@ namespace Aurora.Profiles.ETS2.Layers {
             EffectLayer layer = new EffectLayer("ETS2 Beacon Layer");
 
             if (gamestate is GameState_ETS2 && (gamestate as GameState_ETS2).Truck.lightsBeaconOn) {
-                switch (this.Properties.BeaconStyle) {
+                switch (Properties.BeaconStyle) {
                     // Fades all assigned lights in and out together
                     case ETS2_BeaconStyle.Simple_Flash:
                         double multiplier = Math.Pow(Math.Sin(frame * Properties.Speed * Math.PI / 10), 2);

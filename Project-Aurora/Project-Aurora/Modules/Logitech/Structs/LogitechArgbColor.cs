@@ -1,6 +1,6 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
-using Aurora.Utils;
+using Common.Utils;
 
 namespace Aurora.Modules.Logitech.Structs;
 
@@ -15,6 +15,6 @@ public readonly struct LogitechArgbColor
 
     public static implicit operator Color(LogitechArgbColor c)
     {
-        return ColorUtils.FastColor((byte)(c.R * 255d / 100d), (byte)(c.G * 255d / 100d), (byte)(c.B * 255d / 100d), (byte)(c.A * 255d / 100d));
+        return CommonColorUtils.FastColor((byte)(c.R * 255d / 100d), (byte)(c.G * 255d / 100d), (byte)(c.B * 255d / 100d), (byte)(c.A * 255d / 100d));
     }
 }

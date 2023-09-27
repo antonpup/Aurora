@@ -16,12 +16,12 @@ public partial class Control_DeviceCalibration
         _deviceManager = deviceManager;
         
         InitializeComponent();
-        RefreshLists();
     }
 
-    private void RefreshLists()
+    private async Task RefreshLists()
     {
-        var devices = _deviceManager.Result.DeviceContainers
+        var deviceContainers = (await _deviceManager).DeviceContainers;
+        var devices = deviceContainers
             .Where(c => c.Device.IsInitialized)
             .Select(c => c.Device);
 
@@ -29,10 +29,9 @@ public partial class Control_DeviceCalibration
             .SelectMany(a => a.GetDevices())
             .Except(Global.Configuration.DeviceCalibrations.Keys);
         DeviceList.Items.Refresh();
-        InvalidateVisual();
     }
 
-    private void ButtonBase_OnClick(object? sender, RoutedEventArgs e)
+    private async void ButtonBase_OnClick(object? sender, RoutedEventArgs e)
     {
         var value = (string)ComboBox.SelectionBoxItem;
         if (string.IsNullOrEmpty(value))
@@ -40,13 +39,18 @@ public partial class Control_DeviceCalibration
             return;
         }
         Global.Configuration.DeviceCalibrations.Add(value, Color.White);
-        RefreshLists();
+        await RefreshLists();
     }
 
-    private void Control_DeviceCalibrationItem_OnItemRemoved(object? sender, KeyValuePair<string, Color> e)
+    private async void Control_DeviceCalibrationItem_OnItemRemoved(object? sender, KeyValuePair<string, Color> e)
     {
         Global.Configuration.DeviceCalibrations.Remove(e.Key);
         Global.Configuration.DeviceCalibrations.TrimExcess();
-        RefreshLists();
+        await RefreshLists();
+    }
+
+    private async void Control_DeviceCalibration_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        await RefreshLists();
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
+using Common.Devices;
 
 namespace Aurora.Profiles.HotlineMiami
 {
@@ -31,7 +32,7 @@ namespace Aurora.Profiles.HotlineMiami
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Yellow,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D })
+                        _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.W, DeviceKeys.A, DeviceKeys.S, DeviceKeys.D })
                     }
                 }
                 ),
@@ -40,7 +41,7 @@ namespace Aurora.Profiles.HotlineMiami
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Red,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.SPACE, Devices.DeviceKeys.LEFT_SHIFT, Devices.DeviceKeys.R, Devices.DeviceKeys.ESC })
+                        _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.SPACE, DeviceKeys.LEFT_SHIFT, DeviceKeys.R, DeviceKeys.ESC })
                     }
                 }),
                 new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()),

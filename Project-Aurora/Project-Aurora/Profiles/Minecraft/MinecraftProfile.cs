@@ -1,18 +1,11 @@
-﻿using Aurora.EffectsEngine.Animations;
-using Aurora.Profiles.Minecraft.Layers;
+﻿using Aurora.Profiles.Minecraft.Layers;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
-using Aurora.Settings.Overrides;
 using Aurora.Settings.Overrides.Logic;
 using Aurora.Settings.Overrides.Logic.Builder;
-using Octokit;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DK = Aurora.Devices.DeviceKeys;
+using DK = Common.Devices.DeviceKeys;
 
 namespace Aurora.Profiles.Minecraft
 {

@@ -1,4 +1,5 @@
 ﻿using System.Windows.Media;
+using Common.Devices;
 
 namespace Aurora.Settings.Keycaps;
 
@@ -13,5 +14,5 @@ public interface IKeycap
         
     void SetColor(Color keyColor);
 
-    Devices.DeviceKeys GetKey();
+    DeviceKeys GetKey();
 }

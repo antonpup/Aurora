@@ -1,5 +1,4 @@
 ﻿using Aurora.Profiles;
-using Aurora.Utils;
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
@@ -11,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using Aurora.Utils;
 using Application = Aurora.Profiles.Application;
 
 namespace Aurora.Controls {

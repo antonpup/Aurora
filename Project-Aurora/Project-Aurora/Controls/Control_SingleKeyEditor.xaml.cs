@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
 using Aurora.Modules.Inputs;
 using Keys = System.Windows.Forms.Keys;
 

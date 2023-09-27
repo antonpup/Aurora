@@ -1,6 +1,5 @@
 ﻿using Aurora.Settings.Layers;
 using Aurora.Settings.Overrides.Logic;
-using Aurora.Utils;
 using FastMember;
 using PropertyChanged;
 using System;
@@ -15,6 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
+using Aurora.Utils;
 
 namespace Aurora.Settings.Overrides {
     /// <summary>

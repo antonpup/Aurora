@@ -1,8 +1,6 @@
-using Aurora.Devices;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
-using Aurora.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,6 +8,8 @@ using System.Drawing;
 using System.Windows.Controls;
 using Aurora.Modules.Razer;
 using Aurora.Settings.Layers.Controls;
+using Common.Devices;
+using Common.Utils;
 using RazerSdkReader.Structures;
 
 namespace Aurora.Settings.Layers;
@@ -160,11 +160,11 @@ public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
         var color = FastTransform(rzColor);
         
         if (Properties.BrightnessChange != 0)
-            color = ColorUtils.ChangeBrightness(color, Properties.BrightnessChange);
+            color = CommonColorUtils.ChangeBrightness(color, Properties.BrightnessChange);
         if (Properties.SaturationChange != 0)
-            color = ColorUtils.ChangeSaturation(color, Properties.SaturationChange);
+            color = CommonColorUtils.ChangeSaturation(color, Properties.SaturationChange);
         if (Properties.HueShift != 0)
-            color = ColorUtils.ChangeHue(color, Properties.HueShift);
+            color = CommonColorUtils.ChangeHue(color, Properties.HueShift);
 
         return color;
     }
@@ -172,7 +172,7 @@ public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
     private Color FastTransform(ChromaColor color)
     {
         return Properties.TransparencyEnabled ?
-            ColorUtils.FastColorTransparent(color.R, color.G, color.B) :
-            ColorUtils.FastColor(color.R, color.G, color.B);
+            CommonColorUtils.FastColorTransparent(color.R, color.G, color.B) :
+            CommonColorUtils.FastColor(color.R, color.G, color.B);
     }
 }

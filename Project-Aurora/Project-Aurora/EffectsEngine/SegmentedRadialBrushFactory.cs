@@ -1,10 +1,9 @@
-﻿using Aurora.Utils;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using Aurora.Utils;
 
 namespace Aurora.EffectsEngine {
 

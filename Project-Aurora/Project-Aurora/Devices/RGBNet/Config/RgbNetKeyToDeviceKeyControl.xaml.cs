@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using AurorDeviceManager.Devices.RGBNet.Config;
+using Common.Devices;
 using RGB.NET.Core;
 
 namespace Aurora.Devices.RGBNet.Config;
@@ -45,19 +47,19 @@ public partial class RgbNetKeyToDeviceKeyControl
             DeviceKeyButton.Content = deviceKey;
             ButtonBorder.BorderBrush = Brushes.Blue;
         }
-        else
-        {
-            if (RgbNetKeyMappings.KeyNames.TryGetValue(_led.Id, out var defaultKey))
-            {
-                DeviceKeyButton.Content = defaultKey;
-                ButtonBorder.BorderBrush = Brushes.Black;
-            }
-            else
-            {
-                DeviceKeyButton.Content = DeviceKeys.NONE;
-                ButtonBorder.BorderBrush = Brushes.Red;
-            }
-        }
+        //else
+        //{
+        //    if (RgbNetKeyMappings.KeyNames.TryGetValue(_led.Id, out var defaultKey))
+        //    {
+        //        DeviceKeyButton.Content = defaultKey;
+        //        ButtonBorder.BorderBrush = Brushes.Black;
+        //    }
+        //    else
+        //    {
+        //        DeviceKeyButton.Content = DeviceKeys.NONE;
+        //        ButtonBorder.BorderBrush = Brushes.Red;
+        //    }
+        //}
     }
 
     private void TestBlink(object? sender, RoutedEventArgs e)

@@ -4,6 +4,7 @@ using System.Linq;
 using Aurora.Profiles.EliteDangerous.GSI;
 using Aurora.Profiles.EliteDangerous.GSI.Nodes;
 using Aurora.Profiles.EliteDangerous.Layers;
+using Aurora.Utils;
 
 namespace Aurora.Profiles.EliteDangerous
 {
@@ -826,7 +827,7 @@ namespace Aurora.Profiles.EliteDangerous
 
         private static Color GetBlinkingColor(Color baseColor, long currentTime)
         {
-            return Utils.ColorUtils.BlendColors(
+            return ColorUtils.BlendColors(
                 baseColor,
                 Color.FromArgb(
                     0,
@@ -990,7 +991,7 @@ namespace Aurora.Profiles.EliteDangerous
 
                         float currentBrightnes = minimalBrightnes + (brightnessRange / 8 * gameState.Status.Pips[0]);
                         
-                        return Utils.ColorUtils.BlendColors(
+                        return ColorUtils.BlendColors(
                             Color.FromArgb(
                                 0,
                                 initialColor.R,
@@ -1010,7 +1011,7 @@ namespace Aurora.Profiles.EliteDangerous
 
                         float currentBrightnes = minimalBrightnes + (brightnessRange / 8 * gameState.Status.Pips[0]);
                         
-                        return Utils.ColorUtils.BlendColors(
+                        return ColorUtils.BlendColors(
                             Color.FromArgb(
                                 0,
                                 initialColor.R,
@@ -1030,7 +1031,7 @@ namespace Aurora.Profiles.EliteDangerous
 
                         float currentBrightnes = minimalBrightnes + (brightnessRange / 8 * gameState.Status.Pips[1]);
                         
-                        return Utils.ColorUtils.BlendColors(
+                        return ColorUtils.BlendColors(
                             Color.FromArgb(
                                 0,
                                 initialColor.R,
@@ -1050,7 +1051,7 @@ namespace Aurora.Profiles.EliteDangerous
 
                         float currentBrightnes = minimalBrightnes + (brightnessRange / 8 * gameState.Status.Pips[1]);
                         
-                        return Utils.ColorUtils.BlendColors(
+                        return ColorUtils.BlendColors(
                             Color.FromArgb(
                                 0,
                                 initialColor.R,
@@ -1070,7 +1071,7 @@ namespace Aurora.Profiles.EliteDangerous
 
                         float currentBrightnes = minimalBrightnes + (brightnessRange / 8 * gameState.Status.Pips[2]);
                         
-                        return Utils.ColorUtils.BlendColors(
+                        return ColorUtils.BlendColors(
                             Color.FromArgb(
                                 0,
                                 initialColor.R,
@@ -1090,7 +1091,7 @@ namespace Aurora.Profiles.EliteDangerous
 
                         float currentBrightnes = minimalBrightnes + (brightnessRange / 8 * gameState.Status.Pips[2]);
                         
-                        return Utils.ColorUtils.BlendColors(
+                        return ColorUtils.BlendColors(
                             Color.FromArgb(
                                 0,
                                 initialColor.R,

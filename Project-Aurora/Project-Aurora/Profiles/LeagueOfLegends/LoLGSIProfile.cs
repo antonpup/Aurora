@@ -2,12 +2,9 @@
 using Aurora.Settings.Layers;
 using Aurora.Settings.Overrides.Logic;
 using Aurora.Settings.Overrides.Logic.Builder;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Runtime.Serialization;
 using Aurora.Profiles.LeagueOfLegends.GSI.Nodes;
-using DK = Aurora.Devices.DeviceKeys;
+using DK = Common.Devices.DeviceKeys;
 
 namespace Aurora.Profiles.LeagueOfLegends
 {

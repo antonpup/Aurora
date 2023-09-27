@@ -10,12 +10,13 @@
              xmlns:sys="clr-namespace:System;assembly=System.Runtime"
              mc:Ignorable="d"
              xmlns:layers="clr-namespace:Aurora.Settings.Layers"
+             xmlns:devices1="clr-namespace:Common.Devices;assembly=AuroraCommon"
              d:DataContext="{layers:InteractiveLayerHandler}">
     <UserControl.Resources>
         <ObjectDataProvider x:Key="DeviceKeyEnum" MethodName="GetValues"
                             ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="devices:DeviceKeys"/>
+                <x:Type TypeName="devices1:DeviceKeys"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
     </UserControl.Resources>

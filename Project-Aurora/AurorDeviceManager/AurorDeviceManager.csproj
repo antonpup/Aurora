@@ -1,0 +1,158 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <Platforms>x64</Platforms>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
+        <LangVersion>11</LangVersion>
+        <OutputType>WinExe</OutputType>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>AurorDeviceManager</RootNamespace>
+        <OutputPath>$(SolutionDir)..\Build\$(Configuration)\win10-x64\AurorDeviceManager</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\AuroraCommon\AuroraCommon.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="DS4WindowsApi, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>.\x64\DS4WindowsApi.dll</HintPath>
+        </Reference>
+        <Reference Include="OmenFourZoneLighting, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>.\x64\OmenFourZoneLighting.dll</HintPath>
+        </Reference>
+        <Reference Include="Roccat-Talk, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>.\x64\Roccat-Talk.dll</HintPath>
+        </Reference>
+        <Reference Include="UniwillSDKDLL, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>.\x64\UniwillSDKDLL.dll</HintPath>
+        </Reference>
+        <Reference Include="YeeLightAPI">
+            <HintPath>.\YeeLightAPI.dll</HintPath>
+        </Reference>
+        <Reference Include="Bloody.NET">
+            <HintPath>.\x64\Bloody.NET.dll</HintPath>
+        </Reference>
+        <Reference Include="SBAuroraReactive">
+            <HintPath>.\x64\SBAuroraReactive.dll</HintPath>
+        </Reference>
+        
+        
+        <Reference Include="RGB.NET.Core, Version=2.0.1.2">
+            <HintPath>.\RGB.NET.Core.dll</HintPath>
+            <Private>true</Private>
+        </Reference>
+        <Reference Include="RGB.NET.Devices.OpenRGB">
+            <HintPath>.\RGB.NET.Devices.OpenRGB.dll</HintPath>
+            <Private>true</Private>
+        </Reference>
+        <Reference Include="RGB.NET.Devices.Bloody">
+            <HintPath>.\RGB.NET.Devices.Bloody.dll</HintPath>
+            <Private>true</Private>
+        </Reference>
+        <Reference Include="RGB.NET.YeeLightStates">
+            <HintPath>.\RGB.NET.YeeLightStates.dll</HintPath>
+            <Private>true</Private>
+        </Reference>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Colore" Version="6.0.0" />
+        <PackageReference Include="hidlibrary" Version="3.3.40" />
+        <PackageReference Include="Microsoft.Win32.SystemEvents" Version="7.0.0" />
+        <PackageReference Include="OpenRGB.NET" Version="2.2.0" />
+        <!--
+        Waiting for #338 and #339 on rgb.net
+        <PackageReference Include="RGB.NET.Core" Version="2.0.0-prerelease.83" />
+        <PackageReference Include="RGB.NET.Devices.OpenRGB" Version="2.0.0-prerelease.83" />
+        -->
+        <PackageReference Include="RGB.NET.Devices.Asus" Version="2.0.0-prerelease.111" />
+        <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="2.0.0-prerelease.111" />
+        <PackageReference Include="RGB.NET.Devices.Logitech" Version="2.0.0-prerelease.111" />
+        <PackageReference Include="RGB.NET.Devices.Razer" Version="2.0.0-prerelease.111" />
+        <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="2.0.0-prerelease.111" />
+        <PackageReference Include="RGB.NET.Devices.Wooting" Version="2.0.0-prerelease.111" />
+        <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
+        <PackageReference Include="Vulcan.NET" Version="2.2.0" />
+        <PackageReference Include="Wooting.NET" Version="1.2.0" />
+
+
+        <PackageReference Include="SmartThreadPool.dll" Version="2.3.0" />
+        <PackageReference Include="Serilog.Aggregating.Filter" Version="1.1.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+        <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
+        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Content Include="x64\Interop.AuraServiceLib.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="x64\iCUESDK.x64_2019.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="x64\CMSDK.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="x64\LogitechLedEnginesWrapper.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="x64\DrevoRadi.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="x64\LightFX_SDK.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="x64\OmenLightingSDK.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="CroccatTalkWrapper\win32-x86-64\talkfx-c.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Logi\GHUB\LogitechLed.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Logi\LGS\LogitechLed.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="x64\ClplLEDController.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="x64\CTDrvLedMgr.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="x64\CTHID.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="x64\CTHIDRpA.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="CTIntrfu.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="x64\CTLEDMgr.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="x64\CUESDK.x64_2019.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="wooting-rgb-sdk.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="x64\wooting-rgb-sdk64.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="Devices\RGBNet\Config\" />
+    </ItemGroup>
+
+</Project>

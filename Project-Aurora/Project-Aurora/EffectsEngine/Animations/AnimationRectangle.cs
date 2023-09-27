@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using Aurora.Utils;
+using Common.Utils;
 
 namespace Aurora.EffectsEngine.Animations
 {
@@ -10,7 +10,7 @@ namespace Aurora.EffectsEngine.Animations
         public AnimationRectangle()
         {
             _dimension = new RectangleF(25, 10, 50, 20);
-            _color = ColorUtils.GenerateRandomColor();
+            _color = CommonColorUtils.GenerateRandomColor();
             _width = 1;
             _duration = 2.0f;
         }

@@ -8,6 +8,7 @@ using Aurora.EffectsEngine;
 using Aurora.Profiles.GTA5.GSI;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
+using Common.Devices;
 using Newtonsoft.Json;
 
 namespace Aurora.Profiles.GTA5.Layers;

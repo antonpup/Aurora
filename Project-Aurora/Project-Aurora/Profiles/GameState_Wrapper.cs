@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using Common.Utils;
 
 namespace Aurora.Profiles;
 
@@ -178,43 +179,43 @@ public class Extra_Keys_Wrapper : Node
     internal Extra_Keys_Wrapper(string JSON)
         : base(JSON)
     {
-        peripheral = Utils.ColorUtils.GetColorFromInt(GetInt("peripheral"));
-        logo = Utils.ColorUtils.GetColorFromInt( GetInt("logo"));
-        mousepad1 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad0"));
-        mousepad2 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad1"));
-        mousepad3 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad2"));
-        mousepad4 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad3"));
-        mousepad5 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad4"));
-        mousepad6 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad5"));
-        mousepad7 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad6"));
-        mousepad8 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad7"));
-        mousepad9 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad8"));
-        mousepad10 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad9"));
-        mousepad11 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad10"));
-        mousepad12 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad11"));
-        mousepad13 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad12"));
-        mousepad14 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad13"));
-        mousepad15 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad14"));
-        badge = Utils.ColorUtils.GetColorFromInt( GetInt("badge"));
-        G1 = Utils.ColorUtils.GetColorFromInt( GetInt("G1"));
-        G2 = Utils.ColorUtils.GetColorFromInt( GetInt("G2"));
-        G3 = Utils.ColorUtils.GetColorFromInt( GetInt("G3"));
-        G4 = Utils.ColorUtils.GetColorFromInt( GetInt("G4"));
-        G5 = Utils.ColorUtils.GetColorFromInt( GetInt("G5"));
-        G6 = Utils.ColorUtils.GetColorFromInt( GetInt("G6"));
-        G7 = Utils.ColorUtils.GetColorFromInt( GetInt("G7"));
-        G8 = Utils.ColorUtils.GetColorFromInt( GetInt("G8"));
-        G9 = Utils.ColorUtils.GetColorFromInt( GetInt("G9"));
-        G10 = Utils.ColorUtils.GetColorFromInt( GetInt("G10"));
-        G11 = Utils.ColorUtils.GetColorFromInt( GetInt("G11"));
-        G12 = Utils.ColorUtils.GetColorFromInt( GetInt("G12"));
-        G13 = Utils.ColorUtils.GetColorFromInt( GetInt("G13"));
-        G14 = Utils.ColorUtils.GetColorFromInt( GetInt("G14"));
-        G15 = Utils.ColorUtils.GetColorFromInt( GetInt("G15"));
-        G16 = Utils.ColorUtils.GetColorFromInt( GetInt("G16"));
-        G17 = Utils.ColorUtils.GetColorFromInt( GetInt("G17"));
-        G18 = Utils.ColorUtils.GetColorFromInt( GetInt("G18"));
-        G19 = Utils.ColorUtils.GetColorFromInt( GetInt("G19"));
-        G20 = Utils.ColorUtils.GetColorFromInt( GetInt("G20"));
+        peripheral = CommonColorUtils.GetColorFromInt(GetInt("peripheral"));
+        logo = CommonColorUtils.GetColorFromInt( GetInt("logo"));
+        mousepad1 = CommonColorUtils.GetColorFromInt(GetInt("mousepad0"));
+        mousepad2 = CommonColorUtils.GetColorFromInt(GetInt("mousepad1"));
+        mousepad3 = CommonColorUtils.GetColorFromInt(GetInt("mousepad2"));
+        mousepad4 = CommonColorUtils.GetColorFromInt(GetInt("mousepad3"));
+        mousepad5 = CommonColorUtils.GetColorFromInt(GetInt("mousepad4"));
+        mousepad6 = CommonColorUtils.GetColorFromInt(GetInt("mousepad5"));
+        mousepad7 = CommonColorUtils.GetColorFromInt(GetInt("mousepad6"));
+        mousepad8 = CommonColorUtils.GetColorFromInt(GetInt("mousepad7"));
+        mousepad9 = CommonColorUtils.GetColorFromInt(GetInt("mousepad8"));
+        mousepad10 = CommonColorUtils.GetColorFromInt(GetInt("mousepad9"));
+        mousepad11 = CommonColorUtils.GetColorFromInt(GetInt("mousepad10"));
+        mousepad12 = CommonColorUtils.GetColorFromInt(GetInt("mousepad11"));
+        mousepad13 = CommonColorUtils.GetColorFromInt(GetInt("mousepad12"));
+        mousepad14 = CommonColorUtils.GetColorFromInt(GetInt("mousepad13"));
+        mousepad15 = CommonColorUtils.GetColorFromInt(GetInt("mousepad14"));
+        badge = CommonColorUtils.GetColorFromInt( GetInt("badge"));
+        G1 = CommonColorUtils.GetColorFromInt( GetInt("G1"));
+        G2 = CommonColorUtils.GetColorFromInt( GetInt("G2"));
+        G3 = CommonColorUtils.GetColorFromInt( GetInt("G3"));
+        G4 = CommonColorUtils.GetColorFromInt( GetInt("G4"));
+        G5 = CommonColorUtils.GetColorFromInt( GetInt("G5"));
+        G6 = CommonColorUtils.GetColorFromInt( GetInt("G6"));
+        G7 = CommonColorUtils.GetColorFromInt( GetInt("G7"));
+        G8 = CommonColorUtils.GetColorFromInt( GetInt("G8"));
+        G9 = CommonColorUtils.GetColorFromInt( GetInt("G9"));
+        G10 = CommonColorUtils.GetColorFromInt( GetInt("G10"));
+        G11 = CommonColorUtils.GetColorFromInt( GetInt("G11"));
+        G12 = CommonColorUtils.GetColorFromInt( GetInt("G12"));
+        G13 = CommonColorUtils.GetColorFromInt( GetInt("G13"));
+        G14 = CommonColorUtils.GetColorFromInt( GetInt("G14"));
+        G15 = CommonColorUtils.GetColorFromInt( GetInt("G15"));
+        G16 = CommonColorUtils.GetColorFromInt( GetInt("G16"));
+        G17 = CommonColorUtils.GetColorFromInt( GetInt("G17"));
+        G18 = CommonColorUtils.GetColorFromInt( GetInt("G18"));
+        G19 = CommonColorUtils.GetColorFromInt( GetInt("G19"));
+        G20 = CommonColorUtils.GetColorFromInt( GetInt("G20"));
     }
 }

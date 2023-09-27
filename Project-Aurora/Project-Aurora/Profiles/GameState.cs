@@ -1,7 +1,7 @@
-using Aurora.Utils;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using Aurora.Utils;
 
 namespace Aurora.Profiles
 {

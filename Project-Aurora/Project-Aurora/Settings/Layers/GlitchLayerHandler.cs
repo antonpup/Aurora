@@ -4,12 +4,13 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Controls;
-using Aurora.Devices;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Layers.Controls;
 using Aurora.Settings.Overrides;
 using Aurora.Utils;
+using Common.Devices;
+using Common.Utils;
 using Newtonsoft.Json;
 
 namespace Aurora.Settings.Layers
@@ -88,12 +89,9 @@ namespace Aurora.Settings.Layers
             var keys = Properties.Sequence.Type == KeySequenceType.FreeForm ? Enum.GetValues(typeof(DeviceKeys)) : Properties.Sequence.Keys.ToArray();
             foreach (DeviceKeys key in keys)
             {
-                var clr = Properties.AllowTransparency ? _randomizer.Next() % 2 == 0 ? Color.Transparent : ColorUtils.GenerateRandomColor() : ColorUtils.GenerateRandomColor();
+                var clr = Properties.AllowTransparency ? _randomizer.Next() % 2 == 0 ? Color.Transparent : CommonColorUtils.GenerateRandomColor() : CommonColorUtils.GenerateRandomColor();
 
-                if (_glitchColors.ContainsKey(key))
-                    _glitchColors[key] = clr;
-                else
-                    _glitchColors.Add(key, clr);
+                _glitchColors[key] = clr;
             }
 
             foreach (var kvp in _glitchColors)

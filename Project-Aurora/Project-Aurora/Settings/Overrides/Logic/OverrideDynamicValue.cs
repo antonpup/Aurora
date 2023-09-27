@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Aurora.Profiles;
+using Common.Utils;
 using DCD = Aurora.Settings.Overrides.Logic.DynamicConstructorDefinition;
 using DCPD = Aurora.Settings.Overrides.Logic.DynamicConstructorParamDefinition;
 
@@ -131,7 +132,7 @@ namespace Aurora.Settings.Overrides.Logic {
 
         #region Dynamic Constructor Helper Methods
         /// <summary>Converts a double object (from 0-1) into a color component (int between 0 and 255).</summary>
-        private static int ToColorComp(object c) => Double.IsNaN((double)c) ? 0 : Convert.ToInt32(Utils.MathUtils.Clamp((double)c, 0, 1) * 255);
+        private static int ToColorComp(object c) => Double.IsNaN((double)c) ? 0 : Convert.ToInt32(MathUtils.Clamp((double)c, 0, 1) * 255);
         #endregion
     }
 

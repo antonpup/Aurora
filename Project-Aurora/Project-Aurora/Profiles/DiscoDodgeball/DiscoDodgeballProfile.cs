@@ -1,9 +1,9 @@
 ﻿using Aurora.Settings;
 using Aurora.Settings.Layers;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
+using Common.Devices;
 
 namespace Aurora.Profiles.DiscoDodgeball
 {
@@ -31,7 +31,7 @@ namespace Aurora.Profiles.DiscoDodgeball
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.White,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.SPACE })
+                        _Sequence = new KeySequence(new[] { DeviceKeys.W, DeviceKeys.A, DeviceKeys.S, DeviceKeys.D, DeviceKeys.SPACE })
                     }
                 }),
                 new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()),

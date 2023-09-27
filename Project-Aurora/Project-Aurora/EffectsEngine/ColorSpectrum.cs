@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using Aurora.Utils;
 
 namespace Aurora.EffectsEngine
 {
@@ -195,8 +196,8 @@ namespace Aurora.EffectsEngine
 				}
 			}
 
-			return Utils.ColorUtils.MultiplyColorByScalar(
-				Utils.ColorUtils.BlendColors(
+			return ColorUtils.MultiplyColorByScalar(
+				ColorUtils.BlendColors(
 					colors[closest_lower], colors[closest_higher], (position - closest_lower) / (closest_higher - closest_lower)
 					),
 				opacity
@@ -215,7 +216,7 @@ namespace Aurora.EffectsEngine
 		public LinearGradientBrush ToLinearGradient(float width, float height = 0.0f, float x = 0.0f, float y = 0.0f, double opacity = 1.0D)
 		{
 			var newColors = colors.Keys
-				.Select(val => new KeyValuePair<double, Color>(val, Utils.ColorUtils.MultiplyColorByScalar(colors[val], opacity)))
+				.Select(val => new KeyValuePair<double, Color>(val, ColorUtils.MultiplyColorByScalar(colors[val], opacity)))
 				.OrderBy(val => val.Key)
 				.ToList();
 
@@ -236,7 +237,7 @@ namespace Aurora.EffectsEngine
 					.OrderBy(val => val.Key)
 					.ToList();
 
-				var endColor = Utils.ColorUtils.BlendColors(
+				var endColor = ColorUtils.BlendColors(
 					newColors.First().Value, newColors.Last().Value,
 					(newColors.First().Key / (newColors.First().Key + 1.0f - newColors.Last().Key)));
 
@@ -282,7 +283,7 @@ namespace Aurora.EffectsEngine
 			Dictionary<double, Color> newcolors = new Dictionary<double, Color>();
 
 			foreach (KeyValuePair<double, Color> kvp in colors)
-				newcolors[kvp.Key] = Utils.ColorUtils.MultiplyColorByScalar(kvp.Value, scalar);
+				newcolors[kvp.Key] = ColorUtils.MultiplyColorByScalar(kvp.Value, scalar);
 
 			colors.Clear();
 			foreach (var e in newcolors)

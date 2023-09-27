@@ -1,5 +1,4 @@
 using System;
-using Aurora.Devices;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
@@ -10,6 +9,7 @@ using System.Windows.Controls;
 using Aurora.Modules;
 using Aurora.Modules.Logitech;
 using Aurora.Settings.Layers.Controls;
+using Common.Devices;
 
 namespace Aurora.Settings.Layers;
 

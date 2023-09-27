@@ -6,8 +6,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Aurora.Devices;
 using Aurora.Settings;
+using Common.Devices;
 
 namespace Aurora.Controls
 {
@@ -38,7 +38,7 @@ namespace Aurora.Controls
             set => SetValue(RecordingTagProperty, value);
         }
 
-        public ObservableCollection<Devices.DeviceKeys> List
+        public ObservableCollection<DeviceKeys> List
         {
             get
             {
@@ -97,7 +97,7 @@ namespace Aurora.Controls
         }
         #endregion
 
-        public IEnumerable<Devices.DeviceKeys> SelectedItems => keys_keysequence.SelectedItems.Cast<Devices.DeviceKeys>();
+        public IEnumerable<DeviceKeys> SelectedItems => keys_keysequence.SelectedItems.Cast<DeviceKeys>();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public static readonly DependencyProperty FreestyleEnabledProperty = DependencyProperty.Register("FreestyleEnabled", typeof(bool), typeof(UserControl));
@@ -246,7 +246,7 @@ namespace Aurora.Controls
 
                     button.Content = "Assign Keys";
 
-                    Devices.DeviceKeys[] recorded_keys = Global.key_recorder.GetKeys();
+                    DeviceKeys[] recorded_keys = Global.key_recorder.GetKeys();
 
                     if (sequence_listbox.SelectedIndex > 0 && sequence_listbox.SelectedIndex < (sequence_listbox.Items.Count - 1))
                     {

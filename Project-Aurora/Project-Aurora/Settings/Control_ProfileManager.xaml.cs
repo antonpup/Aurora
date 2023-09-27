@@ -1,5 +1,4 @@
 ﻿using Aurora.Settings.Layers;
-using Aurora.Utils;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -8,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
+using Aurora.Utils;
 
 namespace Aurora.Settings;
 

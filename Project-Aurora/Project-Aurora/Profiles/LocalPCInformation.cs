@@ -1,12 +1,10 @@
-﻿using Aurora.Devices.Dualshock;
-using Aurora.Utils;
+﻿using Aurora.Utils;
 using NAudio.CoreAudioApi;
-using System.Linq;
 using System.Windows.Forms;
 using Aurora.Modules.HardwareMonitor;
 using Aurora.Modules.Media;
 using Aurora.Modules.ProcessMonitor;
-using JetBrains.Annotations;
+using Common.Utils;
 
 namespace Aurora.Profiles {
     /// <summary>
@@ -84,23 +82,6 @@ namespace Aurora.Profiles {
         /// Selected Audio Device's index.
         /// </summary>
         public string PlaybackDeviceName => Global.RenderProxy?.DeviceName ?? "";
-        #endregion
-
-        #region Device Properties
-
-        private readonly DualshockDevice? _ds4Device = DualshockDevice.Instance;
-        /// <summary>
-        /// Battery level of a dualshock controller
-        /// </summary>
-        public int DS4Battery => _ds4Device?.Battery ?? -1;
-        /// <summary>
-        /// Whether or not thr dualshock controller is charging
-        /// </summary>
-        public bool DS4Charging => _ds4Device?.Charging ?? false;
-        /// <summary>
-        /// Latency of the controller in ms
-        /// </summary>
-        public double DS4Latency => _ds4Device?.Latency ?? -1;
         #endregion
 
         #region CPU Properties

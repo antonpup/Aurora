@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using Common.Utils;
 
 namespace Aurora.EffectsEngine.Animations
 {
@@ -33,7 +34,7 @@ namespace Aurora.EffectsEngine.Animations
         {
             _radius = 0;
             _dimension = new RectangleF(- _radius, - _radius, 2.0f * _radius, 2.0f * _radius);
-            _color = Utils.ColorUtils.GenerateRandomColor();
+            _color = CommonColorUtils.GenerateRandomColor();
             _width = 1;
             _duration = 0.0f;
         }

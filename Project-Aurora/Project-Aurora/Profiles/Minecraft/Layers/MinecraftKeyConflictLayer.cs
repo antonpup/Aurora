@@ -5,6 +5,7 @@ using Aurora.Settings.Layers;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Controls;
+using Common.Devices;
 
 namespace Aurora.Profiles.Minecraft.Layers {
 

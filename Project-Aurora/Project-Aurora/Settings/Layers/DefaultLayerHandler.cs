@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using Aurora.EffectsEngine;
+﻿using System.Windows.Controls;
 using Aurora.Profiles;
 using Aurora.Settings.Layers.Controls;
 using Aurora.Settings.Overrides;

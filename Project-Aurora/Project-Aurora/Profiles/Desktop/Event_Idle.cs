@@ -8,6 +8,7 @@ using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Settings;
 using Aurora.Utils;
+using Common.Devices;
 
 namespace Aurora.Profiles.Desktop;
 

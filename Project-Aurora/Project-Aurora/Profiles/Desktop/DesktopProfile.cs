@@ -9,7 +9,8 @@ using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Aurora.Settings.Overrides.Logic;
 using Aurora.Settings.Overrides.Logic.Builder;
-using Aurora.Utils;
+using Common.Devices;
+using Common.Utils;
 
 namespace Aurora.Profiles.Desktop;
 
@@ -169,8 +170,8 @@ public class DesktopProfile : ApplicationProfile
                 Properties = new LockColourLayerHandlerProperties
                 {
                     _ToggledKey = Keys.NumLock,
-                    _PrimaryColor = ColorUtils.FastColor(108, 20, 255),
-                    _SecondaryColor = ColorUtils.FastColor(255, 0, 4, 120),
+                    _PrimaryColor = CommonColorUtils.FastColor(108, 20, 255),
+                    _SecondaryColor = CommonColorUtils.FastColor(255, 0, 4, 120),
                     _Sequence = new KeySequence(new[] { DeviceKeys.NUM_LOCK }),
                 }
             }),
@@ -179,8 +180,8 @@ public class DesktopProfile : ApplicationProfile
                 Properties = new LockColourLayerHandlerProperties
                 {
                     _ToggledKey = Keys.Capital,
-                    _PrimaryColor = ColorUtils.FastColor(164, 45, 69),
-                    _SecondaryColor = ColorUtils.FastColor(0, 0, 0, 0),
+                    _PrimaryColor = CommonColorUtils.FastColor(164, 45, 69),
+                    _SecondaryColor = CommonColorUtils.FastColor(0, 0, 0, 0),
                     _Sequence = new KeySequence(new[] { DeviceKeys.CAPS_LOCK }),
                 }
             }),
@@ -344,17 +345,17 @@ public class DesktopProfile : ApplicationProfile
                             end = new PointF(1, 1),
                             colorGradients =
                             {
-                                [0] = ColorUtils.FastColor(0, 0, 0, 0),
-                                [0.06593407690525055] = ColorUtils.FastColor(0, 0, 0, 0),
-                                [0.1538461595773697] = ColorUtils.FastColor(153, 59, 237),
-                                [0.24337075650691986] = ColorUtils.FastColor(10, 0, 0, 0),
-                                [0.4263019561767578] = ColorUtils.FastColor(0, 0, 0, 0),
-                                [0.5358933806419373] = ColorUtils.FastColor(151, 183, 63),
-                                [0.6483517289161682] = ColorUtils.FastColor(4, 0, 0, 0),
-                                [0.7614668011665344] = ColorUtils.FastColor(0, 24, 24, 51),
-                                [0.8626373410224915] = ColorUtils.FastColor(129, 255, 239, 48),
-                                [0.9395604133605957] = ColorUtils.FastColor(4, 194, 189, 127),
-                                [1] = ColorUtils.FastColor(4, 194, 189, 12),
+                                [0] = CommonColorUtils.FastColor(0, 0, 0, 0),
+                                [0.06593407690525055] = CommonColorUtils.FastColor(0, 0, 0, 0),
+                                [0.1538461595773697] = CommonColorUtils.FastColor(153, 59, 237),
+                                [0.24337075650691986] = CommonColorUtils.FastColor(10, 0, 0, 0),
+                                [0.4263019561767578] = CommonColorUtils.FastColor(0, 0, 0, 0),
+                                [0.5358933806419373] = CommonColorUtils.FastColor(151, 183, 63),
+                                [0.6483517289161682] = CommonColorUtils.FastColor(4, 0, 0, 0),
+                                [0.7614668011665344] = CommonColorUtils.FastColor(0, 24, 24, 51),
+                                [0.8626373410224915] = CommonColorUtils.FastColor(129, 255, 239, 48),
+                                [0.9395604133605957] = CommonColorUtils.FastColor(4, 194, 189, 127),
+                                [1] = CommonColorUtils.FastColor(4, 194, 189, 12),
                             }
                         }
                     }
@@ -378,7 +379,9 @@ public class DesktopProfile : ApplicationProfile
                         AnimationType = AnimationType.TranslateXy,
                         AnimationReverse = true,
                         Brush = new EffectBrush(new ColorSpectrum(
-                            ColorUtils.FastColor(253, 83, 30), ColorUtils.FastColor(136, 219, 61), ColorUtils.FastColor(255, 83, 30)
+                            CommonColorUtils.FastColor(253, 83, 30),
+                            CommonColorUtils.FastColor(136, 219, 61),
+                            CommonColorUtils.FastColor(255, 83, 30)
                             ))
                         {
                             start = new PointF(0, -0.5f),

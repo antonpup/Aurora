@@ -1,16 +1,10 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles.Dota_2.GSI;
-using Aurora.Profiles.Dota_2.GSI.Nodes;
-using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
+using Aurora.Utils;
 
 namespace Aurora.Profiles.Dota_2.Layers
 {
@@ -142,7 +136,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
             if (!(ksEffectValue > 0)) return EffectLayer.EmptyLayer;
             EffectLayer.Clear();
-            _solidBrush.Color = Utils.ColorUtils.BlendColors(Color.Transparent, ksColor, ksEffectValue);
+            _solidBrush.Color = ColorUtils.BlendColors(Color.Transparent, ksColor, ksEffectValue);
             EffectLayer.Fill(_solidBrush);
             _empty = false;
 

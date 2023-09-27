@@ -1,72 +1,59 @@
-﻿using Aurora.Settings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
+﻿using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Aurora.Utils;
 
-namespace Aurora.Profiles.CSGO.Layers
+namespace Aurora.Profiles.CSGO.Layers;
+
+/// <summary>
+/// Interaction logic for Control_WinningTeamLayer.xaml
+/// </summary>
+public partial class Control_CSGOWinningTeamLayer
 {
-    /// <summary>
-    /// Interaction logic for Control_WinningTeamLayer.xaml
-    /// </summary>
-    public partial class Control_CSGOWinningTeamLayer : UserControl
+    private bool settingsset;
+
+    public Control_CSGOWinningTeamLayer()
     {
-        private bool settingsset = false;
+        InitializeComponent();
+    }
 
-        public Control_CSGOWinningTeamLayer()
+    public Control_CSGOWinningTeamLayer(CSGOWinningTeamLayerHandler datacontext)
+    {
+        InitializeComponent();
+
+        DataContext = datacontext;
+    }
+
+    public void SetSettings()
+    {
+        if (DataContext is CSGOWinningTeamLayerHandler && !settingsset)
         {
-            InitializeComponent();
+            ColorPicker_CT.SelectedColor = ColorUtils.DrawingColorToMediaColor((DataContext as CSGOWinningTeamLayerHandler).Properties._CTColor ?? System.Drawing.Color.Empty);
+            ColorPicker_T.SelectedColor = ColorUtils.DrawingColorToMediaColor((DataContext as CSGOWinningTeamLayerHandler).Properties._TColor ?? System.Drawing.Color.Empty);
+
+            settingsset = true;
         }
+    }
 
-        public Control_CSGOWinningTeamLayer(CSGOWinningTeamLayerHandler datacontext)
-        {
-            InitializeComponent();
+    internal void SetProfile(Application profile)
+    {
+    }
 
-            this.DataContext = datacontext;
-        }
+    private void UserControl_Loaded(object? sender, RoutedEventArgs e)
+    {
+        SetSettings();
 
-        public void SetSettings()
-        {
-            if (this.DataContext is CSGOWinningTeamLayerHandler && !settingsset)
-            {
-                this.ColorPicker_CT.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as CSGOWinningTeamLayerHandler).Properties._CTColor ?? System.Drawing.Color.Empty);
-                this.ColorPicker_T.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as CSGOWinningTeamLayerHandler).Properties._TColor ?? System.Drawing.Color.Empty);
+        Loaded -= UserControl_Loaded;
+    }
 
-                settingsset = true;
-            }
-        }
+    private void ColorPicker_CT_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
+    {
+        if (IsLoaded && settingsset && DataContext is CSGOWinningTeamLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
+            (DataContext as CSGOWinningTeamLayerHandler).Properties._CTColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+    }
 
-        internal void SetProfile(Application profile)
-        {
-        }
-
-        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
-        {
-            SetSettings();
-
-            this.Loaded -= UserControl_Loaded;
-        }
-
-        private void ColorPicker_CT_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is CSGOWinningTeamLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as CSGOWinningTeamLayerHandler).Properties._CTColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
-        }
-
-        private void ColorPicker_T_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is CSGOWinningTeamLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as CSGOWinningTeamLayerHandler).Properties._TColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
-        }
+    private void ColorPicker_T_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
+    {
+        if (IsLoaded && settingsset && DataContext is CSGOWinningTeamLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
+            (DataContext as CSGOWinningTeamLayerHandler).Properties._TColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
     }
 }

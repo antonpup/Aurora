@@ -5,20 +5,15 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text;
-using Aurora.Utils;
 using System.Collections.ObjectModel;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using Aurora.Devices;
-using Aurora.Devices.AtmoOrb;
-using Aurora.Devices.Logitech;
-using Aurora.Devices.OpenRGB;
-using Aurora.Devices.RGBNet;
-using Aurora.Devices.SteelSeries;
 using Aurora.Modules.AudioCapture;
 using Aurora.Settings.Overrides.Logic;
+using Aurora.Utils;
 using JetBrains.Annotations;
 
 namespace Aurora.Settings
@@ -586,7 +581,6 @@ namespace Aurora.Settings
         [JsonProperty("devices_disable_keyboard")] public bool DevicesDisableKeyboard { get; set; }
         [JsonProperty("devices_disable_mouse")] public bool DevicesDisableMouse { get; set; }
         [JsonProperty("devices_disable_headset")] public bool DevicesDisableHeadset { get; set; }
-        [JsonProperty("unified_hid_disabled")] public bool UnifiedHidDisabled { get; set; } = true;
         public bool OverlaysInPreview { get; set; } = true;
 
         public ObservableCollection<string> ExcludedPrograms { get; set; } = new();
@@ -595,7 +589,7 @@ namespace Aurora.Settings
         [JsonProperty]
         private ObservableCollection<Type>? DevicesDisabled { get; set; }
         
-        public ObservableCollection<Type> EnabledDevices { get; set; }
+        public ObservableCollection<string> EnabledDevices { get; set; }
 
         public List<BitmapAccuracy> BitmapAccuracies { get; } = new()
         {
@@ -661,23 +655,21 @@ namespace Aurora.Settings
         [JsonProperty("GSIAudioCaptureDevice", NullValueHandling = NullValueHandling.Ignore)]
         public string GsiAudioCaptureDevice { get; set; } = AudioDevices.DefaultDeviceId;
 
-        private readonly List<Type> _defaultEnabledDevices = new()
+        private readonly List<string> _defaultEnabledDevices = new()
         {
-            typeof(AsusDevice),
-            typeof(CorsairRgbNetDevice),
-            typeof(LogitechDevice),
-            typeof(OpenRgbNetDevice),
+            "AurorDeviceManager.Devices.RGBNet.CorsairRgbNetDevice",
+            "AurorDeviceManager.Devices.RGBNet.OpenRgbNetDevice",
         };
 
         private void EnabledDevicesListMigration()
         {
             EnabledDevices ??= MigrateEnabledDevices();
-            PrioritizeDevice(typeof(OpenRgbNetDevice), typeof(OpenRgbAuroraDevice));
-            PrioritizeDevice(typeof(SteelSeriesRgbNetDevice), typeof(SteelSeriesDevice));
-            PrioritizeDevice(typeof(LogitechDevice), typeof(LogitechRgbNetDevice));
+            //PrioritizeDevice(typeof(OpenRgbNetDevice), typeof(OpenRgbAuroraDevice));
+            //PrioritizeDevice(typeof(SteelSeriesRgbNetDevice), typeof(SteelSeriesDevice));
+            //PrioritizeDevice(typeof(LogitechDevice), typeof(LogitechRgbNetDevice));
         }
 
-        private void PrioritizeDevice(Type primary, Type secondary)
+        private void PrioritizeDevice(string primary, string secondary)
         {
             if (EnabledDevices.Contains(primary))
             {
@@ -685,21 +677,21 @@ namespace Aurora.Settings
             }
         }
 
-        private ObservableCollection<Type> MigrateEnabledDevices()
+        private ObservableCollection<string> MigrateEnabledDevices()
         {
-            ObservableCollection<Type> enabledDevices;
+            ObservableCollection<string> enabledDevices;
             if (DevicesDisabled == null)
             {
-                enabledDevices = new ObservableCollection<Type>(_defaultEnabledDevices);
+                enabledDevices = new ObservableCollection<string>(_defaultEnabledDevices);
             }
             else
             {
-                enabledDevices = new ObservableCollection<Type>(
+                enabledDevices = new ObservableCollection<string>(
                     from type in Assembly.GetExecutingAssembly().GetLoadableTypes()
                     where typeof(IDevice).IsAssignableFrom(type)
                           && !type.IsAbstract
                           && !DevicesDisabled.Contains(type)
-                    select type
+                    select type.ToString()
                 );
             }
             return enabledDevices;
@@ -709,10 +701,6 @@ namespace Aurora.Settings
         /// Called after the configuration file has been deserialized or created for the first time.
         /// </summary>
         public void OnPostLoad() {
-            if (!UnifiedHidDisabled) {
-                EnabledDevices.Remove(typeof(Devices.UnifiedHID.UnifiedHIDDevice));
-                UnifiedHidDisabled = true;
-            }
             EnabledDevicesListMigration();
 
             // Setup events that will trigger PropertyChanged when child collections change (to trigger a save)
@@ -805,11 +793,12 @@ namespace Aurora.Settings
 
         private static readonly Dictionary<string,Type> Migrations = new()
         {
-            {"Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice" , typeof(Devices.UnifiedHID.UnifiedHIDDevice)},
-            {"Aurora.Devices.Asus.AsusDevice" , typeof(AsusDevice)},
-            {"Aurora.Devices.CoolerMaster.CoolerMasterDevice", typeof(CoolerMasterRgbNetDevice)},
-            {"Aurora.Devices.AtmoOrbDevice.AtmoOrbDevice", typeof(AtmoOrbDevice)},
-            {"Aurora.Devices.OpenRGB", typeof(OpenRgbAuroraDevice)},
+            //TODO
+            //{"Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice" , typeof(Devices.UnifiedHID.UnifiedHIDDevice)},
+            //{"Aurora.Devices.Asus.AsusDevice" , typeof(AsusDevice)},
+            //{"Aurora.Devices.CoolerMaster.CoolerMasterDevice", typeof(CoolerMasterRgbNetDevice)},
+            //{"Aurora.Devices.AtmoOrbDevice.AtmoOrbDevice", typeof(AtmoOrbDevice)},
+            //{"Aurora.Devices.OpenRGB", typeof(OpenRgbAuroraDevice)},
         };
 
         private static readonly List<string> Discard = new()

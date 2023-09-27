@@ -1,74 +1,62 @@
-﻿using Aurora.Settings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Aurora.Utils;
 
-namespace Aurora.Profiles.CSGO.Layers
+namespace Aurora.Profiles.CSGO.Layers;
+
+/// <summary>
+/// Interaction logic for Control_CSGOTypingIndicatorLayer.xaml
+/// </summary>
+public partial class Control_CSGOTypingIndicatorLayer
 {
-    /// <summary>
-    /// Interaction logic for Control_CSGOTypingIndicatorLayer.xaml
-    /// </summary>
-    public partial class Control_CSGOTypingIndicatorLayer : UserControl
+    private bool settingsset;
+
+    public Control_CSGOTypingIndicatorLayer()
     {
-        private bool settingsset = false;
+        InitializeComponent();
+    }
 
-        public Control_CSGOTypingIndicatorLayer()
+    public Control_CSGOTypingIndicatorLayer(CSGOTypingIndicatorLayerHandler datacontext)
+    {
+        InitializeComponent();
+
+        DataContext = datacontext;
+    }
+
+    public void SetSettings()
+    {
+        if (DataContext is CSGOTypingIndicatorLayerHandler && !settingsset)
         {
-            InitializeComponent();
+            ColorPicker_TypingKeys.SelectedColor = ColorUtils.DrawingColorToMediaColor((DataContext as CSGOTypingIndicatorLayerHandler).Properties._TypingKeysColor ?? System.Drawing.Color.Empty);
+            KeySequence_keys.Sequence = (DataContext as CSGOTypingIndicatorLayerHandler).Properties._Sequence;
+
+            settingsset = true;
         }
+    }
 
-        public Control_CSGOTypingIndicatorLayer(CSGOTypingIndicatorLayerHandler datacontext)
+    internal void SetProfile(Application profile)
+    {
+    }
+
+    private void UserControl_Loaded(object? sender, RoutedEventArgs e)
+    {
+        SetSettings();
+
+        Loaded -= UserControl_Loaded;
+    }
+
+    private void ColorPicker_CT_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
+    {
+        if (IsLoaded && settingsset && DataContext is CSGOTypingIndicatorLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
+            (DataContext as CSGOTypingIndicatorLayerHandler).Properties._TypingKeysColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+    }
+
+    private void KeySequence_keys_SequenceUpdated(object? sender, EventArgs e)
+    {
+        if (IsLoaded && settingsset && DataContext is CSGOTypingIndicatorLayerHandler && sender is Controls.KeySequence)
         {
-            InitializeComponent();
-
-            this.DataContext = datacontext;
-        }
-
-        public void SetSettings()
-        {
-            if (this.DataContext is CSGOTypingIndicatorLayerHandler && !settingsset)
-            {
-                this.ColorPicker_TypingKeys.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as CSGOTypingIndicatorLayerHandler).Properties._TypingKeysColor ?? System.Drawing.Color.Empty);
-                this.KeySequence_keys.Sequence = (this.DataContext as CSGOTypingIndicatorLayerHandler).Properties._Sequence;
-
-                settingsset = true;
-            }
-        }
-
-        internal void SetProfile(Application profile)
-        {
-        }
-
-        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
-        {
-            SetSettings();
-
-            this.Loaded -= UserControl_Loaded;
-        }
-
-        private void ColorPicker_CT_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is CSGOTypingIndicatorLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as CSGOTypingIndicatorLayerHandler).Properties._TypingKeysColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
-        }
-
-        private void KeySequence_keys_SequenceUpdated(object? sender, EventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is CSGOTypingIndicatorLayerHandler && sender is Aurora.Controls.KeySequence)
-            {
-                (this.DataContext as CSGOTypingIndicatorLayerHandler).Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
-            }
+            (DataContext as CSGOTypingIndicatorLayerHandler).Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
         }
     }
 }

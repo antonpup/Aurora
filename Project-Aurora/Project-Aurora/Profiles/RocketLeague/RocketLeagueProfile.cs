@@ -7,6 +7,7 @@ using System.Drawing;
 using Aurora.Profiles.RocketLeague.Layers;
 using Aurora.Settings.Overrides.Logic.Builder;
 using Aurora.Settings.Overrides.Logic;
+using Common.Devices;
 
 namespace Aurora.Profiles.RocketLeague
 {
@@ -27,7 +28,7 @@ namespace Aurora.Profiles.RocketLeague
                     Properties = new PercentGradientLayerHandlerProperties()
                     {
                         _PercentType = PercentEffectType.AllAtOnce,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.Peripheral, Devices.DeviceKeys.Peripheral_Logo } ),
+                        _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.Peripheral, DeviceKeys.Peripheral_Logo } ),
                         _Gradient = new EffectsEngine.EffectBrush(new ColorSpectrum(Color.Yellow, Color.Red).SetColorAt(0.75f, Color.OrangeRed)),
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
@@ -40,10 +41,10 @@ namespace Aurora.Profiles.RocketLeague
                     Properties = new PercentGradientLayerHandlerProperties()
                     {
                         _PercentType = PercentEffectType.Progressive_Gradual,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] {
-                            Devices.DeviceKeys.F1, Devices.DeviceKeys.F2, Devices.DeviceKeys.F3, Devices.DeviceKeys.F4, Devices.DeviceKeys.F5,
-                            Devices.DeviceKeys.F6, Devices.DeviceKeys.F7, Devices.DeviceKeys.F8, Devices.DeviceKeys.F9, Devices.DeviceKeys.F10,
-                            Devices.DeviceKeys.F11, Devices.DeviceKeys.F12
+                        _Sequence = new KeySequence(new DeviceKeys[] {
+                            DeviceKeys.F1, DeviceKeys.F2, DeviceKeys.F3, DeviceKeys.F4, DeviceKeys.F5,
+                            DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8, DeviceKeys.F9, DeviceKeys.F10,
+                            DeviceKeys.F11, DeviceKeys.F12
                         }),
                         _Gradient = new EffectsEngine.EffectBrush(new ColorSpectrum(Color.Yellow, Color.Red).SetColorAt(0.75f, Color.OrangeRed)),
                         _BlinkThreshold = 0.0,
@@ -57,10 +58,10 @@ namespace Aurora.Profiles.RocketLeague
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Black,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] {
-                            Devices.DeviceKeys.F1, Devices.DeviceKeys.F2, Devices.DeviceKeys.F3, Devices.DeviceKeys.F4, Devices.DeviceKeys.F5,
-                            Devices.DeviceKeys.F6, Devices.DeviceKeys.F7, Devices.DeviceKeys.F8, Devices.DeviceKeys.F9, Devices.DeviceKeys.F10,
-                            Devices.DeviceKeys.F11, Devices.DeviceKeys.F12
+                        _Sequence = new KeySequence(new DeviceKeys[] {
+                            DeviceKeys.F1, DeviceKeys.F2, DeviceKeys.F3, DeviceKeys.F4, DeviceKeys.F5,
+                            DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8, DeviceKeys.F9, DeviceKeys.F10,
+                            DeviceKeys.F11, DeviceKeys.F12
                         })
                     }
                 }),

@@ -1,87 +1,75 @@
-﻿using Aurora.Settings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Aurora.Utils;
 
-namespace Aurora.Profiles.Dota_2.Layers
+namespace Aurora.Profiles.Dota_2.Layers;
+
+/// <summary>
+/// Interaction logic for Control_Dota2RespawnLayer.xaml
+/// </summary>
+public partial class Control_Dota2RespawnLayer
 {
-    /// <summary>
-    /// Interaction logic for Control_Dota2RespawnLayer.xaml
-    /// </summary>
-    public partial class Control_Dota2RespawnLayer : UserControl
+    private bool settingsset;
+
+    public Control_Dota2RespawnLayer()
     {
-        private bool settingsset = false;
+        InitializeComponent();
+    }
 
-        public Control_Dota2RespawnLayer()
+    public Control_Dota2RespawnLayer(Dota2RespawnLayerHandler datacontext)
+    {
+        InitializeComponent();
+
+        DataContext = datacontext;
+    }
+
+    public void SetSettings()
+    {
+        if (DataContext is Dota2RespawnLayerHandler && !settingsset)
         {
-            InitializeComponent();
+            ColorPicker_background.SelectedColor = ColorUtils.DrawingColorToMediaColor((DataContext as Dota2RespawnLayerHandler).Properties._BackgroundColor ?? System.Drawing.Color.Empty);
+            ColorPicker_respawn.SelectedColor = ColorUtils.DrawingColorToMediaColor((DataContext as Dota2RespawnLayerHandler).Properties._RespawnColor ?? System.Drawing.Color.Empty);
+            ColorPicker_respawning.SelectedColor = ColorUtils.DrawingColorToMediaColor((DataContext as Dota2RespawnLayerHandler).Properties._RespawningColor ?? System.Drawing.Color.Empty);
+            KeySequence_sequence.Sequence = (DataContext as Dota2RespawnLayerHandler).Properties._Sequence;
+
+            settingsset = true;
         }
+    }
 
-        public Control_Dota2RespawnLayer(Dota2RespawnLayerHandler datacontext)
-        {
-            InitializeComponent();
+    internal void SetProfile(Application profile)
+    {
+    }
 
-            this.DataContext = datacontext;
-        }
+    private void UserControl_Loaded(object? sender, RoutedEventArgs e)
+    {
+        SetSettings();
 
-        public void SetSettings()
-        {
-            if (this.DataContext is Dota2RespawnLayerHandler && !settingsset)
-            {
-                this.ColorPicker_background.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2RespawnLayerHandler).Properties._BackgroundColor ?? System.Drawing.Color.Empty);
-                this.ColorPicker_respawn.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2RespawnLayerHandler).Properties._RespawnColor ?? System.Drawing.Color.Empty);
-                this.ColorPicker_respawning.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2RespawnLayerHandler).Properties._RespawningColor ?? System.Drawing.Color.Empty);
-                this.KeySequence_sequence.Sequence = (this.DataContext as Dota2RespawnLayerHandler).Properties._Sequence;
+        Loaded -= UserControl_Loaded;
+    }
 
-                settingsset = true;
-            }
-        }
+    private void ColorPicker_background_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
+    {
+        if (IsLoaded && settingsset && DataContext is Dota2RespawnLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
+            (DataContext as Dota2RespawnLayerHandler).Properties._BackgroundColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
 
-        internal void SetProfile(Application profile)
-        {
-        }
+    }
 
-        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
-        {
-            SetSettings();
+    private void ColorPicker_respawn_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
+    {
+        if (IsLoaded && settingsset && DataContext is Dota2RespawnLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
+            (DataContext as Dota2RespawnLayerHandler).Properties._RespawnColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+    }
 
-            this.Loaded -= UserControl_Loaded;
-        }
+    private void ColorPicker_respawning_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
+    {
+        if (IsLoaded && settingsset && DataContext is Dota2RespawnLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
+            (DataContext as Dota2RespawnLayerHandler).Properties._RespawningColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+    }
 
-        private void ColorPicker_background_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is Dota2RespawnLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2RespawnLayerHandler).Properties._BackgroundColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
-
-        }
-
-        private void ColorPicker_respawn_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is Dota2RespawnLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2RespawnLayerHandler).Properties._RespawnColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
-        }
-
-        private void ColorPicker_respawning_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is Dota2RespawnLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2RespawnLayerHandler).Properties._RespawningColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
-        }
-
-        private void KeySequence_sequence_SequenceUpdated(object? sender, EventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is Dota2RespawnLayerHandler && sender is Aurora.Controls.KeySequence)
-                (this.DataContext as Dota2RespawnLayerHandler).Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
-        }
+    private void KeySequence_sequence_SequenceUpdated(object? sender, EventArgs e)
+    {
+        if (IsLoaded && settingsset && DataContext is Dota2RespawnLayerHandler && sender is Controls.KeySequence)
+            (DataContext as Dota2RespawnLayerHandler).Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
     }
 }

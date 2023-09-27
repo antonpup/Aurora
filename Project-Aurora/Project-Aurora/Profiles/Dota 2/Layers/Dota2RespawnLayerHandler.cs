@@ -4,13 +4,10 @@ using Aurora.Profiles.Dota_2.GSI.Nodes;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
+using Aurora.Utils;
+using Common.Devices;
 
 namespace Aurora.Profiles.Dota_2.Layers
 {
@@ -44,8 +41,8 @@ namespace Aurora.Profiles.Dota_2.Layers
             _BackgroundColor = Color.FromArgb(255, 255, 255);
             _Sequence = new KeySequence(
                 new[] {
-                    Devices.DeviceKeys.F1, Devices.DeviceKeys.F2, Devices.DeviceKeys.F3, Devices.DeviceKeys.F4, Devices.DeviceKeys.F5, Devices.DeviceKeys.F6, Devices.DeviceKeys.F7, Devices.DeviceKeys.F8, Devices.DeviceKeys.F9, Devices.DeviceKeys.F10, Devices.DeviceKeys.F11, Devices.DeviceKeys.F12,
-                    Devices.DeviceKeys.ONE, Devices.DeviceKeys.TWO, Devices.DeviceKeys.THREE, Devices.DeviceKeys.FOUR, Devices.DeviceKeys.FIVE, Devices.DeviceKeys.SIX, Devices.DeviceKeys.SEVEN, Devices.DeviceKeys.EIGHT, Devices.DeviceKeys.NINE, Devices.DeviceKeys.ZERO, Devices.DeviceKeys.MINUS, Devices.DeviceKeys.EQUALS
+                    DeviceKeys.F1, DeviceKeys.F2, DeviceKeys.F3, DeviceKeys.F4, DeviceKeys.F5, DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8, DeviceKeys.F9, DeviceKeys.F10, DeviceKeys.F11, DeviceKeys.F12,
+                    DeviceKeys.ONE, DeviceKeys.TWO, DeviceKeys.THREE, DeviceKeys.FOUR, DeviceKeys.FIVE, DeviceKeys.SIX, DeviceKeys.SEVEN, DeviceKeys.EIGHT, DeviceKeys.NINE, DeviceKeys.ZERO, DeviceKeys.MINUS, DeviceKeys.EQUALS
                 }
                 );
         }
@@ -76,7 +73,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             if (!(percent > 0)) return EffectLayer.EmptyLayer;
 
             _empty = false;
-            _solidBrush.Color = Utils.ColorUtils.BlendColors(Color.Transparent, Properties.BackgroundColor, percent);
+            _solidBrush.Color = ColorUtils.BlendColors(Color.Transparent, Properties.BackgroundColor, percent);
             EffectLayer.Fill(_solidBrush);
 
             EffectLayer.PercentEffect(

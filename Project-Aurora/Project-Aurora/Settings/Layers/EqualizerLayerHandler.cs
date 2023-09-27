@@ -1,7 +1,6 @@
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
-using Aurora.Utils;
 using NAudio.CoreAudioApi;
 using NAudio.Dsp;
 using NAudio.Wave;
@@ -15,6 +14,8 @@ using System.Linq;
 using System.Windows.Controls;
 using Aurora.Modules.AudioCapture;
 using Aurora.Settings.Layers.Controls;
+using Aurora.Utils;
+using Common.Utils;
 
 namespace Aurora.Settings.Layers;
 
@@ -146,8 +147,8 @@ public class EqualizerLayerHandlerProperties : LayerHandlerProperties<EqualizerL
     {
         base.Default();
         _Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
-        _PrimaryColor = ColorUtils.GenerateRandomColor();
-        _secondaryColor = ColorUtils.GenerateRandomColor();
+        _PrimaryColor = CommonColorUtils.GenerateRandomColor();
+        _secondaryColor = CommonColorUtils.GenerateRandomColor();
         _gradient = new EffectBrush(ColorSpectrum.RainbowLoop).SetBrushType(EffectBrush.BrushType.Linear);
         _EQType = EqualizerType.PowerBars;
         _viewType = EqualizerPresentationType.SolidColor;

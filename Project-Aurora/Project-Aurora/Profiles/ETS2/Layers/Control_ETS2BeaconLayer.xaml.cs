@@ -1,18 +1,9 @@
 ﻿using Aurora.Controls;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Aurora.Utils;
 
 namespace Aurora.Profiles.ETS2.Layers {
     /// <summary>
@@ -27,20 +18,20 @@ namespace Aurora.Profiles.ETS2.Layers {
         }
 
         public Control_ETS2BeaconLayer(ETS2BeaconLayerHandler datacontext) {
-            this.DataContext = datacontext;
+            DataContext = datacontext;
             InitializeComponent();
         }
 
-        private ETS2BeaconLayerHandler context => (ETS2BeaconLayerHandler)this.DataContext;
-        private bool isReady => IsLoaded && settingsset && this.DataContext is ETS2BeaconLayerHandler;
+        private ETS2BeaconLayerHandler context => (ETS2BeaconLayerHandler)DataContext;
+        private bool isReady => IsLoaded && settingsset && DataContext is ETS2BeaconLayerHandler;
 
         public void SetSettings() {
-            if (this.DataContext is ETS2BeaconLayerHandler && !settingsset) {
-                this.lightMode.SelectedValue = context.Properties._BeaconStyle;
-                this.speedSlider.Value = (double)context.Properties._Speed;
-                this.speedSlider.IsEnabled = context.Properties._BeaconStyle == ETS2_BeaconStyle.Simple_Flash;
-                this.beaconColorPicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(context.Properties._PrimaryColor ?? System.Drawing.Color.Empty);
-                this.keyPicker.Sequence = context.Properties._Sequence;
+            if (DataContext is ETS2BeaconLayerHandler && !settingsset) {
+                lightMode.SelectedValue = context.Properties._BeaconStyle;
+                speedSlider.Value = (double)context.Properties._Speed;
+                speedSlider.IsEnabled = context.Properties._BeaconStyle == ETS2_BeaconStyle.Simple_Flash;
+                beaconColorPicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(context.Properties._PrimaryColor ?? System.Drawing.Color.Empty);
+                keyPicker.Sequence = context.Properties._Sequence;
                 settingsset = true;
             }
         }
@@ -51,7 +42,7 @@ namespace Aurora.Profiles.ETS2.Layers {
             lightMode.Items.Add(ETS2_BeaconStyle.Two_Half);
             lightMode.Items.Add(ETS2_BeaconStyle.Fancy_Flash);
             lightMode.Items.Add(ETS2_BeaconStyle.Flip_Flop);*/
-            this.Loaded -= UserControl_Loaded;
+            Loaded -= UserControl_Loaded;
         }
 
         private void lightMode_SelectionChanged(object? sender, SelectionChangedEventArgs e) {
@@ -68,7 +59,7 @@ namespace Aurora.Profiles.ETS2.Layers {
 
         private void beaconColorPicker_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (isReady && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                context.Properties._PrimaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                context.Properties._PrimaryColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void keyPicker_SequenceUpdated(object? sender, EventArgs e) {

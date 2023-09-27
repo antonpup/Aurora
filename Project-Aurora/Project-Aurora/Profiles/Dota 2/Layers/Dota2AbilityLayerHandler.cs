@@ -8,6 +8,7 @@ using Aurora.Profiles.Dota_2.GSI;
 using Aurora.Profiles.Dota_2.GSI.Nodes;
 using Aurora.Settings.Layers;
 using Aurora.Utils;
+using Common.Devices;
 using Newtonsoft.Json;
 
 namespace Aurora.Profiles.Dota_2.Layers

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows;
-using Aurora.Utils;
+using Common.Utils;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;

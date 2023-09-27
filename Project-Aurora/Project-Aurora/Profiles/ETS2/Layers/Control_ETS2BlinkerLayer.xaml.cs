@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Aurora.Utils;
 
 namespace Aurora.Profiles.ETS2.Layers {
     /// <summary>
@@ -27,44 +18,44 @@ namespace Aurora.Profiles.ETS2.Layers {
 
         public Control_ETS2BlinkerLayer(ETS2BlinkerLayerHandler datacontext) {
             InitializeComponent();
-            this.DataContext = datacontext;
+            DataContext = datacontext;
         }
 
-        private ETS2BlinkerLayerHandler context => (ETS2BlinkerLayerHandler)this.DataContext;
+        private ETS2BlinkerLayerHandler context => (ETS2BlinkerLayerHandler)DataContext;
 
         public void SetSettings() {
-            if (this.DataContext is ETS2BlinkerLayerHandler && !settingsset) {
-                this.ColorPicker_BlinkerOn.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(context.Properties._BlinkerOnColor ?? System.Drawing.Color.Empty);
-                this.ColorPicker_BlinkerOff.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(context.Properties._BlinkerOffColor ?? System.Drawing.Color.Empty);
-                this.LeftBlinker_keys.Sequence = context.Properties._LeftBlinkerSequence;
-                this.RightBlinker_keys.Sequence = context.Properties._RightBlinkerSequence;
+            if (DataContext is ETS2BlinkerLayerHandler && !settingsset) {
+                ColorPicker_BlinkerOn.SelectedColor = ColorUtils.DrawingColorToMediaColor(context.Properties._BlinkerOnColor ?? System.Drawing.Color.Empty);
+                ColorPicker_BlinkerOff.SelectedColor = ColorUtils.DrawingColorToMediaColor(context.Properties._BlinkerOffColor ?? System.Drawing.Color.Empty);
+                LeftBlinker_keys.Sequence = context.Properties._LeftBlinkerSequence;
+                RightBlinker_keys.Sequence = context.Properties._RightBlinkerSequence;
                 settingsset = true;
             }
         }
 
         private void UserControl_Loaded(object? sender, RoutedEventArgs e) {
             SetSettings();
-            this.Loaded -= UserControl_Loaded;
+            Loaded -= UserControl_Loaded;
         }
 
         private void ColorPicker_BlinkerOn_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
-            if (IsLoaded && settingsset && this.DataContext is ETS2BlinkerLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                context.Properties._BlinkerOnColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+            if (IsLoaded && settingsset && DataContext is ETS2BlinkerLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
+                context.Properties._BlinkerOnColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void ColorPicker_BlinkerOff_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
-            if (IsLoaded && settingsset && this.DataContext is ETS2BlinkerLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                context.Properties._BlinkerOffColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+            if (IsLoaded && settingsset && DataContext is ETS2BlinkerLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
+                context.Properties._BlinkerOffColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void LeftBlinker_keys_SequenceUpdated(object? sender, EventArgs e) {
-            if (IsLoaded && settingsset && this.DataContext is ETS2BlinkerLayerHandler && sender is Aurora.Controls.KeySequence)
-                context.Properties._LeftBlinkerSequence = (sender as Aurora.Controls.KeySequence).Sequence;
+            if (IsLoaded && settingsset && DataContext is ETS2BlinkerLayerHandler && sender is Controls.KeySequence)
+                context.Properties._LeftBlinkerSequence = (sender as Controls.KeySequence).Sequence;
         }
 
         private void RightBlinker_keys_SequenceUpdated(object? sender, EventArgs e) {
-            if (IsLoaded && settingsset && this.DataContext is ETS2BlinkerLayerHandler && sender is Aurora.Controls.KeySequence)
-                context.Properties._RightBlinkerSequence = (sender as Aurora.Controls.KeySequence).Sequence;
+            if (IsLoaded && settingsset && DataContext is ETS2BlinkerLayerHandler && sender is Controls.KeySequence)
+                context.Properties._RightBlinkerSequence = (sender as Controls.KeySequence).Sequence;
         }
     }
 }

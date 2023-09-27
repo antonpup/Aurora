@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using Aurora.Utils;
 
 namespace Aurora.Profiles.Payday_2.Layers
 {
@@ -55,7 +56,7 @@ namespace Aurora.Profiles.Payday_2.Layers
                 //Update Flashed
                 if (pd2state.Game.State == GameStates.Ingame && pd2state.LocalPlayer.FlashAmount > 0)
                 {
-                    Color flash_color = Utils.ColorUtils.MultiplyColorByScalar(Properties.FlashbangColor, pd2state.LocalPlayer.FlashAmount);
+                    Color flash_color = ColorUtils.MultiplyColorByScalar(Properties.FlashbangColor, pd2state.LocalPlayer.FlashAmount);
 
                     flashed_layer.FillOver(flash_color);
                 }

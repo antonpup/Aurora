@@ -5,13 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Controls;
-using Aurora.Utils;
 using System.ComponentModel;
 using Aurora.Settings.Layers.Controls;
+using Aurora.Utils;
+using Common.Devices;
 
 namespace Aurora.Settings.Layers
 {
@@ -188,8 +186,8 @@ namespace Aurora.Settings.Layers
             }
 
             // Convert to DeviceKeys
-            Devices.DeviceKeys[] selectedKeys = BuildSelectedKeys(currentShortcutNode, heldKeysToHighlight);
-            Devices.DeviceKeys[] backgroundKeys = KeyUtils.GetDeviceAllKeys().Except(selectedKeys).ToArray();
+            DeviceKeys[] selectedKeys = BuildSelectedKeys(currentShortcutNode, heldKeysToHighlight);
+            DeviceKeys[] backgroundKeys = KeyUtils.GetDeviceAllKeys().Except(selectedKeys).ToArray();
 
             // Display keys
             ApplyKeyColors(EffectLayer, selectedKeys, backgroundKeys);
@@ -197,7 +195,7 @@ namespace Aurora.Settings.Layers
             return EffectLayer;
         }
 
-        protected Devices.DeviceKeys[] BuildSelectedKeys(Tree<Keys> currentShortcutNode, Keys[] previousShortcutKeys)
+        protected DeviceKeys[] BuildSelectedKeys(Tree<Keys> currentShortcutNode, Keys[] previousShortcutKeys)
         {
             Keys[] nextPossibleShortcutKeys;
             switch (Properties.PresentationType)
@@ -215,7 +213,7 @@ namespace Aurora.Settings.Layers
                         .Concat(KeyUtils.GetDeviceKeys(previousShortcutKeys, true)).ToArray();
         }
 
-        protected void ApplyKeyColors(EffectLayer layer, Devices.DeviceKeys[] selectedKeys, Devices.DeviceKeys[] backgroundKeys)
+        protected void ApplyKeyColors(EffectLayer layer, DeviceKeys[] selectedKeys, DeviceKeys[] backgroundKeys)
         {
             if (backgroundKeys != null && Properties.DimBackground)
             {

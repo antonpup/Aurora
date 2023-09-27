@@ -15,7 +15,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using Aurora.Devices;
 using Aurora.Modules.GameStateListen;
 using Aurora.Modules.ProcessMonitor;
 
@@ -47,11 +46,11 @@ public sealed class LightingStateManager
 
     private readonly Task<PluginManager> _pluginManager;
     private readonly Task<IpcListener?> _ipcListener;
-    private readonly Task<DeviceManager> _deviceManager;
+    private readonly Task<Devices.DeviceManager> _deviceManager;
 
     private bool Initialized { get; set; }
 
-    public LightingStateManager(Task<PluginManager> pluginManager, Task<IpcListener?> ipcListener, Task<DeviceManager> deviceManager)
+    public LightingStateManager(Task<PluginManager> pluginManager, Task<IpcListener?> ipcListener, Task<Devices.DeviceManager> deviceManager)
     {
         _pluginManager = pluginManager;
         _ipcListener = ipcListener;

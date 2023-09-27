@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Threading.Tasks;
-using Aurora.Utils;
 using Lombok.NET;
 using Aurora.Modules.Inputs;
+using Common.Utils;
 
 namespace Aurora.Modules;
 

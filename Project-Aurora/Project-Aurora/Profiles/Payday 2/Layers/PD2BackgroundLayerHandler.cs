@@ -11,6 +11,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using Aurora.Utils;
+using Common.Devices;
 
 namespace Aurora.Profiles.Payday_2.Layers
 {
@@ -132,7 +134,7 @@ namespace Aurora.Profiles.Payday_2.Layers
 
                     double blend_percent = Math.Pow(Math.Sin(((currenttime % 1300L) / 1300.0D) * Properties.AssaultSpeedMultiplier * 2.0D * Math.PI), 2.0D);
 
-                    bg_color = Utils.ColorUtils.BlendColors(Properties.AssaultFadeColor, bg_color, blend_percent);
+                    bg_color = ColorUtils.BlendColors(Properties.AssaultFadeColor, bg_color, blend_percent);
 
                     if (Properties.AssaultAnimationEnabled)
                     {
@@ -190,7 +192,7 @@ namespace Aurora.Profiles.Payday_2.Layers
                     bg_layer.FillOver(bg_color);
 
                     if (Properties.PeripheralUse)
-                        bg_layer.Set(Devices.DeviceKeys.Peripheral, bg_color);
+                        bg_layer.Set(DeviceKeys.Peripheral, bg_color);
                 }
                 else if (pd2.Level.Phase == LevelPhase.Stealth && pd2.Game.State == GameStates.Ingame)
                 {
@@ -206,7 +208,7 @@ namespace Aurora.Profiles.Payday_2.Layers
                         bg_layer.PercentEffect(suspicion_spec, suspicionSequence, percentSuspicious, 1.0D, Properties.SuspicionEffectType);
 
                         if (Properties.PeripheralUse)
-                            bg_layer.Set(Devices.DeviceKeys.Peripheral, suspicion_spec.GetColorAt((float)percentSuspicious));
+                            bg_layer.Set(DeviceKeys.Peripheral, suspicion_spec.GetColorAt((float)percentSuspicious));
                     }
                 }
                 else if (pd2.Level.Phase == LevelPhase.Point_of_no_return && pd2.Game.State == GameStates.Ingame)
@@ -227,14 +229,14 @@ namespace Aurora.Profiles.Payday_2.Layers
                     bg_layer.FillOver(no_return_color);
 
                     if (Properties.PeripheralUse)
-                        bg_layer.Set(Devices.DeviceKeys.Peripheral, no_return_color);
+                        bg_layer.Set(DeviceKeys.Peripheral, no_return_color);
                 }
                 else
                 {
                     bg_layer.FillOver(bg_color);
 
                     if (Properties.PeripheralUse)
-                        bg_layer.Set(Devices.DeviceKeys.Peripheral, bg_color);
+                        bg_layer.Set(DeviceKeys.Peripheral, bg_color);
                 }
 
             }

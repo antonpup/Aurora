@@ -4,10 +4,10 @@ using Aurora.EffectsEngine;
 using Aurora.Settings.Layers;
 using System.Drawing;
 using System.Linq;
-using Aurora.Devices;
 using Aurora.Profiles.EliteDangerous.GSI;
 using Aurora.Profiles.EliteDangerous.GSI.Nodes;
 using Aurora.Utils;
+using Common.Devices;
 using UserControl = System.Windows.Controls.UserControl;
 
 namespace Aurora.Profiles.EliteDangerous.Layers;

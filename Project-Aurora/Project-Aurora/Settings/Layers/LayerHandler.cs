@@ -12,6 +12,7 @@ using System.Drawing.Imaging;
 using System.Runtime.Serialization;
 using System.Windows;
 using Aurora.Settings.Layers.Controls;
+using Common.Utils;
 using JetBrains.Annotations;
 using Lombok.NET;
 using Application = Aurora.Profiles.Application;
@@ -100,7 +101,7 @@ namespace Aurora.Settings.Layers
             }
             Logic = (TProperty)Activator.CreateInstance(typeof(TProperty), new object[] { true })!;
             Logic.PropertyChanged += OnPropertiesChanged;
-            _PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
+            _PrimaryColor = CommonColorUtils.GenerateRandomColor();
             if (_Sequence != null)
             {
                 _Sequence.Freeform.ValuesChanged -= OnPropertiesChanged;
@@ -175,7 +176,7 @@ namespace Aurora.Settings.Layers
         public override void Default()
         {
             base.Default();
-            _SecondaryColor = Utils.ColorUtils.GenerateRandomColor();
+            _SecondaryColor = CommonColorUtils.GenerateRandomColor();
         }
     }
 

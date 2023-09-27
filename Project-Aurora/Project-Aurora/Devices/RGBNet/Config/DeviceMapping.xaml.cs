@@ -5,6 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using AurorDeviceManager.Devices.RGBNet.Config;
+using Common.Devices;
+using Common.Devices.RGBNet;
 using RGB.NET.Core;
 
 namespace Aurora.Devices.RGBNet.Config;
@@ -14,15 +17,15 @@ namespace Aurora.Devices.RGBNet.Config;
 /// </summary>
 public partial class DeviceMapping
 {
-    private readonly Dictionary<IRGBDevice, RgbNetDevice> _devices = new();
+    private readonly Dictionary<IRGBDevice, IDevice> _devices = new();
     private readonly List<RgbNetKeyToDeviceKeyControl> _keys = new();
     private readonly Task<DeviceManager> _deviceManager;
 
     private DeviceMappingConfig _config;
 
-    private IEnumerable<RgbNetDevice> DeviceProviders => _deviceManager.Result.InitializedDeviceContainers
+    private IEnumerable<IDevice> DeviceProviders => _deviceManager.Result.InitializedDeviceContainers
         .Select(container => container.Device)
-        .OfType<RgbNetDevice>();
+        .Where(d => d.IsRemappable);
         
     public DeviceMapping(Task<DeviceManager> deviceManager)
     {
@@ -90,14 +93,14 @@ public partial class DeviceMapping
         }
     }
 
-    private void DeviceSelect(IRGBDevice device, RgbNetDevice rgbNetDevice)
+    private void DeviceSelect(IRGBDevice device, RemappableDevice rgbNetDevice)
     {
         _keys.Clear();
 
         // Rebuild the key area
         AsusDeviceKeys.Children.Clear();
 
-        RgbNetConfigDevice configDevice = GetAsusConfigDevice(device);
+        var configDevice = GetAsusConfigDevice(device);
 
         foreach (var led in device)
         {
@@ -154,7 +157,7 @@ public partial class DeviceMapping
         var token = _tokenSource.Token;
         try
         {
-            for (int i = 0; i < BlinkCount; i++)
+            for (var i = 0; i < BlinkCount; i++)
             {
                 if (token.IsCancellationRequested || device == null)
                     return;
@@ -179,12 +182,6 @@ public partial class DeviceMapping
         }
     }
 
-    /// <summary>
-    /// Returns the index and the device, -1 if not found
-    /// </summary>
-    /// <param name="rgbDevice"></param>
-    /// <param name="device"></param>
-    /// <returns></returns>
     private RgbNetConfigDevice GetAsusConfigDevice(IRGBDevice rgbDevice)
     {
         foreach (var netConfigDevice in DeviceMappingConfig.Config.Devices)

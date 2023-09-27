@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
@@ -8,9 +7,10 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Threading;
 using System.Windows;
-using Aurora.Devices;
 using Aurora.Settings;
 using Aurora.Utils;
+using Common.Devices;
+using Common.Utils;
 using Point = System.Drawing.Point;
 
 namespace Aurora.EffectsEngine
@@ -389,7 +389,7 @@ namespace Aurora.EffectsEngine
         private FreeFormObject _lastFreeform = new();
         private bool _ksChanged = true;
         /// <summary>
-        /// Sets a specific Devices.DeviceKeys on the bitmap with a specified color.
+        /// Sets a specific DeviceKeys on the bitmap with a specified color.
         /// </summary>
         /// <param name="key">DeviceKey to be set</param>
         /// <param name="color">Color to be used</param>
@@ -400,7 +400,7 @@ namespace Aurora.EffectsEngine
         }
 
         /// <summary>
-        /// Sets a specific Devices.DeviceKeys on the bitmap with a specified color.
+        /// Sets a specific DeviceKeys on the bitmap with a specified color.
         /// </summary>
         /// <param name="keys">Array of DeviceKeys to be set</param>
         /// <param name="color">Color to be used</param>
@@ -747,7 +747,7 @@ namespace Aurora.EffectsEngine
         /// <returns>The passed instance of EffectLayer with adjustments</returns>
         public static EffectLayer operator *(EffectLayer layer, double value)
         {
-            if (!ColorUtils.NearlyEqual(layer._opacity,(float)value, 0.0001f))
+            if (!MathUtils.NearlyEqual(layer._opacity,(float)value, 0.0001f))
             {
                 layer._opacity = (float) value;
                 layer.Invalidate();

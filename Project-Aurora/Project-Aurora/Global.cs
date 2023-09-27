@@ -64,7 +64,7 @@ public static class Global
             .WriteTo.File(logPath,
                 rollingInterval: RollingInterval.Infinite,
                 fileSizeLimitBytes: 25 * 1000000,  //25 MB
-                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
+                outputTemplate: "Aurora-{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
             )
 #if DEBUG
             .WriteTo.Console(

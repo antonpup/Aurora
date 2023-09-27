@@ -4,6 +4,7 @@ using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
+using Common.Devices;
 using MemoryAccessProfiles.Profiles.ResidentEvil2.GSI;
 using MemoryAccessProfiles.Profiles.ResidentEvil2.GSI.Nodes;
 
@@ -18,9 +19,9 @@ public class ResidentEvil2RankLayerHandlerProperties : LayerHandlerProperties2Co
     public override void Default()
     {
         base.Default();
-        this._Sequence = new KeySequence(new Aurora.Devices.DeviceKeys[] {
-            Aurora.Devices.DeviceKeys.ONE, Aurora.Devices.DeviceKeys.TWO, Aurora.Devices.DeviceKeys.THREE, Aurora.Devices.DeviceKeys.FOUR, Aurora.Devices.DeviceKeys.FIVE,
-            Aurora.Devices.DeviceKeys.SIX, Aurora.Devices.DeviceKeys.SEVEN, Aurora.Devices.DeviceKeys.EIGHT, Aurora.Devices.DeviceKeys.NINE
+        this._Sequence = new KeySequence(new DeviceKeys[] {
+            DeviceKeys.ONE, DeviceKeys.TWO, DeviceKeys.THREE, DeviceKeys.FOUR, DeviceKeys.FIVE,
+            DeviceKeys.SIX, DeviceKeys.SEVEN, DeviceKeys.EIGHT, DeviceKeys.NINE
         });
     }
 

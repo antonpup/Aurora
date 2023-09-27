@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Aurora.Utils;
 using Xceed.Wpf.Toolkit;
 
 namespace Aurora.Profiles.Minecraft.Layers {
@@ -39,7 +40,7 @@ namespace Aurora.Profiles.Minecraft.Layers {
         private void SetSettings() {
             if (!settingsSet && DataContext is MinecraftRainLayerHandler) {
                 settingsSet = true;
-                ColorPicker_RainColor.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((DataContext as MinecraftRainLayerHandler).Properties._PrimaryColor ?? System.Drawing.Color.Empty);
+                ColorPicker_RainColor.SelectedColor = ColorUtils.DrawingColorToMediaColor((DataContext as MinecraftRainLayerHandler).Properties._PrimaryColor ?? System.Drawing.Color.Empty);
                 MinimumIntensity_Stepper.Value = (DataContext as MinecraftRainLayerHandler).Properties._MinimumInterval;
                 MaximumIntensity_Stepper.Value = (DataContext as MinecraftRainLayerHandler).Properties._MaximumInterval;
             }
@@ -47,7 +48,7 @@ namespace Aurora.Profiles.Minecraft.Layers {
 
         private void ColorPicker_RainColor_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (IsLoaded && settingsSet && DataContext is MinecraftRainLayerHandler && e.NewValue.HasValue)
-                (DataContext as MinecraftRainLayerHandler).Properties._PrimaryColor = Utils.ColorUtils.MediaColorToDrawingColor(e.NewValue.Value);
+                (DataContext as MinecraftRainLayerHandler).Properties._PrimaryColor = ColorUtils.MediaColorToDrawingColor(e.NewValue.Value);
         }
 
         private void MinimumIntensity_Stepper_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e) {

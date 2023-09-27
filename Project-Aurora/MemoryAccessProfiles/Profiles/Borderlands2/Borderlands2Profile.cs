@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
+using Common.Devices;
 
 namespace MemoryAccessProfiles.Profiles.Borderlands2;
 
@@ -23,10 +24,10 @@ public class Borderlands2Profile : ApplicationProfile
                     _PrimaryColor = Color.Red,
                     _SecondaryColor = Color.DarkRed,
                     _PercentType = PercentEffectType.Progressive_Gradual,
-                    _Sequence = new KeySequence(new Aurora.Devices.DeviceKeys[] {
-                        Aurora.Devices.DeviceKeys.ONE, Aurora.Devices.DeviceKeys.TWO, Aurora.Devices.DeviceKeys.THREE, Aurora.Devices.DeviceKeys.FOUR, Aurora.Devices.DeviceKeys.FIVE,
-                        Aurora.Devices.DeviceKeys.SIX, Aurora.Devices.DeviceKeys.SEVEN, Aurora.Devices.DeviceKeys.EIGHT, Aurora.Devices.DeviceKeys.NINE, Aurora.Devices.DeviceKeys.ZERO,
-                        Aurora.Devices.DeviceKeys.MINUS, Aurora.Devices.DeviceKeys.EQUALS
+                    _Sequence = new KeySequence(new DeviceKeys[] {
+                        DeviceKeys.ONE, DeviceKeys.TWO, DeviceKeys.THREE, DeviceKeys.FOUR, DeviceKeys.FIVE,
+                        DeviceKeys.SIX, DeviceKeys.SEVEN, DeviceKeys.EIGHT, DeviceKeys.NINE, DeviceKeys.ZERO,
+                        DeviceKeys.MINUS, DeviceKeys.EQUALS
                     }),
                     _BlinkThreshold = 0.0,
                     _BlinkDirection = false,
@@ -41,10 +42,10 @@ public class Borderlands2Profile : ApplicationProfile
                     _PrimaryColor =  Color.Cyan,
                     _SecondaryColor = Color.DarkCyan,
                     _PercentType = PercentEffectType.Progressive_Gradual,
-                    _Sequence = new KeySequence(new Aurora.Devices.DeviceKeys[] {
-                        Aurora.Devices.DeviceKeys.F1, Aurora.Devices.DeviceKeys.F2, Aurora.Devices.DeviceKeys.F3, Aurora.Devices.DeviceKeys.F4,
-                        Aurora.Devices.DeviceKeys.F5, Aurora.Devices.DeviceKeys.F6, Aurora.Devices.DeviceKeys.F7, Aurora.Devices.DeviceKeys.F8,
-                        Aurora.Devices.DeviceKeys.F9, Aurora.Devices.DeviceKeys.F10, Aurora.Devices.DeviceKeys.F11, Aurora.Devices.DeviceKeys.F12
+                    _Sequence = new KeySequence(new DeviceKeys[] {
+                        DeviceKeys.F1, DeviceKeys.F2, DeviceKeys.F3, DeviceKeys.F4,
+                        DeviceKeys.F5, DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8,
+                        DeviceKeys.F9, DeviceKeys.F10, DeviceKeys.F11, DeviceKeys.F12
                     }),
                     _BlinkThreshold = 0.0,
                     _BlinkDirection = false,

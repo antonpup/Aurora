@@ -8,6 +8,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using Aurora.Profiles;
 using Aurora.Utils;
+using Common.Utils;
 using Newtonsoft.Json;
 using Xceed.Wpf.Toolkit;
 

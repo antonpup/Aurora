@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using Aurora.Utils;
+using Common.Utils;
 using Microsoft.Win32;
 
 namespace Aurora.Modules;

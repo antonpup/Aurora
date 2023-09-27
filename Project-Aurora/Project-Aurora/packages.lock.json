@@ -52,22 +52,6 @@
         "resolved": "1.1.0",
         "contentHash": "FFEkdRSidMrbMfQVwhCzq6KtSyR1qQojqtiUrkCyjnOOuMf7W3TNQkzFnBBxYxFe7uLk5mz7M38wFh1qdWyfvg=="
       },
-      "hidlibrary": {
-        "type": "Direct",
-        "requested": "[3.3.40, )",
-        "resolved": "3.3.40",
-        "contentHash": "8KEiKYk4nmK3OyV+kQr8DwLcl8L+sPUPqENhtWTzQJrhFzGSaKe1F4VDG/bRBSfkbS0AxkM5+AN8xanxsAWfWA=="
-      },
-      "IronPython": {
-        "type": "Direct",
-        "requested": "[3.4.1, )",
-        "resolved": "3.4.1",
-        "contentHash": "2CKriGKn8KAdEHTpV6umPaEA5kq2tod5npH1V07JeEetJO0PqNYLD7ovJcUB4ZfPVPhwdrlGkOeqyJx8EGGJVA==",
-        "dependencies": {
-          "DynamicLanguageRuntime": "1.3.4",
-          "Mono.Unix": "7.1.0-final.1.21458.1"
-        }
-      },
       "JetBrains.Annotations": {
         "type": "Direct",
         "requested": "[2023.2.0, )",
@@ -139,12 +123,6 @@
         "resolved": "7.1.0",
         "contentHash": "v2qhKBe1Zlssa4XOmpOXNDFBrOAMw2tBmr8L8YMSrEi+PlF/L/PboZcXHSkZuhIxIeOGxEFiwkuJLkvG4aHNHQ=="
       },
-      "OpenRGB.NET": {
-        "type": "Direct",
-        "requested": "[2.2.0, )",
-        "resolved": "2.2.0",
-        "contentHash": "m1LdKH2zk6hMjaODISPU3ynLX43tp5dqcMPya/IHZzSEuN/fKHpqGG97OTEu5tthrRQBkAPHVEwf4AOZrVG9MQ=="
-      },
       "PropertyChanged.Fody": {
         "type": "Direct",
         "requested": "[4.1.0, )",
@@ -161,73 +139,6 @@
         "contentHash": "6XdLslr7dLDme3nz3PkbrdJn+R5cR8q0j1knww/xRFxdIgt828ISb9dgVAxBLte2CdoPnc6O2YymnZqOtDaTuA==",
         "dependencies": {
           "NETStandard.Library": "1.6.1"
-        }
-      },
-      "RGB.NET.Devices.Asus": {
-        "type": "Direct",
-        "requested": "[2.0.0-prerelease.111, )",
-        "resolved": "2.0.0-prerelease.111",
-        "contentHash": "q472V6gY1xeN6YHTIrF3fcw1kiDR2gDSZDHgdaW3eN2YJ7OxU4uTGljEmFFZcGQjA+VjEjaazNBs0CdbgdWbig==",
-        "dependencies": {
-          "RGB.NET.Core": "2.0.0-prerelease.111",
-          "System.Management": "7.0.0"
-        }
-      },
-      "RGB.NET.Devices.CoolerMaster": {
-        "type": "Direct",
-        "requested": "[2.0.0-prerelease.111, )",
-        "resolved": "2.0.0-prerelease.111",
-        "contentHash": "THnQia0Mjd4FvCYlocoR56yehruT1zKUjR4qtY2AXCSD5xsqNUiHUOz3WbZk+9Een6bMs+51pXvmF547KIb8Qg==",
-        "dependencies": {
-          "RGB.NET.Core": "2.0.0-prerelease.111"
-        }
-      },
-      "RGB.NET.Devices.CorsairLegacy": {
-        "type": "Direct",
-        "requested": "[2.0.0-prerelease.111, )",
-        "resolved": "2.0.0-prerelease.111",
-        "contentHash": "XtMQsZ3xV1scSrQhJ5XmhpqPl/89BpEhZ7XXgkT5so3e7dLaJ7hquvF3zlfPudL3i0vMDl4+2CByjlINoIZ4AQ==",
-        "dependencies": {
-          "RGB.NET.Core": "2.0.0-prerelease.111"
-        }
-      },
-      "RGB.NET.Devices.Logitech": {
-        "type": "Direct",
-        "requested": "[2.0.0-prerelease.111, )",
-        "resolved": "2.0.0-prerelease.111",
-        "contentHash": "4403eXjBHQ86AW48nfHvVqXhOyyhasegUdv2oHK+h9W1O65vGEnBzcMmgUt/fBknv8xGJMKmsxBLP5v2MCSfxg==",
-        "dependencies": {
-          "RGB.NET.Core": "2.0.0-prerelease.111",
-          "RGB.NET.HID": "2.0.0-prerelease.111"
-        }
-      },
-      "RGB.NET.Devices.Razer": {
-        "type": "Direct",
-        "requested": "[2.0.0-prerelease.111, )",
-        "resolved": "2.0.0-prerelease.111",
-        "contentHash": "K7BfEPn0OFjWJZaoHaGaKshogZkskoIARFTcBEeKROD/as+ky8m9YNiFXewOUY/BhXMSz0ojRIUAZorvIHdcPg==",
-        "dependencies": {
-          "RGB.NET.Core": "2.0.0-prerelease.111",
-          "RGB.NET.HID": "2.0.0-prerelease.111"
-        }
-      },
-      "RGB.NET.Devices.SteelSeries": {
-        "type": "Direct",
-        "requested": "[2.0.0-prerelease.111, )",
-        "resolved": "2.0.0-prerelease.111",
-        "contentHash": "PZpIdKm9J20CkTIQel6SRuvly1wizqPwagm/XgAhpHfhNVi9h7T9CIKWtDrbyfUsOXrG8iHVjKI29RyGEKbhPw==",
-        "dependencies": {
-          "RGB.NET.Core": "2.0.0-prerelease.111",
-          "RGB.NET.HID": "2.0.0-prerelease.111"
-        }
-      },
-      "RGB.NET.Devices.Wooting": {
-        "type": "Direct",
-        "requested": "[2.0.0-prerelease.111, )",
-        "resolved": "2.0.0-prerelease.111",
-        "contentHash": "z8bbiAlqEtaN8dx+Fn7FcObAtoBj8P+yqk3F1Tka+DenecuahmTsMmdDTZPKS8Xp3IUWSEi1B0uwaVnQLg8fZw==",
-        "dependencies": {
-          "RGB.NET.Core": "2.0.0-prerelease.111"
         }
       },
       "SemanticVersioning": {
@@ -348,21 +259,6 @@
           "System.Security.AccessControl": "5.0.0"
         }
       },
-      "Vulcan.NET": {
-        "type": "Direct",
-        "requested": "[2.2.0, )",
-        "resolved": "2.2.0",
-        "contentHash": "6fb12dnt4Id/MdBBQKVcB03Gsr+E62xRw4xv94TsLJmCyDZrVWHO7PpkfDtDhi4VK6nQf6hirdz3W6I8TLLubg==",
-        "dependencies": {
-          "HidSharp": "2.1.0"
-        }
-      },
-      "Wooting.NET": {
-        "type": "Direct",
-        "requested": "[1.2.0, )",
-        "resolved": "1.2.0",
-        "contentHash": "9hxNTjymcvHf6S/Bc1NK5DwH7fwytspmWf7LhClfNA2l5Asrkct4jyLhVcmDjhg+TzfuFTkQ7u/qxb87SS6JcQ=="
-      },
       "WPFToolkits": {
         "type": "Direct",
         "requested": "[3.5.50211.1, )",
@@ -391,6 +287,15 @@
         "type": "Transitive",
         "resolved": "2.14.1",
         "contentHash": "lQKvtaTDOXnoVJ20ibTuSIOf2i0uO0MPbDhd1jm238I+U/2ZnRENj0cktKZhtchBMtCUSRQ5v4xBCUbKNmyVMw=="
+      },
+      "IronPython": {
+        "type": "Transitive",
+        "resolved": "3.4.1",
+        "contentHash": "2CKriGKn8KAdEHTpV6umPaEA5kq2tod5npH1V07JeEetJO0PqNYLD7ovJcUB4ZfPVPhwdrlGkOeqyJx8EGGJVA==",
+        "dependencies": {
+          "DynamicLanguageRuntime": "1.3.4",
+          "Mono.Unix": "7.1.0-final.1.21458.1"
+        }
       },
       "Microsoft.Bcl.AsyncInterfaces": {
         "type": "Transitive",
@@ -486,6 +391,11 @@
           "System.Security.Principal.Windows": "5.0.0"
         }
       },
+      "Microsoft.Win32.SystemEvents": {
+        "type": "Transitive",
+        "resolved": "7.0.0",
+        "contentHash": "2nXPrhdAyAzir0gLl8Yy8S5Mnm/uBSQQA7jEsILOS1MTyS7DbmV1NgViMtvV1sfCD1ebITpNwb1NIinKeJgUVQ=="
+      },
       "Mono.Posix.NETStandard": {
         "type": "Transitive",
         "resolved": "1.0.0",
@@ -551,6 +461,23 @@
         "type": "Transitive",
         "resolved": "2.0.0-prerelease.111",
         "contentHash": "kZ7qxDBAgRI44N+bQEue+nfB7ppyrAMyFgwsIU70lPLj7KIHCEsZ9Vlt6C0XkjZX1koYWwzvSA3n9SIAHX/lrg=="
+      },
+      "RGB.NET.Devices.CorsairLegacy": {
+        "type": "Transitive",
+        "resolved": "2.0.0-prerelease.111",
+        "contentHash": "XtMQsZ3xV1scSrQhJ5XmhpqPl/89BpEhZ7XXgkT5so3e7dLaJ7hquvF3zlfPudL3i0vMDl4+2CByjlINoIZ4AQ==",
+        "dependencies": {
+          "RGB.NET.Core": "2.0.0-prerelease.111"
+        }
+      },
+      "RGB.NET.Devices.Logitech": {
+        "type": "Transitive",
+        "resolved": "2.0.0-prerelease.111",
+        "contentHash": "4403eXjBHQ86AW48nfHvVqXhOyyhasegUdv2oHK+h9W1O65vGEnBzcMmgUt/fBknv8xGJMKmsxBLP5v2MCSfxg==",
+        "dependencies": {
+          "RGB.NET.Core": "2.0.0-prerelease.111",
+          "RGB.NET.HID": "2.0.0-prerelease.111"
+        }
       },
       "RGB.NET.HID": {
         "type": "Transitive",
@@ -1617,6 +1544,17 @@
           "System.Xml.ReaderWriter": "4.3.0"
         }
       },
+      "auroracommon": {
+        "type": "Project",
+        "dependencies": {
+          "IronPython": "[3.4.1, )",
+          "Microsoft.Win32.SystemEvents": "[7.0.0, )",
+          "Newtonsoft.Json": "[13.0.3, )",
+          "RGB.NET.Devices.CorsairLegacy": "[2.0.0-prerelease.111, )",
+          "RGB.NET.Devices.Logitech": "[2.0.0-prerelease.111, )",
+          "System.Threading.AccessControl": "[7.0.1, )"
+        }
+      },
       "colorbox": {
         "type": "Project"
       }
@@ -1687,6 +1625,11 @@
           "System.Security.AccessControl": "5.0.0",
           "System.Security.Principal.Windows": "5.0.0"
         }
+      },
+      "Microsoft.Win32.SystemEvents": {
+        "type": "Transitive",
+        "resolved": "7.0.0",
+        "contentHash": "2nXPrhdAyAzir0gLl8Yy8S5Mnm/uBSQQA7jEsILOS1MTyS7DbmV1NgViMtvV1sfCD1ebITpNwb1NIinKeJgUVQ=="
       },
       "Mono.Posix.NETStandard": {
         "type": "Transitive",

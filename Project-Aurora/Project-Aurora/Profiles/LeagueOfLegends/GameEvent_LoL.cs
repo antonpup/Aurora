@@ -1,7 +1,6 @@
 ﻿using Aurora.Profiles;
 using Aurora.Profiles.LeagueOfLegends.GSI;
 using Aurora.Profiles.LeagueOfLegends.GSI.Nodes;
-using Aurora.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -14,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using Aurora.Modules.ProcessMonitor;
+using Aurora.Utils;
 
 namespace Aurora.Profiles.LeagueOfLegends
 {

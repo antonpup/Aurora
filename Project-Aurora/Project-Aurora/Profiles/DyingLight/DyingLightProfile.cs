@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
+using Common.Devices;
 
 namespace Aurora.Profiles.DyingLight
 {
@@ -32,7 +33,7 @@ namespace Aurora.Profiles.DyingLight
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.DodgerBlue,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.SPACE, Devices.DeviceKeys.C, Devices.DeviceKeys.LEFT_SHIFT })
+                        _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.W, DeviceKeys.A, DeviceKeys.S, DeviceKeys.D, DeviceKeys.SPACE, DeviceKeys.C, DeviceKeys.LEFT_SHIFT })
                     }
                 }
                 ),
@@ -41,7 +42,7 @@ namespace Aurora.Profiles.DyingLight
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.DarkOrange,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.Q, Devices.DeviceKeys.E, Devices.DeviceKeys.R, Devices.DeviceKeys.F, Devices.DeviceKeys.V, Devices.DeviceKeys.B })
+                        _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.Q, DeviceKeys.E, DeviceKeys.R, DeviceKeys.F, DeviceKeys.V, DeviceKeys.B })
                     }
                 }
                 ),
@@ -50,7 +51,7 @@ namespace Aurora.Profiles.DyingLight
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Magenta,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.I, Devices.DeviceKeys.M, Devices.DeviceKeys.L, Devices.DeviceKeys.U})
+                        _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.I, DeviceKeys.M, DeviceKeys.L, DeviceKeys.U})
                     }
                 }
                 ),
@@ -59,7 +60,7 @@ namespace Aurora.Profiles.DyingLight
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Green,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.H}),
+                        _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.H}),
                     }
                 }
                 ),
@@ -68,7 +69,7 @@ namespace Aurora.Profiles.DyingLight
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.White,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.T})
+                        _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.T})
                     }
                 }),
                 new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()

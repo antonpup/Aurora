@@ -1,6 +1,5 @@
 ﻿using Aurora.Devices;
 using Aurora.Settings;
-using Aurora.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Aurora.Modules.Inputs;
+using Aurora.Utils;
+using Common.Devices;
 
 namespace Aurora.Profiles.Dota_2.Layers
 {
@@ -43,10 +44,10 @@ namespace Aurora.Profiles.Dota_2.Layers
         {
             if (this.DataContext is Dota2ItemLayerHandler && !settingsset)
             {
-                this.ColorPicker_Item_Empty.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2ItemLayerHandler).Properties._EmptyItemColor ?? System.Drawing.Color.Empty);
-                this.ColorPicker_Item_Cooldown.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2ItemLayerHandler).Properties._ItemCooldownColor ?? System.Drawing.Color.Empty);
-                this.ColorPicker_Item_NoCharges.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2ItemLayerHandler).Properties._ItemNoChargersColor ?? System.Drawing.Color.Empty);
-                this.ColorPicker_Item_Color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2ItemLayerHandler).Properties._ItemsColor ?? System.Drawing.Color.Empty);
+                this.ColorPicker_Item_Empty.SelectedColor = ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2ItemLayerHandler).Properties._EmptyItemColor ?? System.Drawing.Color.Empty);
+                this.ColorPicker_Item_Cooldown.SelectedColor = ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2ItemLayerHandler).Properties._ItemCooldownColor ?? System.Drawing.Color.Empty);
+                this.ColorPicker_Item_NoCharges.SelectedColor = ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2ItemLayerHandler).Properties._ItemNoChargersColor ?? System.Drawing.Color.Empty);
+                this.ColorPicker_Item_Color.SelectedColor = ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2ItemLayerHandler).Properties._ItemsColor ?? System.Drawing.Color.Empty);
                 this.CheckBox_Use_Item_Colors.IsChecked = (this.DataContext as Dota2ItemLayerHandler).Properties._UseItemColors;
 
                 UIUtils.SetSingleKey(this.item_slot1_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 0);
@@ -483,25 +484,25 @@ namespace Aurora.Profiles.Dota_2.Layers
         private void ColorPicker_Item_Empty_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2ItemLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2ItemLayerHandler).Properties._EmptyItemColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as Dota2ItemLayerHandler).Properties._EmptyItemColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void ColorPicker_Item_Cooldown_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2ItemLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2ItemLayerHandler).Properties._ItemCooldownColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as Dota2ItemLayerHandler).Properties._ItemCooldownColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void ColorPicker_Item_NoCharges_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2ItemLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2ItemLayerHandler).Properties._ItemNoChargersColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as Dota2ItemLayerHandler).Properties._ItemNoChargersColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void ColorPicker_Item_Color_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2ItemLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Dota2ItemLayerHandler).Properties._ItemsColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as Dota2ItemLayerHandler).Properties._ItemsColor = ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void CheckBox_Use_Item_Colors_Checked(object? sender, RoutedEventArgs e)

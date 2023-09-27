@@ -11,6 +11,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using Aurora.Utils;
+using Common.Devices;
 
 namespace Aurora.Profiles.Payday_2.Layers
 {
@@ -87,22 +89,22 @@ namespace Aurora.Profiles.Payday_2.Layers
                         Color incapColor = Color.FromArgb(incapAlpha, Properties.DownedColor);
 
                         states_layer.FillOver(incapColor);
-                        states_layer.Set(Devices.DeviceKeys.Peripheral, incapColor);
+                        states_layer.Set(DeviceKeys.Peripheral, incapColor);
                     }
                     else if (pd2state.LocalPlayer.State == PlayerState.Arrested)
                     {
                         states_layer.FillOver(Properties.ArrestedColor);
-                        states_layer.Set(Devices.DeviceKeys.Peripheral, Properties.ArrestedColor);
+                        states_layer.Set(DeviceKeys.Peripheral, Properties.ArrestedColor);
                     }
 
                     if (pd2state.LocalPlayer.IsSwanSong && Properties.ShowSwanSong)
                     {
                         double blend_percent = Math.Pow(Math.Cos((Utils.Time.GetMillisecondsSinceEpoch() % 1300L) / 1300.0D * Properties.SwanSongSpeedMultiplier * 2.0D * Math.PI), 2.0D);
 
-                        Color swansongColor = Utils.ColorUtils.MultiplyColorByScalar(Properties.SwanSongColor, blend_percent);
+                        Color swansongColor = ColorUtils.MultiplyColorByScalar(Properties.SwanSongColor, blend_percent);
 
                         EffectLayer swansong_layer = new EffectLayer("Payday 2 - Swansong", swansongColor);
-                        swansong_layer.Set(Devices.DeviceKeys.Peripheral, swansongColor);
+                        swansong_layer.Set(DeviceKeys.Peripheral, swansongColor);
 
                         states_layer += swansong_layer;
                     }

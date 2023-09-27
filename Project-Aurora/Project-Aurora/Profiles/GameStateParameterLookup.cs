@@ -1,8 +1,8 @@
-﻿using Aurora.Utils;
-using FastMember;
+﻿using FastMember;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Aurora.Utils;
 
 namespace Aurora.Profiles {
 

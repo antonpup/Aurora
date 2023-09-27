@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using Common.Devices;
 using Linearstar.Windows.RawInput.Native;
 
 namespace Aurora.Utils;
@@ -166,10 +167,10 @@ public static class KeyUtils
     }
 
     /// <summary>
-    /// Converts Devices.DeviceKeys to Forms.Keys
+    /// Converts DeviceKeys to Forms.Keys
     /// </summary>
     /// <param name="deviceKeys">The Forms.Key to be converted</param>
-    /// <returns>The resulting Devices.DeviceKeys</returns>
+    /// <returns>The resulting DeviceKeys</returns>
     public static Keys GetFormsKey(DeviceKeys deviceKeys)
     {
         return deviceKeys switch
@@ -423,10 +424,10 @@ public static class KeyUtils
     }
 
     /// <summary>
-    /// Converts Forms.Keys to Devices.DeviceKeys
+    /// Converts Forms.Keys to DeviceKeys
     /// </summary>
     /// <param name="formsKeys">Array of Forms.Keys to be converted</param>
-    /// <returns>The resulting Devices.DeviceKeys</returns>
+    /// <returns>The resulting DeviceKeys</returns>
     public static DeviceKeys[] GetDeviceKeys(Keys[] formsKeys, bool extendedKeys = false, bool getBoth = false)
     {
         HashSet<DeviceKeys> _returnKeys = new HashSet<DeviceKeys>();

@@ -1,15 +1,11 @@
 ﻿using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using Aurora.EffectsEngine;
 using Aurora.Profiles.ETS2.GSI;
+using Common.Devices;
 
 namespace Aurora.Profiles.ETS2.Layers {
     public class ETS2BlinkerLayerHandlerProperties : LayerHandlerProperties2Color<ETS2BlinkerLayerHandlerProperties> {
@@ -36,10 +32,10 @@ namespace Aurora.Profiles.ETS2.Layers {
         public override void Default() {
             base.Default();
 
-            this._LeftBlinkerSequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.F1, Devices.DeviceKeys.F2, Devices.DeviceKeys.F3, Devices.DeviceKeys.F4 });
-            this._RightBlinkerSequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.F9, Devices.DeviceKeys.F10, Devices.DeviceKeys.F11, Devices.DeviceKeys.F12 });
-            this._BlinkerOffColor = Color.Empty;
-            this._BlinkerOnColor = Color.FromArgb(255, 127, 0);
+            _LeftBlinkerSequence = new KeySequence(new DeviceKeys[] { DeviceKeys.F1, DeviceKeys.F2, DeviceKeys.F3, DeviceKeys.F4 });
+            _RightBlinkerSequence = new KeySequence(new DeviceKeys[] { DeviceKeys.F9, DeviceKeys.F10, DeviceKeys.F11, DeviceKeys.F12 });
+            _BlinkerOffColor = Color.Empty;
+            _BlinkerOnColor = Color.FromArgb(255, 127, 0);
         }
     }
 

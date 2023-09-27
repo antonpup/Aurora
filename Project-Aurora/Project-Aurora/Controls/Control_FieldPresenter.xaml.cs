@@ -1,13 +1,14 @@
-﻿using Aurora.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Media;
+using Aurora.Utils;
 using Xceed.Wpf.Toolkit;
 
 namespace Aurora.Controls {
@@ -37,7 +38,7 @@ namespace Aurora.Controls {
                         Label = t.GetMember(@enum.ToString()).FirstOrDefault()?.GetCustomAttribute<DescriptionAttribute>()?.Description ?? @enum.ToString(),
                         Value = @enum
                     })
-                }.SetBindingChain(ComboBox.SelectedValueProperty, new Binding("Value") { Source = control });
+                }.SetBindingChain(Selector.SelectedValueProperty, new Binding("Value") { Source = control });
 
             } else
                 // If there is no predefined type and the type is not an enum, we don't know what to do
@@ -69,7 +70,7 @@ namespace Aurora.Controls {
         private static Dictionary<Type, Func<Binding, Visual>> TypeControlMap = new Dictionary<Type, Func<Binding, Visual>> {
 
             // Boolean
-            { typeof(bool), bind => new CheckBox().SetBindingChain(CheckBox.IsCheckedProperty, bind) },
+            { typeof(bool), bind => new CheckBox().SetBindingChain(ToggleButton.IsCheckedProperty, bind) },
 
             // String
             { typeof(string), bind => new TextBox().SetBindingChain(TextBox.TextProperty, bind) },
@@ -81,7 +82,7 @@ namespace Aurora.Controls {
             { typeof(float), bind => new SingleUpDown{ Increment = .1f }.SetBindingChain(SingleUpDown.ValueProperty, bind) },
 
             // Colours
-            { typeof(System.Drawing.Color), bind => new ColorPicker{ ColorMode = ColorMode.ColorCanvas }.SetBindingChain(ColorPicker.SelectedColorProperty, bind, new Utils.DrawingMediaColorConverter()) },
+            { typeof(System.Drawing.Color), bind => new ColorPicker{ ColorMode = ColorMode.ColorCanvas }.SetBindingChain(ColorPicker.SelectedColorProperty, bind, new DrawingMediaColorConverter()) },
             { typeof(RealColor), bind => new ColorPicker{ ColorMode = ColorMode.ColorCanvas }.SetBindingChain(ColorPicker.SelectedColorProperty, bind, new RealColorConverter()) },
 
             // Gradient colour
@@ -89,11 +90,11 @@ namespace Aurora.Controls {
             { typeof(EffectsEngine.EffectBrush), bind => new ColorBox.ColorBox().SetBindingChain(ColorBox.ColorBox.BrushProperty, bind, new EffectMediaBrushConverter(), BindingMode.TwoWay) },
 
             // KeySequences
-            { typeof(Settings.KeySequence), bind => new Controls.KeySequence {
+            { typeof(Settings.KeySequence), bind => new KeySequence {
                     Title = "Assigned Keys",
                     RecordingTag = "FieldPresenterKeySequence",
                     Height = 120,
-                }.SetBindingChain(Controls.KeySequence.SequenceProperty, bind, bindingMode: BindingMode.TwoWay)
+                }.SetBindingChain(KeySequence.SequenceProperty, bind, bindingMode: BindingMode.TwoWay)
             },
 
             // Single key inputs

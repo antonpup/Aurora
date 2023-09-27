@@ -1,12 +1,10 @@
-using Aurora.Utils;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
+using Aurora.Utils;
 
 namespace Aurora.Controls {
 

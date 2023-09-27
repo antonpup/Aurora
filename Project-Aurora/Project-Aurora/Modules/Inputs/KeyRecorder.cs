@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Aurora.Devices;
-using Aurora.Utils;
+using Common.Devices;
 
 namespace Aurora.Modules.Inputs;
 

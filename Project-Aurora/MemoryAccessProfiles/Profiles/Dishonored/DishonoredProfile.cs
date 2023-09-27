@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
+using Common.Devices;
 
 namespace MemoryAccessProfiles.Profiles.Dishonored;
 
@@ -23,10 +24,10 @@ public class DishonoredProfile : ApplicationProfile
                     _PrimaryColor = Color.Red,
                     _SecondaryColor = Color.FromArgb(255,70,0,0),
                     _PercentType = PercentEffectType.Progressive_Gradual,
-                    _Sequence = new KeySequence(new Aurora.Devices.DeviceKeys[] {
-                        Aurora.Devices.DeviceKeys.ONE, Aurora.Devices.DeviceKeys.TWO, Aurora.Devices.DeviceKeys.THREE, Aurora.Devices.DeviceKeys.FOUR, Aurora.Devices.DeviceKeys.FIVE,
-                        Aurora.Devices.DeviceKeys.SIX, Aurora.Devices.DeviceKeys.SEVEN, Aurora.Devices.DeviceKeys.EIGHT, Aurora.Devices.DeviceKeys.NINE, Aurora.Devices.DeviceKeys.ZERO,
-                        Aurora.Devices.DeviceKeys.MINUS, Aurora.Devices.DeviceKeys.EQUALS
+                    _Sequence = new KeySequence(new DeviceKeys[] {
+                        DeviceKeys.ONE, DeviceKeys.TWO, DeviceKeys.THREE, DeviceKeys.FOUR, DeviceKeys.FIVE,
+                        DeviceKeys.SIX, DeviceKeys.SEVEN, DeviceKeys.EIGHT, DeviceKeys.NINE, DeviceKeys.ZERO,
+                        DeviceKeys.MINUS, DeviceKeys.EQUALS
                     }),
                     _BlinkThreshold = 0.0,
                     _BlinkDirection = false,
@@ -41,10 +42,10 @@ public class DishonoredProfile : ApplicationProfile
                     _PrimaryColor =  Color.Blue,
                     _SecondaryColor = Color.FromArgb(255,0,0,70),
                     _PercentType = PercentEffectType.Progressive_Gradual,
-                    _Sequence = new KeySequence(new Aurora.Devices.DeviceKeys[] {
-                        Aurora.Devices.DeviceKeys.F1, Aurora.Devices.DeviceKeys.F2, Aurora.Devices.DeviceKeys.F3, Aurora.Devices.DeviceKeys.F4,
-                        Aurora.Devices.DeviceKeys.F5, Aurora.Devices.DeviceKeys.F6, Aurora.Devices.DeviceKeys.F7, Aurora.Devices.DeviceKeys.F8,
-                        Aurora.Devices.DeviceKeys.F9, Aurora.Devices.DeviceKeys.F10, Aurora.Devices.DeviceKeys.F11, Aurora.Devices.DeviceKeys.F12
+                    _Sequence = new KeySequence(new DeviceKeys[] {
+                        DeviceKeys.F1, DeviceKeys.F2, DeviceKeys.F3, DeviceKeys.F4,
+                        DeviceKeys.F5, DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8,
+                        DeviceKeys.F9, DeviceKeys.F10, DeviceKeys.F11, DeviceKeys.F12
                     }),
                     _BlinkThreshold = 0.0,
                     _BlinkDirection = false,
@@ -59,10 +60,10 @@ public class DishonoredProfile : ApplicationProfile
                     _PrimaryColor =  Color.Blue,
                     _SecondaryColor = Color.FromArgb(255,0,0,70),
                     _PercentType = PercentEffectType.Progressive,
-                    _Sequence = new KeySequence(new Aurora.Devices.DeviceKeys[] {
-                        Aurora.Devices.DeviceKeys.DELETE, Aurora.Devices.DeviceKeys.END, Aurora.Devices.DeviceKeys.PAGE_DOWN,
-                        Aurora.Devices.DeviceKeys.INSERT, Aurora.Devices.DeviceKeys.HOME, Aurora.Devices.DeviceKeys.PAGE_UP,
-                        Aurora.Devices.DeviceKeys.PRINT_SCREEN, Aurora.Devices.DeviceKeys.SCROLL_LOCK, Aurora.Devices.DeviceKeys.PAUSE_BREAK
+                    _Sequence = new KeySequence(new DeviceKeys[] {
+                        DeviceKeys.DELETE, DeviceKeys.END, DeviceKeys.PAGE_DOWN,
+                        DeviceKeys.INSERT, DeviceKeys.HOME, DeviceKeys.PAGE_UP,
+                        DeviceKeys.PRINT_SCREEN, DeviceKeys.SCROLL_LOCK, DeviceKeys.PAUSE_BREAK
                     }),
                     _BlinkThreshold = 0.0,
                     _BlinkDirection = false,
@@ -77,10 +78,10 @@ public class DishonoredProfile : ApplicationProfile
                     _PrimaryColor =  Color.Red,
                     _SecondaryColor = Color.FromArgb(255,70,0,0),
                     _PercentType = PercentEffectType.Progressive,
-                    _Sequence = new KeySequence(new Aurora.Devices.DeviceKeys[] {
-                        Aurora.Devices.DeviceKeys.NUM_ONE, Aurora.Devices.DeviceKeys.NUM_TWO, Aurora.Devices.DeviceKeys.NUM_THREE, Aurora.Devices.DeviceKeys.NUM_FOUR,
-                        Aurora.Devices.DeviceKeys.NUM_FIVE, Aurora.Devices.DeviceKeys.NUM_SIX, Aurora.Devices.DeviceKeys.NUM_SEVEN, Aurora.Devices.DeviceKeys.NUM_EIGHT,
-                        Aurora.Devices.DeviceKeys.NUM_NINE
+                    _Sequence = new KeySequence(new DeviceKeys[] {
+                        DeviceKeys.NUM_ONE, DeviceKeys.NUM_TWO, DeviceKeys.NUM_THREE, DeviceKeys.NUM_FOUR,
+                        DeviceKeys.NUM_FIVE, DeviceKeys.NUM_SIX, DeviceKeys.NUM_SEVEN, DeviceKeys.NUM_EIGHT,
+                        DeviceKeys.NUM_NINE
                     }),
                     _BlinkThreshold = 0.0,
                     _BlinkDirection = false,

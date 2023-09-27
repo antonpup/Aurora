@@ -1,7 +1,7 @@
-using Aurora.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Aurora.Utils;
 
 namespace Aurora.Settings.Overrides.Logic {
 

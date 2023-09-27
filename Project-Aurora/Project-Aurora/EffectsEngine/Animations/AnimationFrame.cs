@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using Aurora.Utils;
 
 namespace Aurora.EffectsEngine.Animations
 {
@@ -219,8 +220,7 @@ namespace Aurora.EffectsEngine.Animations
 
             newframe._angle = newAngle;
             newframe._width = newWidth;
-            newframe._color = Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount);
-            
+            newframe._color = ColorUtils.BlendColors(_color, otherAnim._color, amount);
 
             return newframe;
         }

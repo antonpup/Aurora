@@ -5,7 +5,6 @@
              xmlns:a="clr-namespace:Aurora"
              xmlns:local="clr-namespace:Aurora.Settings"
              xmlns:Controls="clr-namespace:Aurora.Controls"
-             xmlns:config="clr-namespace:Aurora.Devices.RGBNet.Config"
              x:Class="Aurora.Settings.Control_Settings"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="403.521"

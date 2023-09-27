@@ -1,7 +1,6 @@
 ﻿using Aurora.Devices;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Settings;
-using Aurora.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;

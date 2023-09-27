@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common.Devices;
 
 namespace Aurora.Profiles.Dota_2
 {
@@ -30,10 +31,10 @@ namespace Aurora.Profiles.Dota_2
                         _PrimaryColor =  Color.FromArgb(0, 255, 0),
                         _SecondaryColor = Color.FromArgb(0, 60, 0),
                         _PercentType = PercentEffectType.Progressive_Gradual,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] {
-                            Devices.DeviceKeys.F1, Devices.DeviceKeys.F2, Devices.DeviceKeys.F3, Devices.DeviceKeys.F4,
-                            Devices.DeviceKeys.F5, Devices.DeviceKeys.F6, Devices.DeviceKeys.F7, Devices.DeviceKeys.F8,
-                            Devices.DeviceKeys.F9, Devices.DeviceKeys.F10, Devices.DeviceKeys.F11, Devices.DeviceKeys.F12
+                        _Sequence = new KeySequence(new DeviceKeys[] {
+                            DeviceKeys.F1, DeviceKeys.F2, DeviceKeys.F3, DeviceKeys.F4,
+                            DeviceKeys.F5, DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8,
+                            DeviceKeys.F9, DeviceKeys.F10, DeviceKeys.F11, DeviceKeys.F12
                         }),
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
@@ -48,10 +49,10 @@ namespace Aurora.Profiles.Dota_2
                         _PrimaryColor =  Color.FromArgb(0, 125, 255),
                         _SecondaryColor = Color.FromArgb(0, 0, 60),
                         _PercentType = PercentEffectType.Progressive_Gradual,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] {
-                            Devices.DeviceKeys.ONE, Devices.DeviceKeys.TWO, Devices.DeviceKeys.THREE, Devices.DeviceKeys.FOUR,
-                            Devices.DeviceKeys.FIVE, Devices.DeviceKeys.SIX, Devices.DeviceKeys.SEVEN, Devices.DeviceKeys.EIGHT,
-                            Devices.DeviceKeys.NINE, Devices.DeviceKeys.ZERO, Devices.DeviceKeys.MINUS, Devices.DeviceKeys.EQUALS
+                        _Sequence = new KeySequence(new DeviceKeys[] {
+                            DeviceKeys.ONE, DeviceKeys.TWO, DeviceKeys.THREE, DeviceKeys.FOUR,
+                            DeviceKeys.FIVE, DeviceKeys.SIX, DeviceKeys.SEVEN, DeviceKeys.EIGHT,
+                            DeviceKeys.NINE, DeviceKeys.ZERO, DeviceKeys.MINUS, DeviceKeys.EQUALS
                         }),
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,

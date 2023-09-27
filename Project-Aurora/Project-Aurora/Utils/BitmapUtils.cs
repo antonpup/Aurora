@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using Common.Utils;
 
 namespace Aurora.Utils;
 
@@ -76,7 +77,7 @@ public static class BitmapUtils
         map.UnlockBits(srcData);
 
         var area = rectangle.Width * rectangle.Height;
-        return ColorUtils.FastColor(
+        return CommonColorUtils.FastColor(
             (byte) (color[2] / area), (byte) (color[1] / area), (byte) (color[0] / area)
         );
     }

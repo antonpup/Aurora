@@ -1,16 +1,14 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles.Dota_2.GSI;
 using Aurora.Profiles.Dota_2.GSI.Nodes;
-using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
+using Aurora.Utils;
+using Common.Devices;
 
 namespace Aurora.Profiles.Dota_2.Layers
 {
@@ -42,10 +40,10 @@ namespace Aurora.Profiles.Dota_2.Layers
         public Color ItemNoChargersColor { get { return Logic._ItemNoChargersColor ?? _ItemNoChargersColor ?? Color.Empty; } }
 
         [JsonProperty("item_keys2")]    //changed property name to reset because some update broke this setting
-        public List<Devices.DeviceKeys> _ItemKeys { get; set; }
+        public List<DeviceKeys> _ItemKeys { get; set; }
 
         [JsonIgnore]
-        public List<Devices.DeviceKeys> ItemKeys { get { return Logic._ItemKeys ?? _ItemKeys ?? new List<Devices.DeviceKeys>(); } }
+        public List<DeviceKeys> ItemKeys { get { return Logic._ItemKeys ?? _ItemKeys ?? new List<DeviceKeys>(); } }
 
         public Dota2ItemLayerHandlerProperties() : base() { }
 
@@ -60,7 +58,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             this._ItemCooldownColor = Color.FromArgb(0, 0, 0);
             this._ItemNoChargersColor = Color.FromArgb(150, 150, 150);
             this._UseItemColors = true;
-            this._ItemKeys = new List<Devices.DeviceKeys>() { Devices.DeviceKeys.Z, Devices.DeviceKeys.X, Devices.DeviceKeys.C, Devices.DeviceKeys.V, Devices.DeviceKeys.B, Devices.DeviceKeys.N, Devices.DeviceKeys.INSERT, Devices.DeviceKeys.HOME, Devices.DeviceKeys.PAGE_UP, Devices.DeviceKeys.NUM_ONE, Devices.DeviceKeys.NUM_TWO, Devices.DeviceKeys.NUM_THREE, Devices.DeviceKeys.NUM_FOUR, Devices.DeviceKeys.NUM_FIVE , Devices.DeviceKeys.NUM_SIX };
+            this._ItemKeys = new List<DeviceKeys>() { DeviceKeys.Z, DeviceKeys.X, DeviceKeys.C, DeviceKeys.V, DeviceKeys.B, DeviceKeys.N, DeviceKeys.INSERT, DeviceKeys.HOME, DeviceKeys.PAGE_UP, DeviceKeys.NUM_ONE, DeviceKeys.NUM_TWO, DeviceKeys.NUM_THREE, DeviceKeys.NUM_FOUR, DeviceKeys.NUM_FIVE , DeviceKeys.NUM_SIX };
         }
 
     }
@@ -357,7 +355,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 for (int index = 0; index < dota2State.Items.InventoryCount; index++)
                 {
                     Item item = dota2State.Items.GetInventoryAt(index);
-                    Devices.DeviceKeys key = Properties.ItemKeys[index];
+                    DeviceKeys key = Properties.ItemKeys[index];
 
                     if (item.Name.Equals("empty"))
                         EffectLayer.Set(key, Properties.EmptyItemColor);
@@ -366,7 +364,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                         if (Properties.UseItemColors && ItemColors.ContainsKey(item.Name))
                         {
                             if (!String.IsNullOrWhiteSpace(item.ContainsRune))
-                                EffectLayer.Set(key, Utils.ColorUtils.BlendColors(ItemColors[item.Name], BottleRuneColors[item.ContainsRune], 0.8));
+                                EffectLayer.Set(key, ColorUtils.BlendColors(ItemColors[item.Name], BottleRuneColors[item.ContainsRune], 0.8));
                             else
                                 EffectLayer.Set(key, ItemColors[item.Name]);
                         }
@@ -375,20 +373,20 @@ namespace Aurora.Profiles.Dota_2.Layers
 
                         //Cooldown
                         if (item.Cooldown > 5)
-                            EffectLayer.Set(key, Utils.ColorUtils.BlendColors(EffectLayer.Get(key), Properties.ItemCooldownColor, 1.0));
+                            EffectLayer.Set(key, ColorUtils.BlendColors(EffectLayer.Get(key), Properties.ItemCooldownColor, 1.0));
                         else if (item.Cooldown > 0 && item.Cooldown <= 5)
-                            EffectLayer.Set(key, Utils.ColorUtils.BlendColors(EffectLayer.Get(key), Properties.ItemCooldownColor, item.Cooldown / 5.0));
+                            EffectLayer.Set(key, ColorUtils.BlendColors(EffectLayer.Get(key), Properties.ItemCooldownColor, item.Cooldown / 5.0));
 
                         //Charges
                         if (item.Charges == 0)
-                            EffectLayer.Set(key, Utils.ColorUtils.BlendColors(EffectLayer.Get(key), Properties.ItemNoChargersColor, 0.7));
+                            EffectLayer.Set(key, ColorUtils.BlendColors(EffectLayer.Get(key), Properties.ItemNoChargersColor, 0.7));
                     }
                 }
 
                 for (int index = 0; index < dota2State.Items.StashCount; index++)
                 {
                     Item item = dota2State.Items.GetStashAt(index);
-                    Devices.DeviceKeys key = Properties.ItemKeys[9 + index];
+                    DeviceKeys key = Properties.ItemKeys[9 + index];
 
                     if (item.Name.Equals("empty"))
                     {
@@ -399,7 +397,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                         if (Properties.UseItemColors && ItemColors.ContainsKey(item.Name))
                         {
                             if (!String.IsNullOrWhiteSpace(item.ContainsRune))
-                                EffectLayer.Set(key, Utils.ColorUtils.BlendColors(ItemColors[item.Name], BottleRuneColors[item.ContainsRune], 0.8));
+                                EffectLayer.Set(key, ColorUtils.BlendColors(ItemColors[item.Name], BottleRuneColors[item.ContainsRune], 0.8));
                             else
                                 EffectLayer.Set(key, ItemColors[item.Name]);
                         }
@@ -408,13 +406,13 @@ namespace Aurora.Profiles.Dota_2.Layers
 
                         //Cooldown
                         if (item.Cooldown > 5)
-                            EffectLayer.Set(key, Utils.ColorUtils.BlendColors(EffectLayer.Get(key), Properties.ItemCooldownColor, 1.0));
+                            EffectLayer.Set(key, ColorUtils.BlendColors(EffectLayer.Get(key), Properties.ItemCooldownColor, 1.0));
                         else if (item.Cooldown > 0 && item.Cooldown <= 5)
-                            EffectLayer.Set(key, Utils.ColorUtils.BlendColors(EffectLayer.Get(key), Properties.ItemCooldownColor, item.Cooldown / 5.0));
+                            EffectLayer.Set(key, ColorUtils.BlendColors(EffectLayer.Get(key), Properties.ItemCooldownColor, item.Cooldown / 5.0));
 
                         //Charges
                         if (item.Charges == 0)
-                            EffectLayer.Set(key, Utils.ColorUtils.BlendColors(EffectLayer.Get(key), Properties.ItemNoChargersColor, 0.7));
+                            EffectLayer.Set(key, ColorUtils.BlendColors(EffectLayer.Get(key), Properties.ItemNoChargersColor, 0.7));
                     }
                 }
             }

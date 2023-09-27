@@ -1,18 +1,13 @@
 ﻿using Aurora.EffectsEngine;
-using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
-using Aurora.Utils;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Controls;
 using Aurora.Settings.Layers.Controls;
+using Aurora.Utils;
 
 namespace Aurora.Settings.Layers {
 

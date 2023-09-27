@@ -49,7 +49,9 @@
                     </ContextMenu.ItemsPanel>
 
                     <MenuItem Header="Open Aurora" Click="trayicon_menu_settings_Click" Foreground="White" />
-                    <MenuItem Header="Restart" Click="trayicon_menu_restart_Click" Foreground="White" />
+                    <MenuItem Header="Restart Aurora" Click="trayicon_menu_restart_aurora_Click" Foreground="White" />
+                    <MenuItem Header="Restart Devices" Click="trayicon_menu_restart_devices_Click" Foreground="White" />
+                    <MenuItem Header="Quit Devices" Click="trayicon_menu_quit_devices_Click" Foreground="White" />
                     <MenuItem Header="Quit" Click="trayicon_menu_quit_Click" Foreground="White" />
                 </ContextMenu>
             </tb:TaskbarIcon.ContextMenu>

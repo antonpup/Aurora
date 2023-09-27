@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Controls;
-using Aurora.Devices;
 using Aurora.EffectsEngine;
 using Aurora.Profiles.CSGO.GSI;
 using Aurora.Profiles.CSGO.GSI.Nodes;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
+using Common.Devices;
 using Newtonsoft.Json;
 
 namespace Aurora.Profiles.CSGO.Layers;

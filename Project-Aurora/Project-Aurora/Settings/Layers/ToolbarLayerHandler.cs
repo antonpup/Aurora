@@ -1,17 +1,11 @@
-﻿using Aurora.Devices;
-using Aurora.EffectsEngine;
+﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
-using Aurora.Utils;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Input;
 using Aurora.Modules.Inputs;
 using Aurora.Settings.Layers.Controls;
+using Common.Devices;
 
 namespace Aurora.Settings.Layers {
 

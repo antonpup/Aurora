@@ -2,7 +2,6 @@
 using Aurora.Profiles.Minecraft.GSI;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
-using Aurora.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using Aurora.Utils;
 
 namespace Aurora.Profiles.Minecraft.Layers {
 

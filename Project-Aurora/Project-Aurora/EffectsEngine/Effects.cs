@@ -1,12 +1,13 @@
 ﻿using System;
 using Aurora.EffectsEngine;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Aurora.Devices;
 using System.Drawing;
 using System.Threading.Tasks;
 using Aurora.Utils;
+using Common;
+using Common.Devices;
 
 namespace Aurora;
 
@@ -226,7 +227,7 @@ public class Effects
 
     private static IReadOnlyDictionary<DeviceKeys, BitmapRectangle> _bitmapMap = new Dictionary<DeviceKeys, BitmapRectangle>();
 
-    private readonly Dictionary<DeviceKeys, Color> _keyColors = new(MaxDeviceId, EnumHashGetter.Instance as IEqualityComparer<DeviceKeys>);
+    private readonly Dictionary<DeviceKeys, SimpleColor> _keyColors = new(MaxDeviceId, EnumHashGetter.Instance as IEqualityComparer<DeviceKeys>);
 
     private readonly Lazy<EffectLayer> _effectLayerFactory = new(() => new EffectLayer("Global Background", Color.Black, true));
     private EffectLayer Background => _effectLayerFactory.Value;
@@ -240,7 +241,7 @@ public class Effects
 
         foreach (var key in allKeys)
         {
-            _keyColors[key] = Color.Black;
+            _keyColors[key] = new SimpleColor(0, 0, 0);
         }
     }
 
@@ -292,26 +293,25 @@ public class Effects
         }
 
         foreach (var key in _bitmapMap.Keys)
-            _keyColors[key] = Background.Get(key);
+            _keyColors[key] = (SimpleColor)Background.Get(key);
 
         var peripheralDarkness = 1.0f - Global.Configuration.PeripheralBrightness * Global.Configuration.GlobalBrightness;
         foreach (var key in PossiblePeripheralKeys)
         {
             if (_keyColors.TryGetValue(key, out var color))
             {
-                _keyColors[key] = ColorUtils.BlendColors(color, Color.Black, peripheralDarkness);
+                _keyColors[key] = ColorUtils.BlendColors(color, SimpleColor.Black, peripheralDarkness);
             }
         }
 
-        var dcc = new DeviceColorComposition(_keyColors);
-        _deviceManager.Result.UpdateDevices(dcc);
+        _deviceManager.Result.UpdateDevices(_keyColors);
 
         NewLayerRender?.Invoke(Background.GetBitmap());
 
         frame.Dispose();
     }
 
-    public Dictionary<DeviceKeys, Color> GetKeyboardLights()
+    public Dictionary<DeviceKeys, SimpleColor> GetKeyboardLights()
     {
         return _keyColors;
     }

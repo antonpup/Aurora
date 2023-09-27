@@ -1,9 +1,9 @@
 ﻿using Aurora.Profiles;
-using Aurora.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Windows.Data;
 using System.Windows.Media;
+using Aurora.Utils;
 
 namespace Aurora.Settings.Overrides.Logic {
     /// <summary>

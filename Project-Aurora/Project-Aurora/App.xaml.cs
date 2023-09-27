@@ -109,6 +109,13 @@ public partial class App
             Window_BitmapView.Open();
         if (Global.Configuration.HttpWindowOnStartUp)
             Window_GSIHttpDebug.Open(HttpListenerModule.HttpListener);
+
+        SessionEnding += (_, sessionEndingParams) =>
+        {
+            Global.logger.Information("Session ending. Reason: {Reason}", sessionEndingParams.ReasonSessionEnding);
+            sessionEndingParams.Cancel = true;
+            configUi.ExitApp();
+        };
     }
 
     private void CheckRunningProcesses()
