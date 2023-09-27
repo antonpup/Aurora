@@ -59,7 +59,7 @@ namespace Aurora.Settings
             chkLayerSmoothing.IsChecked = Layer.Handler.EnableSmoothing;
             chk_ExcludeMask.IsChecked = Layer.Handler._EnableExclusionMask ?? false;
             keyseq_ExcludeMask.Sequence = Layer.Handler._ExclusionMask;
-            sldr_Opacity.Value = (int)(Layer.Handler._Opacity ?? 1f * 100.0f);
+            sldr_Opacity.Value = (Layer.Handler._Opacity ?? 1d) * 100.0;
             lbl_Opacity_Text.Text = $"{(int)sldr_Opacity.Value} %";
 
             grdLayerConfigs.Visibility = Visibility.Hidden;
