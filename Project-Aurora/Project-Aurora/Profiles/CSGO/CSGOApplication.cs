@@ -7,7 +7,7 @@ public class CSGO : Application
 {
     public CSGO()
         : base(new LightEventConfig {
-            Name = "CS:GO",
+            Name = "CS2",
             ID = "csgo",
             AppID = "730",
             ProcessNames = new[] { "csgo.exe", "cs2.exe" },
@@ -15,7 +15,7 @@ public class CSGO : Application
             ProfileType = typeof(CSGOProfile),
             OverviewControlType = typeof(Control_CSGO),
             GameStateType = typeof(GSI.GameState_CSGO),
-            IconURI = "Resources/csgo_64x64.png"
+            IconURI = "Resources/cs2.png"
         })
     {
         AllowLayer<CSGOBackgroundLayerHandler>();
