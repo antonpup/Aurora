@@ -233,7 +233,18 @@ public abstract class RgbNetDevice : DefaultDevice
         {
             if (!RgbNetKeyMappings.AuroraToRgbNet.TryGetValue(key, out var rgbNetLedId))
                 continue;
-            var led = device[rgbNetLedId] ?? device.AddLed(rgbNetLedId, new Point(), new Size());
+            
+            var led = device[rgbNetLedId];
+            if (led == null)
+            {
+                if (device.Size == Size.Invalid)
+                {
+                    device.Size = new Size(0, 0);
+                }
+                led = device.AddLed(rgbNetLedId, new Point(device.Size.Width, 10), new Size(10, 10));
+                device.Size = new Size(device.Size.Width + 10, 10);
+            }
+
             if (led == null)
                 continue;
 
