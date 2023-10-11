@@ -48,7 +48,7 @@ public partial class App
         new PointerUpdateModule(),
         new HardwareMonitorModule(),
         new LogitechSdkModule(),
-        new BlacklistMonitor(),
+        new OnlineSettings(DevicesModule.DeviceManager),
         PluginsModule,
         IpcListenerModule,
         HttpListenerModule,

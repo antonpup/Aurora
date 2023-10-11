@@ -22,13 +22,6 @@ namespace Aurora.Devices.Logitech
         private readonly Color[] headset = new Color[3];
         private DeviceKeys genericKey;
 
-        public LogitechDevice()
-        {
-            const string info = "LGS can also work";
-            const string sdkLink = "https://www.logitechg.com/en-us/innovation/g-hub.html";
-            _tooltips = new DeviceTooltips(false, false, info, sdkLink);
-        }
-
         protected override async Task<bool> DoInitialize()
         {
             genericKey = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{DeviceName}_devicekey");

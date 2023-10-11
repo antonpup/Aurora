@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading.Tasks;
+using Aurora.Modules.OnlineConfigs.Model;
 using Aurora.Settings;
 using JetBrains.Annotations;
 
@@ -88,5 +89,5 @@ public interface IDevice
 
     IEnumerable<string> GetDevices();
     
-    DeviceTooltips Tooltips { get; }
+    DeviceTooltips Tooltips { get; set; }
 }

@@ -17,7 +17,6 @@ public class CorsairRgbNetDevice : RgbNetDevice
     public CorsairRgbNetDevice()
     {
         const string sdkLink = "https://www.corsair.com/ww/en/s/downloads";
-        _tooltips = new DeviceTooltips(false, false, null, sdkLink);
     }
 
     protected override void RegisterVariables(VariableRegistry variableRegistry)

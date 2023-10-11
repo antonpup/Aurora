@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Threading.Tasks;
+using Aurora.Modules.OnlineConfigs.Model;
 using Aurora.Settings;
 
 namespace Aurora.Devices;
@@ -11,8 +12,7 @@ namespace Aurora.Devices;
 public abstract class DefaultDevice : IDevice, IDisposable
 {
     protected readonly Stopwatch Watch = new();
-    protected DeviceTooltips _tooltips = new ();
-    
+
     private readonly Stopwatch _updateWatch = new();
     private long _lastUpdateTime;
     private long _updateTime;
@@ -31,7 +31,7 @@ public abstract class DefaultDevice : IDevice, IDisposable
 
     public virtual bool IsInitialized { get; protected set; }
 
-    public DeviceTooltips Tooltips => _tooltips;
+    public DeviceTooltips Tooltips { get; set; } = new();
 
     public async Task<bool> Initialize() {
         if (IsInitialized || isDoingWork)

@@ -19,13 +19,6 @@ public class OpenRgbNetDevice : RgbNetDevice
         ClientName = "Aurora (RGB.NET)"
     };
 
-    public OpenRgbNetDevice()
-    {
-        var info = "Sdk server needs to be enabled in OpenRGB";
-        var sdkLink = "https://openrgb.org/";
-        _tooltips = new DeviceTooltips(true, true, info, sdkLink);
-    }
-
     protected override Task ConfigureProvider()
     {
         base.ConfigureProvider();
