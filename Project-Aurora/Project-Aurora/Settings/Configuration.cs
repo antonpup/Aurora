@@ -665,7 +665,7 @@ namespace Aurora.Settings
         {
             typeof(AsusDevice),
             typeof(CorsairRgbNetDevice),
-            typeof(LogitechDevice),
+            typeof(LogitechRgbNetDevice),
             typeof(OpenRgbNetDevice),
         };
 
@@ -674,7 +674,7 @@ namespace Aurora.Settings
             EnabledDevices ??= MigrateEnabledDevices();
             PrioritizeDevice(typeof(OpenRgbNetDevice), typeof(OpenRgbAuroraDevice));
             PrioritizeDevice(typeof(SteelSeriesRgbNetDevice), typeof(SteelSeriesDevice));
-            PrioritizeDevice(typeof(LogitechDevice), typeof(LogitechRgbNetDevice));
+            PrioritizeDevice(typeof(LogitechRgbNetDevice), typeof(LogitechDevice));
         }
 
         private void PrioritizeDevice(Type primary, Type secondary)
