@@ -9,7 +9,6 @@ using Aurora.Profiles;
 using Aurora.Settings.Layers.Controls;
 using Aurora.Settings.Overrides;
 using Aurora.Utils;
-using LedCSharp;
 using Newtonsoft.Json;
 
 namespace Aurora.Settings.Layers;
@@ -123,26 +122,12 @@ public class WrapperLightsLayerHandler : LayerHandler<WrapperLightsLayerHandlerP
             if (Properties.CloningMap.Values.Any(sequence => sequence.Keys.Contains(key)))
                 continue;
 
-            if (_extraKeys.ContainsKey(key))
-            {
-                EffectLayer.Set(key, GetBoostedColor(_extraKeys[key]));
+            if (!_extraKeys.ContainsKey(key)) continue;
+            EffectLayer.Set(key, GetBoostedColor(_extraKeys[key]));
 
-                // Do the key cloning
-                if (Properties.CloningMap.TryGetValue(key, out var targetKey))
-                    EffectLayer.Set(targetKey, GetBoostedColor(_extraKeys[key]));
-            }
-            else
-            {
-                var logiKey = DeviceKeysUtils.ToLogitechBitmap(key);
-
-                if (logiKey == Logitech_keyboardBitmapKeys.UNKNOWN || _bitmap.Length <= 0) continue;
-                var color = GetBoostedColor(ColorUtils.GetColorFromInt(_bitmap[(int)logiKey / 4]));
-                EffectLayer.Set(key, color);
-
-                // Key cloning
-                if (Properties.CloningMap.TryGetValue(key, out var targetKey))
-                    EffectLayer.Set(targetKey, color);
-            }
+            // Do the key cloning
+            if (Properties.CloningMap.TryGetValue(key, out var targetKey))
+                EffectLayer.Set(targetKey, GetBoostedColor(_extraKeys[key]));
         }
 
         var currentTime = Time.GetMillisecondsSinceEpoch();

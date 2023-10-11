@@ -1,8 +1,8 @@
-using LedCSharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using RGB.NET.Devices.Logitech;
 
 namespace Aurora.Profiles.GTA5.GSI
 {
@@ -148,7 +148,7 @@ namespace Aurora.Profiles.GTA5.GSI
 
 
             //Get Current State
-            Color state_color = Utils.ColorUtils.GetColorFromInt(Sent_Bitmap[(int)Logitech_keyboardBitmapKeys.ESC / 4]);
+            Color state_color = Utils.ColorUtils.GetColorFromInt(Sent_Bitmap[(int)LogitechLedId.ESC / 4]);
 
             if(stateColors.TryGetValue(state_color, out var newState))
             {
@@ -163,9 +163,9 @@ namespace Aurora.Profiles.GTA5.GSI
             }
 
 
-            LeftSirenColor = Utils.ColorUtils.GetColorFromInt(Sent_Bitmap[(int)Logitech_keyboardBitmapKeys.F1 / 4]);
+            LeftSirenColor = Utils.ColorUtils.GetColorFromInt(Sent_Bitmap[(int)LogitechLedId.F1 / 4]);
 
-            RightSirenColor = Utils.ColorUtils.GetColorFromInt(Sent_Bitmap[(int)Logitech_keyboardBitmapKeys.F12 / 4]);
+            RightSirenColor = Utils.ColorUtils.GetColorFromInt(Sent_Bitmap[(int)LogitechLedId.F12 / 4]);
 
             HasCops = LeftSirenColor != RightSirenColor;
         }
