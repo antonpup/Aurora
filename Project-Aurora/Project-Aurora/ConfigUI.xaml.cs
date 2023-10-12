@@ -26,6 +26,7 @@ using Hardcodet.Wpf.TaskbarNotification;
 using PropertyChanged;
 using RazerSdkReader;
 using Application = Aurora.Profiles.Application;
+using Brushes = System.Windows.Media.Brushes;
 using Color = System.Windows.Media.Color;
 using Image = System.Windows.Controls.Image;
 using Timer = System.Timers.Timer;
@@ -150,7 +151,16 @@ partial class ConfigUI : INotifyPropertyChanged
                 var keyLights = Global.effengine.GetKeyboardLights();
                 _layoutManager.Result.SetKeyboardColors(keyLights);
 
-                KeyboardRecordMessage.Visibility = Global.key_recorder.IsRecording() ? Visibility.Visible : Visibility.Hidden;
+                if (Global.key_recorder?.IsRecording() ?? false)
+                {
+                    KeyboardRecordMessage.Visibility = Visibility.Visible;
+                    KeyboardViewBorder.BorderBrush = Brushes.Red;
+                }
+                else
+                {
+                    KeyboardRecordMessage.Visibility = Visibility.Hidden;
+                    KeyboardViewBorder.BorderBrush = Brushes.Transparent;
+                }
             }
         };
         _virtualKeyboardTimer.Elapsed += virtual_keyboard_timer_Tick;
@@ -246,19 +256,19 @@ partial class ConfigUI : INotifyPropertyChanged
     {
         _virtualKb = (await _layoutManager).VirtualKeyboard;
 
-        keyboard_grid.Children.Clear();
-        keyboard_grid.Children.Add(_virtualKb);
-        keyboard_grid.Children.Add(new LayerEditor());
+        KeyboardGrid.Children.Clear();
+        KeyboardGrid.Children.Add(_virtualKb);
+        KeyboardGrid.Children.Add(new LayerEditor());
 
-        keyboard_grid.Width = _virtualKb.Width;
+        KeyboardGrid.Width = _virtualKb.Width;
 
-        keyboard_grid.Height = _virtualKb.Height;
+        KeyboardGrid.Height = _virtualKb.Height;
 
-        keyboard_grid.UpdateLayout();
+        KeyboardGrid.UpdateLayout();
 
-        keyboard_viewbox.MaxWidth = _virtualKb.Width + 50;
-        keyboard_viewbox.MaxHeight = _virtualKb.Height + 50;
-        keyboard_viewbox.UpdateLayout();
+        KeyboardViewbox.MaxWidth = _virtualKb.Width + 50;
+        KeyboardViewbox.MaxHeight = _virtualKb.Height + 50;
+        KeyboardViewbox.UpdateLayout();
 
         UpdateLayout();
     }
@@ -272,19 +282,19 @@ partial class ConfigUI : INotifyPropertyChanged
 
         _virtualKb = (await _layoutManager).VirtualKeyboard;
 
-        keyboard_grid.Children.Clear();
-        keyboard_grid.Children.Add(_virtualKb);
-        keyboard_grid.Children.Add(new LayerEditor());
+        KeyboardGrid.Children.Clear();
+        KeyboardGrid.Children.Add(_virtualKb);
+        KeyboardGrid.Children.Add(new LayerEditor());
 
-        keyboard_grid.Width = _virtualKb.Width;
+        KeyboardGrid.Width = _virtualKb.Width;
 
-        keyboard_grid.Height = _virtualKb.Height;
+        KeyboardGrid.Height = _virtualKb.Height;
 
-        keyboard_grid.UpdateLayout();
+        KeyboardGrid.UpdateLayout();
 
-        keyboard_viewbox.MaxWidth = _virtualKb.Width + 50;
-        keyboard_viewbox.MaxHeight = _virtualKb.Height + 50;
-        keyboard_viewbox.UpdateLayout();
+        KeyboardViewbox.MaxWidth = _virtualKb.Width + 50;
+        KeyboardViewbox.MaxHeight = _virtualKb.Height + 50;
+        KeyboardViewbox.UpdateLayout();
 
         UpdateManagerStackFocus(ctrlLayerManager);
 
