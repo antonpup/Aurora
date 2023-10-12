@@ -65,8 +65,18 @@ public class TransparencyComponent
                 DwmSetWindowAttribute(_hwHandle.Handle, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE,
                     ref falseValue, Marshal.SizeOf(typeof(int)));
 
-            DwmSetWindowAttribute(_hwHandle.Handle, DwmWindowAttribute.DWMWA_MICA_EFFECT, ref trueValue,
-                Marshal.SizeOf(typeof(int)));
+            if (Environment.OSVersion.Version.Build >= 22523)
+            {
+                DwmSetWindowAttribute(_hwHandle.Handle, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, ref trueValue, Marshal.SizeOf(typeof(int)));
+                var mica = 2;
+                DwmSetWindowAttribute(_hwHandle.Handle, DwmWindowAttribute.DWMWA_SYSTEMBACKDROP_TYPE, ref mica, Marshal.SizeOf(typeof(int)));
+            }
+            else
+            {
+                DwmSetWindowAttribute(_hwHandle.Handle, DwmWindowAttribute.DWMWA_MICA_EFFECT, ref trueValue,
+                    Marshal.SizeOf(typeof(int)));
+            }
+
             _window.TintColor = Color.FromArgb(1, 0, 0, 0);
             _window.FallbackColor = Color.FromArgb(64, 0, 0, 0);
         }
