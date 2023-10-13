@@ -8,6 +8,8 @@ using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
 using RazerSdkReader;
 using Serilog;
+using Serilog.Core;
+using Serilog.Events;
 
 namespace Aurora;
 
@@ -42,14 +44,38 @@ public static class Global
     /// </summary>
     public static IInputEvents InputEvents { get; set; } = new NoopInputEvents();
 
-    public static LightingStateManager? LightingStateManager { get; set; }     //TODO module access
-    public static Configuration Configuration { get; set; }
+    public static LightingStateManager? LightingStateManager { get; set; } //TODO module access
+
+    public static Configuration Configuration
+    {
+        get => _configuration;
+        set
+        {
+            _configuration = value;
+
+            Configuration.PropertyChanged += (_, args) =>
+            {
+                if (args.PropertyName != nameof(Configuration.LogLevel))
+                {
+                    return;
+                }
+
+                logger.Information("Setting logger level: {Level}", Configuration.LogLevel);
+                LoggingLevelSwitch.MinimumLevel = Configuration.LogLevel;
+            };
+            LoggingLevelSwitch.MinimumLevel = Configuration.LogLevel;
+        }
+    }
+
     public static KeyboardLayoutManager? kbLayout { get; set; }                //TODO module access
     public static Effects effengine { get; set; }
     public static KeyRecorder? key_recorder { get; set; }
     public static ChromaReader? razerSdkManager { get; set; }                  //TODO module access
     public static AudioDeviceProxy? CaptureProxy { get; set; }
     public static AudioDeviceProxy? RenderProxy { get; set; }
+    
+    internal static readonly LoggingLevelSwitch LoggingLevelSwitch = new(LogEventLevel.Verbose);
+    private static Configuration _configuration;
 
     public static void Initialize()
     {
@@ -72,6 +98,7 @@ public static class Global
             )
             .WriteTo.Debug()
 #endif
+            .MinimumLevel.ControlledBy(LoggingLevelSwitch)
             .CreateLogger();
     }
 }

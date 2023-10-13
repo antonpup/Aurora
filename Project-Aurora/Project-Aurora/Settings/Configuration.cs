@@ -20,6 +20,7 @@ using Aurora.Devices.SteelSeries;
 using Aurora.Modules.AudioCapture;
 using Aurora.Settings.Overrides.Logic;
 using JetBrains.Annotations;
+using Serilog.Events;
 
 namespace Aurora.Settings
 {
@@ -649,6 +650,8 @@ namespace Aurora.Settings
         //httpDebug Data
         public bool HttpDebugTopMost { get; set; } = false;
         public bool HttpWindowOnStartUp { get; set; } = false;
+
+        public LogEventLevel LogLevel { get; set; } = LogEventLevel.Information;
 
         public ObservableConcurrentDictionary<string, IEvaluatable> EvaluatableTemplates { get; set; } = new();
 
