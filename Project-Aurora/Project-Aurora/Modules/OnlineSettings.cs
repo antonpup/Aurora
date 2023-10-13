@@ -57,7 +57,7 @@ public sealed partial class OnlineSettings : AuroraModule
 
         if (commitDate <= Global.Configuration.OnlineSettingsTime)
         {
-            _layoutUpdateTaskSource.SetResult();
+            _layoutUpdateTaskSource.TrySetResult();
             return;
         }
         
@@ -72,7 +72,7 @@ public sealed partial class OnlineSettings : AuroraModule
             Global.logger.Error(e, "Error extracting online settings");
         }
 
-        _layoutUpdateTaskSource.SetResult();
+        _layoutUpdateTaskSource.TrySetResult();
         Global.Configuration.OnlineSettingsTime = commitDate;
 
         try
