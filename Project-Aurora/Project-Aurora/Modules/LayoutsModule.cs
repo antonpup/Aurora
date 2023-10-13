@@ -8,13 +8,15 @@ namespace Aurora.Modules;
 public sealed partial class LayoutsModule : AuroraModule
 {
     private readonly Task<ChromaReader?> _rzSdk;
-    
+    private readonly Task _onlineSettingsLayoutsUpdate;
+
     private KeyboardLayoutManager? _layoutManager;
     private readonly TaskCompletionSource<KeyboardLayoutManager> _taskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-    public LayoutsModule(Task<ChromaReader?> rzSdk)
+    public LayoutsModule(Task<ChromaReader?> rzSdk, Task onlineSettingsLayoutsUpdate)
     {
         _rzSdk = rzSdk;
+        _onlineSettingsLayoutsUpdate = onlineSettingsLayoutsUpdate;
     }
 
     public Task<KeyboardLayoutManager> LayoutManager => _taskCompletionSource.Task;
@@ -29,6 +31,7 @@ public sealed partial class LayoutsModule : AuroraModule
         Global.logger.Information("Loading KB Layouts");
         _layoutManager = new KeyboardLayoutManager(_rzSdk);
         Global.kbLayout = _layoutManager;
+        await _onlineSettingsLayoutsUpdate;
         await Global.kbLayout.LoadBrandDefault();
         Global.logger.Information("Loaded KB Layouts");
         _taskCompletionSource.SetResult(_layoutManager);

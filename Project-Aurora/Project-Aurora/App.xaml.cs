@@ -36,7 +36,8 @@ public partial class App
     private static readonly DevicesModule DevicesModule = new(RazerSdkModule.RzSdkManager);
     private static readonly LightingStateManagerModule LightingStateManagerModule = new(
         PluginsModule.PluginManager, IpcListenerModule.IpcListener, HttpListenerModule.HttpListener, DevicesModule.DeviceManager);
-    private static readonly LayoutsModule LayoutsModule = new(RazerSdkModule.RzSdkManager);
+    private static readonly OnlineSettings OnlineSettings = new(DevicesModule.DeviceManager);
+    private static readonly LayoutsModule LayoutsModule = new(RazerSdkModule.RzSdkManager, OnlineSettings.LayoutsUpdate);
 
     private readonly List<AuroraModule> _modules = new()
     {
@@ -48,7 +49,7 @@ public partial class App
         new PointerUpdateModule(),
         new HardwareMonitorModule(),
         new LogitechSdkModule(),
-        new OnlineSettings(DevicesModule.DeviceManager),
+        OnlineSettings,
         PluginsModule,
         IpcListenerModule,
         HttpListenerModule,
@@ -58,6 +59,7 @@ public partial class App
         RazerSdkModule,
         new PerformanceMonitor(),
     };
+
 
     protected override async void OnStartup(StartupEventArgs e)
     {

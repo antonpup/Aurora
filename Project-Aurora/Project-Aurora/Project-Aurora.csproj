@@ -82,7 +82,7 @@
     <PackageReference Include="NAudio.Core" Version="2.2.0" />
     <PackageReference Include="NAudio.Wasapi" Version="22.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Octokit" Version="7.1.0" />
+    <PackageReference Include="Octokit" Version="8.1.1" />
     <PackageReference Include="OpenRGB.NET" Version="2.2.0" />
     <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
     <PackageReference Include="RawInput.Sharp" Version="0.1.1" />
@@ -105,6 +105,7 @@
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <PackageReference Include="SmartThreadPool.dll" Version="2.3.0" />
     <PackageReference Include="System.Management" Version="7.0.2" />
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
