@@ -34,12 +34,13 @@ public sealed partial class OnlineSettings : AuroraModule
     {
         SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
 
+        await DownloadAndExtract();
         await Refresh();
 
         RunningProcessMonitor.Instance.RunningProcessesChanged += OnRunningProcessesChanged;
     }
 
-    private async Task Refresh()
+    private async Task DownloadAndExtract()
     {
         try
         {
@@ -74,7 +75,10 @@ public sealed partial class OnlineSettings : AuroraModule
 
         _layoutUpdateTaskSource.TrySetResult();
         Global.Configuration.OnlineSettingsTime = commitDate;
+    }
 
+    private async Task Refresh()
+    {
         try
         {
             await UpdateConflicts();
@@ -83,6 +87,7 @@ public sealed partial class OnlineSettings : AuroraModule
         {
             Global.logger.Error(e, "Failed to update conflicts");
         }
+
         try
         {
             await UpdateDeviceInfos();
@@ -132,6 +137,7 @@ public sealed partial class OnlineSettings : AuroraModule
         {
             return;
         }
+        await DownloadAndExtract();
         await Refresh();
     }
 

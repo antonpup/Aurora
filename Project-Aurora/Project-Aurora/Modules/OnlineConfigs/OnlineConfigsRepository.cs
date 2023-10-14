@@ -31,13 +31,7 @@ public static class OnlineConfigsRepository
         await using var jsonTextReader = new JsonTextReader(stream);
 
         var serializer = JsonSerializer.CreateDefault();
-        var result = serializer.Deserialize<Dictionary<string, DeviceTooltips>>(jsonTextReader) ?? new Dictionary<string, DeviceTooltips>();
-
-        //Save to local cache
-        await using var jsonTextWriter = new JsonTextWriter(new StreamWriter(File.Create(DeviceTooltipsLocalCache)));
-        serializer.Serialize(jsonTextWriter, result);
-        
-        return result;
+        return serializer.Deserialize<Dictionary<string, DeviceTooltips>>(jsonTextReader) ?? new Dictionary<string, DeviceTooltips>();
     }
 
     private static StreamReader GetJsonStream(string cachePath)
