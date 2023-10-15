@@ -69,8 +69,24 @@ void ReceiveCommand(IAsyncResult ar)
     using var sr = new StreamReader(dmPipe);
     while (sr.ReadLine() is { } command)
     {
-        Global.Logger.Information("Received close command");
-        Stop();
+        using var splits = command.Split(Constants.StringSplit).AsEnumerable().GetEnumerator();
+        
+        switch (splits.Current)
+        {
+            case "stop":
+                Global.Logger.Information("Received close command");
+                Stop();
+                break;
+            case "blink":
+                splits.MoveNext();
+                var deviceId = splits.Current;
+                Global.DeviceManager.BlinkDevice(deviceId);
+                
+                
+                break;
+        }
+        
+        
         return;
     }
 

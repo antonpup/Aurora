@@ -21,7 +21,7 @@ public abstract class RgbNetDevice : DefaultDevice
 
     protected readonly IDictionary<string, int> DeviceCountMap = new Dictionary<string, int>();
 
-    private readonly List<IRGBDevice> _deviceList = new();
+    public readonly List<IRGBDevice> DeviceList = new();
 
     public IEnumerable<IRGBDevice> Devices { get; }
 
@@ -29,7 +29,7 @@ public abstract class RgbNetDevice : DefaultDevice
 
     protected RgbNetDevice()
     {
-        Devices = _deviceList.AsReadOnly();
+        Devices = DeviceList.AsReadOnly();
     }
 
     private string GetDeviceStatus()
@@ -102,7 +102,7 @@ public abstract class RgbNetDevice : DefaultDevice
 
     private void ProviderOnDevicesChanged(object? sender, DevicesChangedEventArgs e)
     {
-        lock (_deviceList)
+        lock (DeviceList)
             switch (e.Action)
             {
                 case DevicesChangedEventArgs.DevicesChangedAction.Added:
@@ -113,12 +113,12 @@ public abstract class RgbNetDevice : DefaultDevice
                     break;
             }
         
-        _devicesString = string.Join(Constants.StringSplit, _deviceList.Select(CalibrationName));
+        _devicesString = string.Join(Constants.StringSplit, DeviceList.Select(CalibrationName));
     }
 
     private void ProviderOnDeviceRemoved(IRGBDevice device)
     {
-        _deviceList.Remove(device);
+        DeviceList.Remove(device);
 
         var deviceName = device.DeviceInfo.Manufacturer + " " + device.DeviceInfo.Model;
         DeviceCountMap.TryGetValue(deviceName, out var count);
@@ -135,7 +135,7 @@ public abstract class RgbNetDevice : DefaultDevice
 
     private void ProviderOnDeviceAdded(IRGBDevice device)
     {
-        _deviceList.Add(device);
+        DeviceList.Add(device);
 
         var deviceName = device.DeviceInfo.Manufacturer + " " + device.DeviceInfo.Model;
         if (DeviceCountMap.TryGetValue(deviceName, out var count))
@@ -210,7 +210,7 @@ public abstract class RgbNetDevice : DefaultDevice
         bool forced = false)
     {
         if (Disabled) return Task.FromResult(false);
-        lock (_deviceList)
+        lock (DeviceList)
             foreach (var device in Devices)
             {
                 UpdateDevice(keyColors, device);

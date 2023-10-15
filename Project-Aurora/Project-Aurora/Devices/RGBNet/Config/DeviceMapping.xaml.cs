@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,20 +18,13 @@ namespace Aurora.Devices.RGBNet.Config;
 /// </summary>
 public partial class DeviceMapping
 {
-    private readonly Dictionary<IRGBDevice, IDevice> _devices = new();
+    private readonly List<RemappableDevice> _devices = new();
     private readonly List<RgbNetKeyToDeviceKeyControl> _keys = new();
-    private readonly Task<DeviceManager> _deviceManager;
 
     private DeviceMappingConfig _config;
 
-    private IEnumerable<IDevice> DeviceProviders => _deviceManager.Result.InitializedDeviceContainers
-        .Select(container => container.Device)
-        .Where(d => d.IsRemappable);
-        
-    public DeviceMapping(Task<DeviceManager> deviceManager)
+    public DeviceMapping()
     {
-        _deviceManager = deviceManager;
-        
         InitializeComponent();
         Loaded += OnLoaded;
         Unloaded += OnClosed;
@@ -62,20 +56,24 @@ public partial class DeviceMapping
         // clear current devices
         AsusDeviceList.Children.Clear();
         _devices.Clear();
-        foreach (var deviceProvider in DeviceProviders)
+        //TODO load CurrentDevices object
+
+        var remappableDevices = ReadDevices();
+
+        if (remappableDevices == null)
         {
-            foreach (var device in deviceProvider.Devices)
-            {
-                _devices.Add(device, deviceProvider);
-            }
+            return;
+        }
+        foreach (var remappableDevicesDevice in remappableDevices.Devices)
+        {
+            _devices.Add(remappableDevicesDevice);
         }
 
-        foreach (var pair in _devices)
+        foreach (var device in _devices)
         {
-            var rgbDevice = pair.Key;
             // create a new button for the ui
             var button = new Button();
-            button.Content = $"[{rgbDevice.DeviceInfo.DeviceType}] {rgbDevice.DeviceInfo.DeviceName}";
+            button.Content = device.DeviceSummary;
 
             button.Click += (_,_) =>
             {
@@ -86,14 +84,21 @@ public partial class DeviceMapping
                 }
 
                 button.IsEnabled = false;
-                DeviceSelect(rgbDevice, pair.Value);
+                DeviceSelect(device);
             };
 
             AsusDeviceList.Children.Add(button);
         }
     }
 
-    private void DeviceSelect(IRGBDevice device, RemappableDevice rgbNetDevice)
+    private static CurrentDevices? ReadDevices()
+    { 
+        var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "CurrentDevices.json");
+        using var stream = File.OpenRead(filePath);
+        return JsonSerializer.Deserialize<CurrentDevices>(stream);
+    }
+
+    private void DeviceSelect(RemappableDevice remappableDevice)
     {
         _keys.Clear();
 
@@ -102,7 +107,7 @@ public partial class DeviceMapping
 
         var configDevice = GetAsusConfigDevice(device);
 
-        foreach (var led in device)
+        foreach (var led in remappableDevice.RgbNetLeds)
         {
             var keyControl = new RgbNetKeyToDeviceKeyControl(configDevice, led);
                 
@@ -152,7 +157,7 @@ public partial class DeviceMapping
     {
         if (_tokenSource is {Token.IsCancellationRequested: false})
             _tokenSource.Cancel();
-            
+
         _tokenSource = new CancellationTokenSource();
         var token = _tokenSource.Token;
         try

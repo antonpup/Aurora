@@ -150,9 +150,5 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
-    
-    <ItemGroup>
-      <Folder Include="Devices\RGBNet\Config\" />
-    </ItemGroup>
 
 </Project>

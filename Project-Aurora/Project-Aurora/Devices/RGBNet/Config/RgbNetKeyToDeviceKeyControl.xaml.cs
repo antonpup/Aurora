@@ -25,24 +25,24 @@ public partial class RgbNetKeyToDeviceKeyControl
     }
 
     private readonly RgbNetConfigDevice _configDevice;
-    private readonly Led _led;
+    private readonly LedId _led;
 
     public event EventHandler<DeviceKeys?>? DeviceKeyChanged;
 
-    public RgbNetKeyToDeviceKeyControl(RgbNetConfigDevice configDevice, Led led)
+    public RgbNetKeyToDeviceKeyControl(RgbNetConfigDevice configDevice, LedId led)
     {
         _configDevice = configDevice;
         _led = led;
         
         InitializeComponent();
 
-        KeyIdValue.Text = led.Id.ToString();
+        KeyIdValue.Text = led.ToString();
         UpdateMappedLedId();
     }
 
     private void UpdateMappedLedId()
     {
-        if (_configDevice.KeyMapper.TryGetValue(_led.Id, out var deviceKey))
+        if (_configDevice.KeyMapper.TryGetValue(_led, out var deviceKey))
         {
             DeviceKeyButton.Content = deviceKey;
             ButtonBorder.BorderBrush = Brushes.Blue;

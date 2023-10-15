@@ -45,7 +45,7 @@ public partial class Control_Settings
 
         _devicesAndWrappers = new Control_SettingsDevicesAndWrappers(rzSdkManager, layoutManager, deviceManager);
         _controlDeviceManager = new Control_DeviceManager(deviceManager);
-        var deviceMapping = new DeviceMapping(deviceManager);
+        var deviceMapping = new DeviceMapping();
         
         DevicesAndWrappersTab.Content = _devicesAndWrappers;
         DeviceManagerTab.Content = _controlDeviceManager;

@@ -26,7 +26,6 @@ public sealed class DeviceContainer : IDisposable
     
     private readonly MemorySharedStruct<DeviceInformation> _deviceInformation;
     private readonly MemorySharedArray<DeviceVariable> _deviceVariables;
-    private readonly MemorySharedArray<RemappableLed>? _remappableLeds;
 
     public string SharedObjectName => Device.DeviceName;
 
@@ -59,8 +58,6 @@ public sealed class DeviceContainer : IDisposable
                     
                 }
             }
-
-            _remappableLeds = new MemorySharedArray<RemappableLed>(SharedObjectName + "-remapLeds", 25);
         }
     }
 

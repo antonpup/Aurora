@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using AurorDeviceManager.Devices.RGBNet;
 using Common.Devices;
 using AurorDeviceManager.Devices.ScriptedDevice;
 using Common;
@@ -140,5 +141,17 @@ public sealed class DeviceManager : IDisposable
     {
         _disposed = true;
         DeviceContainers.Clear();
+    }
+
+    public void BlinkDevice(string deviceId)
+    {      
+        var rgbNetDevices = InitializedDeviceContainers
+            .Select(container => container.Device)
+            .Where(d => d is RgbNetDevice)
+            .Cast<RgbNetDevice>();
+        var devicesToBlink = rgbNetDevices.SelectMany(d => d.DeviceList)
+            .Where(rgbDevice => rgbDevice.DeviceInfo.DeviceName == deviceId);
+        
+        
     }
 }
