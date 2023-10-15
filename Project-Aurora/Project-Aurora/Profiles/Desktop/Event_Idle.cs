@@ -30,7 +30,7 @@ public sealed class EventIdle : LightEvent
     public EventIdle()
     {
         Global.Configuration.PropertyChanged += IdleTypeChanged;
-        IdleTypeChanged(this, new PropertyChangedEventArgs(""));
+        IdleTypeChanged(this, new PropertyChangedEventArgs(nameof(Global.Configuration.IdleType)));
     }
 
     public override void Dispose()

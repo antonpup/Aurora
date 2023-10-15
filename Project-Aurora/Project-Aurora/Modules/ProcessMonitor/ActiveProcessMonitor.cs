@@ -62,6 +62,7 @@ public sealed partial class ActiveProcessMonitor
 				ProcessTitle = process.MainWindowTitle;
 				ProcessName = process.ProcessName + ".exe";
 				ProcessId = (int)pid;
+				Global.logger.Debug("New foreground process: {Process} ({Pid})", ProcessName, ProcessId);
 				return;
 			}
 		}

@@ -9,7 +9,7 @@ public static class Win32Transparency
     #region Mica
 
     [Flags]
-    internal enum DwmWindowAttribute : uint
+    public enum DwmWindowAttribute : uint
     {
         DWMWA_NCRENDERING_ENABLED = 1,
         DWMWA_NCRENDERING_POLICY,
@@ -29,6 +29,7 @@ public static class Win32Transparency
         DWMWA_PASSIVE_UPDATE_MODE,
         DWMWA_USE_HOSTBACKDROPBRUSH,
         DWMWA_USE_IMMERSIVE_DARK_MODE = 20,
+        DWMWA_SYSTEMBACKDROP_TYPE = 38,
         DWMWA_MICA_EFFECT = 1029
     }
 

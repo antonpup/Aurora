@@ -119,9 +119,9 @@
       },
       "Octokit": {
         "type": "Direct",
-        "requested": "[7.1.0, )",
-        "resolved": "7.1.0",
-        "contentHash": "v2qhKBe1Zlssa4XOmpOXNDFBrOAMw2tBmr8L8YMSrEi+PlF/L/PboZcXHSkZuhIxIeOGxEFiwkuJLkvG4aHNHQ=="
+        "requested": "[8.1.1, )",
+        "resolved": "8.1.1",
+        "contentHash": "qrRUuJSkmCht+kG4Gf01jtbzNhYbUssy99VsUYlk9d/Z3vFCRpLn7Iulh3V3OWhpWaeHfHUKTMx9VbOB1uoo/A=="
       },
       "PropertyChanged.Fody": {
         "type": "Direct",
@@ -195,6 +195,12 @@
           "SharpDX": "4.2.0",
           "SharpDX.DXGI": "4.2.0"
         }
+      },
+      "SharpZipLib": {
+        "type": "Direct",
+        "requested": "[1.4.2, )",
+        "resolved": "1.4.2",
+        "contentHash": "yjj+3zgz8zgXpiiC3ZdF/iyTBbz2fFvMxZFEBPUcwZjIvXOf37Ylm+K58hqMfIBt5JgU/Z2uoUS67JmTLe973A=="
       },
       "SmartThreadPool.dll": {
         "type": "Direct",

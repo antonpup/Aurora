@@ -239,9 +239,23 @@ public abstract class RgbNetDevice : DefaultDevice
         var calibrated = Global.Configuration.DeviceCalibrations.TryGetValue(calibrationName, out var calibration);
         foreach (var (key, color) in keyColors)
         {
-            Led? led;
-            if (!RgbNetKeyMappings.AuroraToRgbNet.TryGetValue(key, out var rgbNetLedId) || (led = device[rgbNetLedId]) == null)
+            if (!RgbNetKeyMappings.AuroraToRgbNet.TryGetValue(key, out var rgbNetLedId))
                 continue;
+            
+            var led = device[rgbNetLedId];
+            if (led == null)
+            {
+                if (device.Size == Size.Invalid)
+                {
+                    device.Size = new Size(0, 0);
+                }
+                led = device.AddLed(rgbNetLedId, new Point(device.Size.Width, 0), new Size(10, 10));
+                device.Size = new Size(device.Size.Width + 10, 10);
+            }
+
+            if (led == null)
+                continue;
+
             if (calibrated)
             {
                 UpdateLedCalibrated(led, color, calibration);

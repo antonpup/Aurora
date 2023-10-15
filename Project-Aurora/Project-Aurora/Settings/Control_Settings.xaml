@@ -5,6 +5,8 @@
              xmlns:a="clr-namespace:Aurora"
              xmlns:local="clr-namespace:Aurora.Settings"
              xmlns:Controls="clr-namespace:Aurora.Controls"
+             xmlns:utils="clr-namespace:Aurora.Utils"
+             xmlns:events="clr-namespace:Serilog.Events;assembly=Serilog"
              x:Class="Aurora.Settings.Control_Settings"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="403.521"
@@ -135,6 +137,19 @@
                             Height="30"
                             Content="Dump hardware sensors" Click="btnDumpSensors_Click"
                         />
+                    <TextBlock
+                        Margin="0,10,0,0"
+                        >
+                        Log level:
+                    </TextBlock>
+                    <ComboBox
+                        Margin="0,10,0,0"
+                        SelectedValue="{Binding LogLevel}"
+                        ItemsSource="{utils:EnumToItemsSource {x:Type events:LogEventLevel}}" DisplayMemberPath="Text"
+                        SelectedValuePath="Value"
+                        >
+                        
+                    </ComboBox>
                 </StackPanel>
             </Grid>
         </TabItem>

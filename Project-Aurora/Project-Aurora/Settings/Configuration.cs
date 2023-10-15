@@ -15,6 +15,7 @@ using Aurora.Modules.AudioCapture;
 using Aurora.Settings.Overrides.Logic;
 using Aurora.Utils;
 using JetBrains.Annotations;
+using Serilog.Events;
 
 namespace Aurora.Settings
 {
@@ -644,6 +645,8 @@ namespace Aurora.Settings
         public bool HttpDebugTopMost { get; set; } = false;
         public bool HttpWindowOnStartUp { get; set; } = false;
 
+        public LogEventLevel LogLevel { get; set; } = LogEventLevel.Information;
+
         public ObservableConcurrentDictionary<string, IEvaluatable> EvaluatableTemplates { get; set; } = new();
 
         public List<string> ProfileOrder { get; set; } = new List<string>();
@@ -654,10 +657,13 @@ namespace Aurora.Settings
         public string GsiAudioRenderDevice { get; set; } = AudioDevices.DefaultDeviceId;
         [JsonProperty("GSIAudioCaptureDevice", NullValueHandling = NullValueHandling.Ignore)]
         public string GsiAudioCaptureDevice { get; set; } = AudioDevices.DefaultDeviceId;
+        
+        public DateTimeOffset OnlineSettingsTime { get; set; } = DateTimeOffset.MinValue;
 
         private readonly List<string> _defaultEnabledDevices = new()
         {
             "AurorDeviceManager.Devices.RGBNet.CorsairRgbNetDevice",
+            "AurorDeviceManager.Devices.RGBNet.LogitechRgbNetDevice",
             "AurorDeviceManager.Devices.RGBNet.OpenRgbNetDevice",
         };
 
@@ -666,7 +672,7 @@ namespace Aurora.Settings
             EnabledDevices ??= MigrateEnabledDevices();
             //PrioritizeDevice(typeof(OpenRgbNetDevice), typeof(OpenRgbAuroraDevice));
             //PrioritizeDevice(typeof(SteelSeriesRgbNetDevice), typeof(SteelSeriesDevice));
-            //PrioritizeDevice(typeof(LogitechDevice), typeof(LogitechRgbNetDevice));
+            //PrioritizeDevice(typeof(LogitechRgbNetDevice), typeof(LogitechDevice));
         }
 
         private void PrioritizeDevice(string primary, string secondary)

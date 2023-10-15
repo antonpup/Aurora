@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using Aurora.Modules.OnlineConfigs.Model;
 using Aurora.Settings;
 using Common;
 using Common.Devices;
@@ -49,5 +50,5 @@ public interface IDevice
 
     IEnumerable<string> GetDevices();
     
-    DeviceTooltips Tooltips { get; }
+    DeviceTooltips Tooltips { get; set; }
 }

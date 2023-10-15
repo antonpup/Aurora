@@ -65,6 +65,7 @@
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <PackageReference Include="SmartThreadPool.dll" Version="2.3.0" />
     <PackageReference Include="System.Management" Version="7.0.2" />
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
@@ -91,6 +92,8 @@
 
   <ItemGroup>
     <Content Include="x64\LogitechLedEnginesWrapper.dll">
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <ProjectReference Include="..\AuroraCommon\AuroraCommon.csproj" />
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

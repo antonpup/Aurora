@@ -149,7 +149,7 @@ namespace Aurora.Profiles.GTA5.GSI
 
 
             //Get Current State
-            var state_color = CommonColorUtils.GetColorFromInt(Sent_Bitmap[(int)Logitech_keyboardBitmapKeys.ESC / 4]);
+            var state_color = CommonColorUtils.GetColorFromInt(Sent_Bitmap[(int)LogitechLedId.ESC / 4]);
 
             if(stateColors.TryGetValue(state_color, out var newState))
             {
@@ -164,9 +164,9 @@ namespace Aurora.Profiles.GTA5.GSI
             }
 
 
-            LeftSirenColor = CommonColorUtils.GetColorFromInt(Sent_Bitmap[(int)Logitech_keyboardBitmapKeys.F1 / 4]);
+            LeftSirenColor = CommonColorUtils.GetColorFromInt(Sent_Bitmap[(int)LogitechLedId.F1 / 4]);
 
-            RightSirenColor = CommonColorUtils.GetColorFromInt(Sent_Bitmap[(int)Logitech_keyboardBitmapKeys.F12 / 4]);
+            RightSirenColor = CommonColorUtils.GetColorFromInt(Sent_Bitmap[(int)LogitechLedId.F12 / 4]);
 
             HasCops = LeftSirenColor != RightSirenColor;
         }

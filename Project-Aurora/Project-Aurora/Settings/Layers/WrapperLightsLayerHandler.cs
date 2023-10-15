@@ -124,9 +124,8 @@ public class WrapperLightsLayerHandler : LayerHandler<WrapperLightsLayerHandlerP
             if (Properties.CloningMap.Values.Any(sequence => sequence.Keys.Contains(key)))
                 continue;
 
-            if (_extraKeys.ContainsKey(key))
-            {
-                EffectLayer.Set(key, GetBoostedColor(_extraKeys[key]));
+            if (!_extraKeys.ContainsKey(key)) continue;
+            EffectLayer.Set(key, GetBoostedColor(_extraKeys[key]));
 
                 // Do the key cloning
                 if (Properties.CloningMap.TryGetValue(key, out var targetKey))
