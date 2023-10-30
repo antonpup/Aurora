@@ -3,8 +3,6 @@ using System.Diagnostics;
 using System.Drawing;
 using Common.Devices;
 using AurorDeviceManager.Settings;
-using Aurora.Modules.OnlineConfigs.Model;
-using Common;
 
 namespace AurorDeviceManager.Devices;
 
@@ -29,8 +27,6 @@ public abstract class DefaultDevice : IDevice, IDisposable
     public virtual bool isDoingWork { get; protected set; }
 
     public virtual bool IsInitialized { get; protected set; }
-
-    public DeviceTooltips Tooltips { get; set; } = new();
 
     public async Task<bool> Initialize() {
         if (IsInitialized || isDoingWork)

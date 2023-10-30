@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using Common.Devices.Logitech;
 using Common.Utils;
+using RGB.NET.Devices.Logitech;
 
 namespace Aurora.Profiles.GTA5.GSI
 {

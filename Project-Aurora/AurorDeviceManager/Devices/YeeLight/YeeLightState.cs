@@ -27,7 +27,7 @@ static class YeeLightStateBuilder
         return offState;
     }
 }
-    
+
 internal class YeeLightStateOff : IYeeLightState
 {
     public IYeeLightState ColorState;
@@ -68,7 +68,7 @@ internal class YeeLightStateOff : IYeeLightState
     }
 }
     
-internal partial class YeeLightStateColor : IYeeLightState
+internal class YeeLightStateColor : IYeeLightState
 {
     public IYeeLightState WhiteState;
     public IYeeLightState OffState;

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using Aurora.Devices;
+using Aurora.Nodes;
 using Common.Devices;
 using Microsoft.Scripting.Utils;
 

@@ -127,10 +127,9 @@ public class WrapperLightsLayerHandler : LayerHandler<WrapperLightsLayerHandlerP
             if (!_extraKeys.ContainsKey(key)) continue;
             EffectLayer.Set(key, GetBoostedColor(_extraKeys[key]));
 
-                // Do the key cloning
-                if (Properties.CloningMap.TryGetValue(key, out var targetKey))
-                    EffectLayer.Set(targetKey, GetBoostedColor(_extraKeys[key]));
-            }
+            // Do the key cloning
+            if (Properties.CloningMap.TryGetValue(key, out var targetKey))
+                EffectLayer.Set(targetKey, GetBoostedColor(_extraKeys[key]));
         }
 
         var currentTime = Time.GetMillisecondsSinceEpoch();

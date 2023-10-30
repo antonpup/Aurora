@@ -1,12 +1,14 @@
 ﻿using System.Diagnostics;
-using System.Drawing;
 using System.IO.Pipes;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using AurorDeviceManager;
 using Common.Devices;
 using AurorDeviceManager.Devices;
+using AurorDeviceManager.Utils;
 using Common;
+using RGB.NET.Core;
+using Color = System.Drawing.Color;
 
 Global.Initialize();
 
@@ -62,6 +64,7 @@ Global.Logger.Information("Closing DeviceManager");
 Stop();
 return;
 
+//TODO gotta make multi-connection?
 void ReceiveCommand(IAsyncResult ar)
 {
     Global.Logger.Information("Pipe connection established");
@@ -70,24 +73,49 @@ void ReceiveCommand(IAsyncResult ar)
     while (sr.ReadLine() is { } command)
     {
         using var splits = command.Split(Constants.StringSplit).AsEnumerable().GetEnumerator();
-        
-        switch (splits.Current)
+
+        var word = splits.Next();
+        Global.Logger.Information("Received word: {Word}", word);
+        switch (word)
         {
             case "stop":
                 Global.Logger.Information("Received close command");
                 Stop();
-                break;
+                return;
             case "blink":
-                splits.MoveNext();
-                var deviceId = splits.Current;
-                Global.DeviceManager.BlinkDevice(deviceId);
-                
-                
+            {
+                var deviceId = splits.Next();
+                var deviceLed = (LedId)int.Parse(splits.Next());
+                Global.DeviceManager.BlinkDevice(deviceId, deviceLed);
                 break;
+            }
+            case "remap":
+            {
+                var deviceId = splits.Next();
+                var deviceLed = (LedId)int.Parse(splits.Next());
+                var remappedKey = (DeviceKeys)int.Parse(splits.Next());
+                Global.DeviceManager.RemapKey(deviceId, deviceLed, remappedKey);
+                break;
+            }
+            case "demap":
+            {
+                var deviceId = splits.Next();
+                var deviceLed = (LedId)int.Parse(splits.Next());
+                Global.DeviceManager.RemapKey(deviceId, deviceLed, null);
+                break;
+            }
+            case "share":
+            {
+                Global.DeviceManager.ShareRemappableDevices().Wait();
+                //TODO send IPC command?
+                break;
+            }
+            default:
+            {
+                Global.Logger.Warning("Uknown command: {Command}", command);
+                break;
+            }
         }
-        
-        
-        return;
     }
 
     dmPipe = NamedPipeServerStreamAcl.Create(

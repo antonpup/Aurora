@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Aurora.Nodes;
 using static System.Linq.Expressions.Expression;
 
 namespace Aurora.Profiles;
@@ -80,7 +81,6 @@ public class AutoJsonNode<TSelf> : Node where TSelf : AutoJsonNode<TSelf> {
     }
     #endregion
 }
-
 
 #region Attributes
 /// <summary>

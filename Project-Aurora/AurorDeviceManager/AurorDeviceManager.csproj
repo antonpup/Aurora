@@ -43,8 +43,7 @@
         <Reference Include="SBAuroraReactive">
             <HintPath>.\x64\SBAuroraReactive.dll</HintPath>
         </Reference>
-        
-        
+
         <Reference Include="RGB.NET.Core, Version=2.0.1.2">
             <HintPath>.\RGB.NET.Core.dll</HintPath>
             <Private>true</Private>

@@ -1,8 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using Common.Devices;
 using RGB.NET.Core;
 
-namespace AurorDeviceManager.Devices.RGBNet;
+namespace Common.Devices.RGBNet;
 
 public static class RgbNetKeyMappings
 {

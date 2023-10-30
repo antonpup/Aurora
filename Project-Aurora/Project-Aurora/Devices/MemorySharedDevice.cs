@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Aurora.Modules.OnlineConfigs.Model;
 using Aurora.Settings;
 using Common;
 using Common.Data;
@@ -93,6 +94,5 @@ public class MemorySharedDevice : IDevice
         return DeviceInformation.Devices?.Split(Constants.StringSplit) ?? Enumerable.Empty<string>();
     }
 
-    //TODO implement
-    public DeviceTooltips Tooltips { get; } = new();
+    public DeviceTooltips Tooltips { get; set; } = new();
 }

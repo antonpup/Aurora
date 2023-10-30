@@ -1,9 +1,11 @@
-﻿using Aurora.EffectsEngine;
+﻿using System;
+using Aurora.EffectsEngine;
 using Aurora.Profiles.CSGO.GSI;
 using Aurora.Settings.Layers;
 using Newtonsoft.Json;
 using System.Drawing;
 using System.Windows.Controls;
+using Common.Utils;
 
 namespace Aurora.Profiles.CSGO.Layers;
 
@@ -71,23 +73,21 @@ public class CSGODeathLayerHandler : LayerHandler<CSGODeathLayerHandlerPropertie
             return EffectLayer.EmptyLayer;
         }
 
-        // If so...
         var fadeAlpha = GetFadeAlpha();
-
-        if (fadeAlpha == 0)
+        if (fadeAlpha <= 0)
         {
             _isDead = false;
             return EffectLayer.EmptyLayer;
         }
 
-        _solidBrush.Color = Color.FromArgb(fadeAlpha, deathColor.R, deathColor.G, deathColor.B);
+        _solidBrush.Color = CommonColorUtils.FastColor(deathColor.R, deathColor.G, deathColor.B, (byte)fadeAlpha);
         EffectLayer.Fill(_solidBrush);
         return EffectLayer;
     }
 
     public override void SetApplication(Application profile)
     {
-        (Control as Control_CSGODeathLayer).SetProfile(profile);
+        ((Control_CSGODeathLayer)Control).SetProfile(profile);
         base.SetApplication(profile);
     }
 
@@ -96,6 +96,7 @@ public class CSGODeathLayerHandler : LayerHandler<CSGODeathLayerHandlerPropertie
         var t = Utils.Time.GetMillisecondsSinceEpoch() - _lastTimeMillis;
         _lastTimeMillis = Utils.Time.GetMillisecondsSinceEpoch();
         _fadeAlpha -= (int)(t / 10);
-        return _fadeAlpha = _fadeAlpha < 0 ? 0 : _fadeAlpha;
+        _fadeAlpha = Math.Min(_fadeAlpha, 255);
+        return _fadeAlpha;
     }
 }

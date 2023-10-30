@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using AurorDeviceManager.Devices.RGBNet.Config;
 using Newtonsoft.Json;
 
 namespace Common.Devices.RGBNet;
@@ -14,7 +13,7 @@ public class DeviceMappingConfig
     private static string _configPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "DeviceMappings.json");
 
     [JsonProperty(PropertyName = "d")]
-    public List<RgbNetConfigDevice> Devices { get; set; } = new();
+    public List<DeviceRemap> Devices { get; set; } = new();
 
     private DeviceMappingConfig()
     {

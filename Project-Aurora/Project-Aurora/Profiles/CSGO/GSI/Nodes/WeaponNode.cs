@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Aurora.Nodes;
 
 namespace Aurora.Profiles.CSGO.GSI.Nodes
 {

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Aurora.Nodes;
 using Newtonsoft.Json;
 
 namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes

@@ -1,4 +1,6 @@
-﻿namespace Aurora.Profiles.Dota_2.GSI.Nodes
+﻿using Aurora.Nodes;
+
+namespace Aurora.Profiles.Dota_2.GSI.Nodes
 {
     /// <summary>
     /// A class representing the authentication information for GSI

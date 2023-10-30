@@ -1,4 +1,5 @@
 ﻿using System;
+using Aurora.Nodes;
 using Aurora.Profiles.EliteDangerous.Journal;
 using Aurora.Profiles.EliteDangerous.Journal.Events;
 

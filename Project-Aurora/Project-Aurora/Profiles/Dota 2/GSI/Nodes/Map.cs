@@ -1,4 +1,6 @@
-﻿namespace Aurora.Profiles.Dota_2.GSI.Nodes
+﻿using Aurora.Nodes;
+
+namespace Aurora.Profiles.Dota_2.GSI.Nodes
 {
     /// <summary>
     /// Enum list for each Game State

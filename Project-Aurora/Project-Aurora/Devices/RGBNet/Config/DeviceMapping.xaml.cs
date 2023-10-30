@@ -6,10 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using AurorDeviceManager.Devices.RGBNet.Config;
 using Common.Devices;
 using Common.Devices.RGBNet;
-using RGB.NET.Core;
 
 namespace Aurora.Devices.RGBNet.Config;
 
@@ -18,22 +16,24 @@ namespace Aurora.Devices.RGBNet.Config;
 /// </summary>
 public partial class DeviceMapping
 {
+    private readonly Task<DeviceManager> _deviceManager;
     private readonly List<RemappableDevice> _devices = new();
     private readonly List<RgbNetKeyToDeviceKeyControl> _keys = new();
 
     private DeviceMappingConfig _config;
 
-    public DeviceMapping()
+    public DeviceMapping(Task<DeviceManager> deviceManager)
     {
+        _deviceManager = deviceManager;
         InitializeComponent();
         Loaded += OnLoaded;
         Unloaded += OnClosed;
     }
 
-    private void OnLoaded(object? sender, RoutedEventArgs e)
+    private async void OnLoaded(object? sender, RoutedEventArgs e)
     {
         LoadConfigFile();
-        LoadDevices();
+        await LoadDevices();
     }
 
     private void OnClosed(object? sender, EventArgs e)
@@ -46,17 +46,18 @@ public partial class DeviceMapping
         _config = DeviceMappingConfig.Config;
     }
 
-    private void ReloadDevices()
+    private async Task ReloadDevices()
     {
-        LoadDevices();
+        await LoadDevices();
     }
 
-    private void LoadDevices()
+    private async Task LoadDevices()
     {
+        await (await _deviceManager).RequestRemappableDevices();
+        Thread.Sleep(400);
+
         // clear current devices
-        AsusDeviceList.Children.Clear();
         _devices.Clear();
-        //TODO load CurrentDevices object
 
         var remappableDevices = ReadDevices();
 
@@ -69,31 +70,41 @@ public partial class DeviceMapping
             _devices.Add(remappableDevicesDevice);
         }
 
-        foreach (var device in _devices)
+        Dispatcher.Invoke(() =>
         {
-            // create a new button for the ui
-            var button = new Button();
-            button.Content = device.DeviceSummary;
-
-            button.Click += (_,_) =>
+            AsusDeviceList.Children.Clear();
+            foreach (var device in _devices)
             {
-                for (var i = 0; i < AsusDeviceList.Children.Count; i++)
+                // create a new button for the ui
+                var button = new Button();
+                button.Content = device.DeviceSummary;
+
+                button.Click += (_,_) =>
                 {
-                    if (AsusDeviceList.Children[i] is Button dButton) 
-                        dButton.IsEnabled = true;
-                }
+                    for (var i = 0; i < AsusDeviceList.Children.Count; i++)
+                    {
+                        if (AsusDeviceList.Children[i] is Button dButton) 
+                            dButton.IsEnabled = true;
+                    }
 
-                button.IsEnabled = false;
-                DeviceSelect(device);
-            };
+                    button.IsEnabled = false;
+                    DeviceSelect(device);
+                };
 
-            AsusDeviceList.Children.Add(button);
-        }
+                AsusDeviceList.Children.Add(button);
+            }
+        });
     }
 
     private static CurrentDevices? ReadDevices()
     { 
         var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "CurrentDevices.json");
+
+        if (!File.Exists(filePath))
+        {
+            return null;
+        }
+        
         using var stream = File.OpenRead(filePath);
         return JsonSerializer.Deserialize<CurrentDevices>(stream);
     }
@@ -105,43 +116,30 @@ public partial class DeviceMapping
         // Rebuild the key area
         AsusDeviceKeys.Children.Clear();
 
-        var configDevice = GetAsusConfigDevice(device);
+        var deviceRemap = GetDeviceRemap(remappableDevice);
 
         foreach (var led in remappableDevice.RgbNetLeds)
         {
-            var keyControl = new RgbNetKeyToDeviceKeyControl(configDevice, led);
+            var keyControl = new RgbNetKeyToDeviceKeyControl(deviceRemap, led);
                 
             keyControl.BlinkCallback += () =>
             {
-                _tokenSource?.Cancel();
-                rgbNetDevice.Disabled = true;
-                BlinkKey(device, led)
-                    .ContinueWith((a) =>
-                        {
-                            rgbNetDevice.Disabled = false;
-                            return Task.CompletedTask;
-                        }
-                    );
+                _deviceManager.Result.BlinkRemappableKey(remappableDevice, led);
             };
 
-            keyControl.DeviceKeyChanged += (_, newKey) =>
+            keyControl.DeviceKeyChanged += async (_, newKey) =>
             {
-                if (!rgbNetDevice.DeviceKeyRemap.TryGetValue(device, out var deviceKeyMap))
+                if (newKey != null)
                 {
-                    deviceKeyMap = new Dictionary<LedId, DeviceKeys>();
-                    rgbNetDevice.DeviceKeyRemap.TryAdd(device, deviceKeyMap);
-                }
-
-                if (newKey == null)
-                {
-                    deviceKeyMap.Remove(led.Id);
-                    configDevice.KeyMapper.Remove(led.Id);
+                    deviceRemap.KeyMapper[led] = newKey.Value;
                 }
                 else
                 {
-                    deviceKeyMap[led.Id] = (DeviceKeys)newKey;
-                    configDevice.KeyMapper[led.Id] = (DeviceKeys)newKey;
+                    deviceRemap.KeyMapper.Remove(led);
                 }
+
+                var deviceManager = await _deviceManager;
+                await deviceManager.RemapKey(remappableDevice.DeviceId, led, newKey);
             };
                 
             _keys.Add(keyControl);
@@ -149,64 +147,27 @@ public partial class DeviceMapping
             AsusDeviceKeys.Children.Add(keyControl);
         }
     }
-        
-    private CancellationTokenSource? _tokenSource;
-    private const int BlinkCount = 7;
 
-    private async Task BlinkKey(IRGBDevice device, Led led)
-    {
-        if (_tokenSource is {Token.IsCancellationRequested: false})
-            _tokenSource.Cancel();
-
-        _tokenSource = new CancellationTokenSource();
-        var token = _tokenSource.Token;
-        try
-        {
-            for (var i = 0; i < BlinkCount; i++)
-            {
-                if (token.IsCancellationRequested || device == null)
-                    return;
-
-                // set everything to black
-                foreach (var light in device)
-                    light.Color = new Color(0, 0, 0);
-
-                // set this one key to white
-                if (i % 2 == 1)
-                {
-                    led.Color = new Color(255, 255, 255);
-                }
-
-                device.Update();
-                await Task.Delay(200, token); // ms
-            }
-        }
-        catch (Exception e)
-        {
-            Global.logger.Error(e, "Error while blinking device led");
-        }
-    }
-
-    private RgbNetConfigDevice GetAsusConfigDevice(IRGBDevice rgbDevice)
+    private DeviceRemap GetDeviceRemap(RemappableDevice device)
     {
         foreach (var netConfigDevice in DeviceMappingConfig.Config.Devices)
         {
-            if (netConfigDevice.Name.Equals(rgbDevice.DeviceInfo.DeviceName))
+            if (netConfigDevice.Name.Equals(device.DeviceId))
             {
                 return netConfigDevice;
             }
         }
 
-        var rgbNetConfigDevice = new RgbNetConfigDevice(rgbDevice);
+        var rgbNetConfigDevice = new DeviceRemap(device);
         DeviceMappingConfig.Config.Devices.Add(rgbNetConfigDevice);
         return rgbNetConfigDevice;
     }
 
     #region UI
 
-    private void ReloadButton_Click(object? sender, RoutedEventArgs e)
+    private async void ReloadButton_Click(object? sender, RoutedEventArgs e)
     {
-        ReloadDevices();
+        await ReloadDevices();
     }
         
     private void SetAllNone_Click(object? sender, RoutedEventArgs e)

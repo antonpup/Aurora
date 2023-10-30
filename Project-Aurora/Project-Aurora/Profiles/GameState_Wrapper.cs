@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using Aurora.Nodes;
 using Common.Utils;
 
 namespace Aurora.Profiles;

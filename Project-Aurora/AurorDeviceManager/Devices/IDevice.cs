@@ -86,6 +86,4 @@ public interface IDevice
     Task<bool> UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false);
 
     string? GetDevices();
-    
-    DeviceTooltips Tooltips { get; }
 }

@@ -2,6 +2,7 @@
 using Aurora.Profiles;
 using Lombok.NET;
 using Aurora.Modules.HardwareMonitor;
+using Aurora.Nodes;
 
 namespace Aurora.Modules;
 

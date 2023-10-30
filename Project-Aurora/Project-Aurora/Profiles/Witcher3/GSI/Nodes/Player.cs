@@ -1,4 +1,5 @@
-﻿using Witcher3Gsi;
+﻿using Aurora.Nodes;
+using Witcher3Gsi;
 
 namespace Aurora.Profiles.Witcher3.GSI.Nodes;
 

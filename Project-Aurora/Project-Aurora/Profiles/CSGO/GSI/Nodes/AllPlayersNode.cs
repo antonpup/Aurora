@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Aurora.Nodes;
 using Newtonsoft.Json.Linq;
 
 namespace Aurora.Profiles.CSGO.GSI.Nodes

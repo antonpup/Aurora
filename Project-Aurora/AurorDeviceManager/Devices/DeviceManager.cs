@@ -1,10 +1,16 @@
-﻿using System.Drawing;
+﻿using System.Text;
 using AurorDeviceManager.Devices.RGBNet;
 using Common.Devices;
 using AurorDeviceManager.Devices.ScriptedDevice;
 using Common;
 using Common.Data;
+using Common.Devices.RGBNet;
+using Microsoft.Scripting.Utils;
 using Microsoft.Win32;
+using Newtonsoft.Json;
+using RGB.NET.Core;
+using Color = System.Drawing.Color;
+using RgbNetColor = RGB.NET.Core.Color;
 
 namespace AurorDeviceManager.Devices;
 
@@ -45,12 +51,11 @@ public sealed class DeviceManager : IDisposable
         _deviceInformations = new MemorySharedStruct<DeviceManagerInfo>(Constants.DeviceInformations, CreateDeviceManagerInfo());
 
         UpdateSharedDeviceInfos();
-        _deviceInformations.UpdateRequested += (_, _) =>
-        {
-            UpdateSharedDeviceInfos();
-        };
+        _deviceInformations.UpdateRequested += (_, _) => { UpdateSharedDeviceInfos(); };
 
         SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+        
+        Task.Run(ShareRemappableDevices);
     }
 
     private void UpdateSharedDeviceInfos()
@@ -143,15 +148,140 @@ public sealed class DeviceManager : IDisposable
         DeviceContainers.Clear();
     }
 
-    public void BlinkDevice(string deviceId)
-    {      
-        var rgbNetDevices = InitializedDeviceContainers
-            .Select(container => container.Device)
-            .Where(d => d is RgbNetDevice)
-            .Cast<RgbNetDevice>();
-        var devicesToBlink = rgbNetDevices.SelectMany(d => d.DeviceList)
-            .Where(rgbDevice => rgbDevice.DeviceInfo.DeviceName == deviceId);
+
+    private CancellationTokenSource? _tokenSource;
+    private const int BlinkCount = 7;
+
+    public void BlinkDevice(string deviceId, LedId led)
+    {
+        foreach (var auroraDevice in InitializedDeviceContainers.Select(container => container.Device).OfType<RgbNetDevice>())
+        {
+            foreach (var rgbNetDevice in auroraDevice.DeviceList.Where(rgbDevice => rgbDevice.DeviceInfo.DeviceName == deviceId))
+            {
+                _tokenSource?.Cancel();
+                auroraDevice.Disabled = true;
+                BlinkKey(rgbNetDevice, led)
+                    .ContinueWith(_ =>
+                        {
+                            auroraDevice.Disabled = false;
+                            return Task.CompletedTask;
+                        }
+                    );
+            }
+        }
+    }
+
+    private async Task BlinkKey(IRGBDevice device, LedId ledId)
+    {
+        if (_tokenSource is { Token.IsCancellationRequested: false })
+            _tokenSource.Cancel();
+
+        var led = device[ledId];
+        if (led == null)
+        {
+            return;
+        }
+
+        _tokenSource = new CancellationTokenSource();
+        var token = _tokenSource.Token;
+        try
+        {
+            for (var i = 0; i < BlinkCount; i++)
+            {
+                if (token.IsCancellationRequested)
+                    return;
+
+                // set everything to black
+                foreach (var light in device)
+                    light.Color = new RgbNetColor(0, 0, 0);
+
+                // set this one key to white
+                if (i % 2 == 1)
+                {
+                    led.Color = new RgbNetColor(255, 255, 255);
+                }
+
+                device.Update();
+                await Task.Delay(200, token); // ms
+            }
+        }
+        catch (Exception e)
+        {
+            Global.Logger.Error(e, "Error while blinking device led");
+        }
+    }
+
+    public async Task ShareRemappableDevices()
+    {
+        Global.Logger.Information("Updating CurrentDevices.json");
+        var rgbNetControllers = InitializedDeviceContainers.Select(dc => dc.Device).OfType<RgbNetDevice>();
+
+        var remappableDevices = (
+            from rgbNetController in rgbNetControllers
+            from device in rgbNetController.DeviceList
+            let deviceSummary = $"[{device.DeviceInfo.DeviceType}] ({device.DeviceInfo.DeviceName})"
+            let rgbNetLeds = device.Select(l => l.Id).ToList()
+            select new RemappableDevice(device.DeviceInfo.DeviceName, deviceSummary, rgbNetLeds)
+        ).ToList();
+
+        var currentDevices = new CurrentDevices(remappableDevices);
+
+        var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "CurrentDevices.json");
+
+        var json = JsonConvert.SerializeObject(currentDevices, Formatting.Indented);
+
+        Directory.CreateDirectory(Path.GetDirectoryName(filePath) ?? throw new InvalidOperationException());
+        await File.WriteAllTextAsync(filePath, json, Encoding.UTF8);
+    }
+
+    public void RemapKey(string deviceId, LedId deviceLed, DeviceKeys? remappedKey)
+    {
+        var rgbNetControllers = InitializedDeviceContainers.Select(dc => dc.Device).OfType<RgbNetDevice>();
         
+        foreach (var rgbNetDevice in rgbNetControllers)
+        foreach (var device in rgbNetDevice.DeviceList.Where(device => device.DeviceInfo.DeviceName == deviceId))
+        {
+            if (!rgbNetDevice.DeviceKeyRemap.TryGetValue(device, out var deviceKeyMap))
+            {
+                deviceKeyMap = new Dictionary<LedId, DeviceKeys>();
+                rgbNetDevice.DeviceKeyRemap.TryAdd(device, deviceKeyMap);
+            }
+
+            var led = device[deviceLed];
+            if (led == null)
+            {
+                //in case somehow this device doesn't have this led
+                continue;
+            }
+            
+            var deviceRemap = GetDeviceRemap(device);
+            if (remappedKey == null)
+            {
+                deviceKeyMap.Remove(led.Id);
+                deviceRemap.KeyMapper.Remove(led.Id);
+            }
+            else
+            {
+                deviceKeyMap[led.Id] = (DeviceKeys)remappedKey;
+                deviceRemap.KeyMapper[led.Id] = (DeviceKeys)remappedKey;
+            }
+        }
         
+        //TODO save?
+    }
+
+    private DeviceRemap GetDeviceRemap(IRGBDevice device)
+    {
+        foreach (var netConfigDevice in DeviceMappingConfig.Config.Devices)
+        {
+            if (netConfigDevice.Name.Equals(device.DeviceInfo.DeviceName))
+            {
+                return netConfigDevice;
+            }
+        }
+
+        var rgbNetConfigDevice = new DeviceRemap(device.DeviceInfo.DeviceName);
+        DeviceMappingConfig.Config.Devices.Add(rgbNetConfigDevice);
+        return rgbNetConfigDevice;
     }
 }

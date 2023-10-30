@@ -35,6 +35,7 @@ public sealed partial class OnlineSettings : AuroraModule
         SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
 
         await DownloadAndExtract();
+        _layoutUpdateTaskSource.TrySetResult();
         await Refresh();
 
         RunningProcessMonitor.Instance.RunningProcessesChanged += OnRunningProcessesChanged;
@@ -51,30 +52,27 @@ public sealed partial class OnlineSettings : AuroraModule
             Global.logger.Error(e, "Skipped Online Settings update because of internet problem");
             return;
         }
-        
-        var masterBranch = await _gClient.Repository.Branch.Get("Aurora-RGB", "Online-Settings", "master");
-        var lastCommit = await _gClient.Repository.Commit.Get("Aurora-RGB", "Online-Settings", masterBranch.Commit.Sha);
-        var commitDate = lastCommit.Commit.Author.Date;
-
-        if (commitDate <= Global.Configuration.OnlineSettingsTime)
-        {
-            _layoutUpdateTaskSource.TrySetResult();
-            return;
-        }
-        
-        Global.logger.Information("Updating Online Settings");
 
         try
         {
+            var masterBranch = await _gClient.Repository.Branch.Get("Aurora-RGB", "Online-Settings", "master");
+            var lastCommit = await _gClient.Repository.Commit.Get("Aurora-RGB", "Online-Settings", masterBranch.Commit.Sha);
+            var commitDate = lastCommit.Commit.Author.Date;
+
+            if (commitDate <= Global.Configuration.OnlineSettingsTime)
+            {
+                return;
+            }
+        
+            Global.logger.Information("Updating Online Settings");
             await ExtractSettings();
+
+            Global.Configuration.OnlineSettingsTime = commitDate;
         }
         catch (Exception e)
         {
             Global.logger.Error(e, "Error extracting online settings");
         }
-
-        _layoutUpdateTaskSource.TrySetResult();
-        Global.Configuration.OnlineSettingsTime = commitDate;
     }
 
     private async Task Refresh()

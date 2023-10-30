@@ -1,4 +1,5 @@
 ﻿using System;
+using Aurora.Nodes;
 
 namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
 {

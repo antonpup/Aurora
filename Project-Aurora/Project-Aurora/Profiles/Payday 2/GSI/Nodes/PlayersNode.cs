@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using System.Collections;
+using Aurora.Nodes;
 
 namespace Aurora.Profiles.Payday_2.GSI.Nodes
 {

@@ -3,226 +3,234 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Aurora.Utils
+namespace Aurora.Utils;
+
+public class ItemValues
 {
-    public class ItemValues
+    public Dictionary<string, object> Items { get; } = new();
+
+    public ItemValues(Stream instream)
     {
-        public Dictionary<string, object> Items { get { return _items; } }
-
-        private Dictionary<string, object> _items = new Dictionary<string, object>();
-        public ItemValues(Stream instream)
+        using var sr = new StreamReader(instream);
+        while (!sr.EndOfStream)
         {
-            using (StreamReader sr = new StreamReader(instream))
-            {
-                while (!sr.EndOfStream)
-                {
-                    //Attempt to read the item key
-                    object keyValue = ReadValue(sr);
-                    if (keyValue != null)
-                        _items.Add(((string)keyValue).ToLowerInvariant(), ReadValue(sr));
-
-                    //Skip over any whitespace characters to get to next value
-                    while (char.IsWhiteSpace((char)sr.Peek()))
-                        sr.Read();
-                }
-            }
-        }
-
-        private object ReadValue(StreamReader instream)
-        {
-            object returnValue = null;
+            //Attempt to read the item key
+            var keyValue = ReadValue(sr);
+            if (keyValue != null)
+                Items.Add(((string)keyValue).ToLowerInvariant(), keyValue);
 
             //Skip over any whitespace characters to get to next value
-            while (char.IsWhiteSpace((char)instream.Peek()))
-                instream.Read();
+            while (char.IsWhiteSpace((char)sr.Peek()))
+                sr.Read();
+        }
+    }
 
-            char peekchar = (char)instream.Peek();
+    private object? ReadValue(StreamReader instream)
+    {
+        object? returnValue = null;
 
-            if (peekchar.Equals('{'))
+        //Skip over any whitespace characters to get to next value
+        while (char.IsWhiteSpace((char)instream.Peek()))
+            instream.Read();
+
+        var peekchar = (char)instream.Peek();
+
+        switch (peekchar)
+        {
+            case '{':
                 returnValue = ReadSubValues(instream);
-            else if (peekchar.Equals('/'))
-            {
+                break;
+            case '/':
                 //Comment, read until end of line
                 instream.ReadLine();
+                break;
+            default:
+                returnValue = ReadString(instream);
+                break;
+        }
+
+        return returnValue;
+    }
+
+    private string ReadString(StreamReader instream)
+    {
+        var builder = new StringBuilder();
+
+        var isQuote = ((char)instream.Peek()).Equals('"');
+
+        if (isQuote)
+            instream.Read();
+
+        for (var chr = (char)instream.Read(); !instream.EndOfStream; chr = (char)instream.Read())
+        {
+            if (isQuote && chr.Equals('"') ||
+                !isQuote && char.IsWhiteSpace(chr)) //Arrived at end of string
+                break;
+
+            if (chr.Equals('\\')) //Fix up escaped characters
+            {
+                var escape = (char)instream.Read();
+
+                switch (escape)
+                {
+                    case 'r':
+                        builder.Append('\r');
+                        break;
+                    case 'n':
+                        builder.Append('\n');
+                        break;
+                    case 't':
+                        builder.Append('\t');
+                        break;
+                    case '\'':
+                        builder.Append('\'');
+                        break;
+                    case '"':
+                        builder.Append('"');
+                        break;
+                    case '\\':
+                        builder.Append('\\');
+                        break;
+                    case 'b':
+                        builder.Append('\b');
+                        break;
+                    case 'f':
+                        builder.Append('\f');
+                        break;
+                    case 'v':
+                        builder.Append('\v');
+                        break;
+                }
             }
             else
-                returnValue = ReadString(instream);
-
-            return returnValue;
+                builder.Append(chr);
         }
 
-        private string ReadString(StreamReader instream)
-        {
-            StringBuilder builder = new StringBuilder();
+        return builder.ToString();
+    }
 
-            bool isQuote = ((char)instream.Peek()).Equals('"');
+    private Dictionary<string, object> ReadSubValues(StreamReader instream)
+    {
+        Dictionary<string, object> subValues = new();
 
-            if (isQuote)
-                instream.Read();
+        //Read first {
+        instream.Read();
 
-            for (char chr = (char)instream.Read(); !instream.EndOfStream; chr = (char)instream.Read())
-            {
-
-                if (isQuote && chr.Equals('"') ||
-                    !isQuote && char.IsWhiteSpace(chr)) //Arrived at end of string
-                    break;
-
-                if (chr.Equals('\\')) //Fix up escaped characters
-                {
-                    char escape = (char)instream.Read();
-
-                    if (escape.Equals('r'))
-                        builder.Append('\r');
-                    else if (escape.Equals('n'))
-                        builder.Append('\n');
-                    else if (escape.Equals('t'))
-                        builder.Append('\t');
-                    else if (escape.Equals('\''))
-                        builder.Append('\'');
-                    else if (escape.Equals('"'))
-                        builder.Append('"');
-                    else if (escape.Equals('\\'))
-                        builder.Append('\\');
-                    else if (escape.Equals('b'))
-                        builder.Append('\b');
-                    else if (escape.Equals('f'))
-                        builder.Append('\f');
-                    else if (escape.Equals('v'))
-                        builder.Append('\v');
-
-                }
-                else
-                    builder.Append(chr);
-
-            }
-
-            return builder.ToString();
-        }
-
-        private Dictionary<string, object> ReadSubValues(StreamReader instream)
-        {
-            Dictionary<string, object> subValues = new Dictionary<string, object>();
-
-            //Read first {
+        //Seek to next data
+        while (char.IsWhiteSpace((char)instream.Peek()))
             instream.Read();
+
+        while (!((char)instream.Peek()).Equals('}'))
+        {
+            var keyValue = ReadValue(instream);
+            if (keyValue != null)
+                subValues.Add(((string)keyValue).ToLowerInvariant(), ReadValue(instream));
 
             //Seek to next data
             while (char.IsWhiteSpace((char)instream.Peek()))
                 instream.Read();
-
-            while (!((char)instream.Peek()).Equals('}'))
-            {
-                object keyValue = ReadValue(instream);
-                if (keyValue != null)
-                    subValues.Add(((string)keyValue).ToLowerInvariant(), ReadValue(instream));
-
-                //Seek to next data
-                while (char.IsWhiteSpace((char)instream.Peek()))
-                    instream.Read();
-            }
-
-            //Read last }
-            instream.Read();
-
-            return subValues;
         }
-    }
 
+        //Read last }
+        instream.Read();
+
+        return subValues;
+    }
+}
+
+/// <summary>
+/// A class for handling Steam games
+/// </summary>
+public static class SteamUtils
+{
     /// <summary>
-    /// A class for handling Steam games
+    /// Retrieves a path to a specified AppID
     /// </summary>
-    public static class SteamUtils
+    /// <param name="gameId">The game's AppID</param>
+    /// <returns>Path to the location of AppID's install</returns>
+    public static string? GetGamePath(int gameId)
     {
-        /// <summary>
-        /// Retrieves a path to a specified AppID
-        /// </summary>
-        /// <param name="gameId">The game's AppID</param>
-        /// <returns>Path to the location of AppID's install</returns>
-        public static string GetGamePath(int gameId)
+        Global.logger.Debug("Trying to get game path for: {GameId}", gameId);
+
+        try
         {
-            Global.logger.Debug("Trying to get game path for: {GameId}", gameId);
+            string? steamPath;
 
             try
             {
-                string steamPath = "";
+                steamPath = Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Valve\Steam", "InstallPath", null) as string;
+            }
+            catch (Exception)
+            {
+                steamPath = "";
+            }
 
+            if (string.IsNullOrWhiteSpace(steamPath))
+            {
                 try
                 {
-                    steamPath = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Valve\Steam", "InstallPath", null);
+                    steamPath = Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Valve\Steam", "InstallPath", null) as string;
                 }
-                catch (Exception exc)
+                catch (Exception)
                 {
                     steamPath = "";
                 }
+            }
 
-                if (String.IsNullOrWhiteSpace(steamPath))
+            if (!string.IsNullOrWhiteSpace(steamPath))
+            {
+                var manifestFile = Path.Combine(steamPath, "SteamApps", $"appmanifest_{gameId}.acf");
+                if (File.Exists(manifestFile))
                 {
-                    try
-                    {
-                        steamPath = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Valve\Steam", "InstallPath", null);
-                    }
-                    catch (Exception exc)
-                    {
-                        steamPath = "";
-                    }
+                    ItemValues manifestData;
+                    using (Stream manifestStream = new FileStream(manifestFile, FileMode.Open))
+                        manifestData = new ItemValues(manifestStream);
+
+                    var installdir = (string)((Dictionary<string, object>)manifestData.Items["appstate"])["installdir"];
+                    var appidpath = Path.Combine(steamPath, "SteamApps", "common", installdir);
+                    if (Directory.Exists(appidpath))
+                        return appidpath;
                 }
-
-
-                if (!String.IsNullOrWhiteSpace(steamPath))
+                else
                 {
-                    string manifestFile = Path.Combine(steamPath, "SteamApps", String.Format("appmanifest_{0}.acf", gameId));
-                    if (File.Exists(manifestFile))
+                    var librariesFile = Path.Combine(steamPath, "SteamApps", "libraryfolders.vdf");
+                    if (File.Exists(librariesFile))
                     {
-                        ItemValues manifestData;
-                        using (Stream manifestStream = new FileStream(manifestFile, FileMode.Open))
-                            manifestData = new ItemValues(manifestStream);
+                        ItemValues libData;
+                        using (Stream libStream = new FileStream(librariesFile, FileMode.Open))
+                            libData = new ItemValues(libStream);
 
-                        string installdir = (string)((Dictionary<string, object>)manifestData.Items["appstate"])["installdir"];
-                        string appidpath = Path.Combine(steamPath, "SteamApps", "common", installdir);
-                        if (Directory.Exists(appidpath))
-                            return appidpath;
-                    }
-                    else
-                    {
-                        string librariesFile = Path.Combine(steamPath, "SteamApps", string.Format("libraryfolders.vdf"));
-                        if (File.Exists(librariesFile))
+                        var libraryFolders = (Dictionary<string, object>)libData.Items["libraryfolders"];
+
+                        for (var libraryId = 1; libraryFolders.ContainsKey(libraryId.ToString()); libraryId++)
                         {
-                            ItemValues libData;
-                            using (Stream libStream = new FileStream(librariesFile, FileMode.Open))
-                                libData = new ItemValues(libStream);
+                            var library = (Dictionary<string, object>)libraryFolders[libraryId.ToString()];
+                            var libraryPath = (string)library["path"];
 
-                            Dictionary<string, object> libraryFolders = (Dictionary<string, object>)libData.Items["libraryfolders"];
-
-                            for (int libraryId = 1; libraryFolders.ContainsKey(libraryId.ToString()); libraryId++)
+                            manifestFile = Path.Combine(libraryPath, "steamapps", $"appmanifest_{gameId}.acf");
+                            if (File.Exists(manifestFile))
                             {
-                                Dictionary<string, object> library = (Dictionary<string, object>)libraryFolders[libraryId.ToString()];
-                                string libraryPath = (string)library["path"];
-
-                                manifestFile = Path.Combine(libraryPath, "steamapps", string.Format("appmanifest_{0}.acf", gameId));
-                                if (File.Exists(manifestFile))
+                                ItemValues manifestData;
+                                using (Stream s = File.OpenRead(manifestFile))
                                 {
-                                    ItemValues manifestData;
-                                    using (Stream s = File.OpenRead(manifestFile))
-                                    {
-                                        manifestData = new ItemValues(s);
-                                    }
-
-                                    string installdir = (string)((Dictionary<string, object>)manifestData.Items["appstate"])["installdir"];
-                                    string appidpath = Path.Combine(libraryPath, "steamapps", "common", installdir);
-                                    if (Directory.Exists(appidpath))
-                                        return appidpath;
+                                    manifestData = new ItemValues(s);
                                 }
+
+                                var installdir = (string)((Dictionary<string, object>)manifestData.Items["appstate"])["installdir"];
+                                var appidpath = Path.Combine(libraryPath, "steamapps", "common", installdir);
+                                if (Directory.Exists(appidpath))
+                                    return appidpath;
                             }
                         }
                     }
                 }
             }
-            catch (Exception exc)
-            {
-                Global.logger.Error(exc, "SteamUtils: GetGamePath({GameId})", gameId);
-            }
-
-            return null;
         }
+        catch (Exception exc)
+        {
+            Global.logger.Error(exc, "SteamUtils: GetGamePath({GameId})", gameId);
+        }
+
+        return null;
     }
 }

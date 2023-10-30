@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Aurora.Nodes;
 
 namespace Aurora.Profiles.Subnautica.GSI.Nodes {
     public class GameStateNode : Node {

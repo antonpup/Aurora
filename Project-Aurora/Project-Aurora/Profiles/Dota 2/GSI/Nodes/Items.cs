@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Aurora.Nodes;
 
 namespace Aurora.Profiles.Dota_2.GSI.Nodes
 {

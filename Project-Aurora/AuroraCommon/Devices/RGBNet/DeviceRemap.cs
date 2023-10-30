@@ -1,13 +1,10 @@
-﻿using Common;
-using Common.Devices;
-using IronPython.Modules;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using RGB.NET.Core;
 
-namespace AurorDeviceManager.Devices.RGBNet.Config;
+namespace Common.Devices.RGBNet;
 
 [Serializable]
-public class RgbNetConfigDevice
+public class DeviceRemap
 {
     [JsonProperty(PropertyName = "n")]
     public string Name { get; init; }
@@ -16,32 +13,29 @@ public class RgbNetConfigDevice
     public Dictionary<LedId, DeviceKeys> KeyMapper { get; } = new(Constants.MaxKeyId);
 
     [JsonConstructor]
-    public RgbNetConfigDevice(string name)
+    public DeviceRemap(string name)
     {
         Name = name;
     }
 
-    public RgbNetConfigDevice(IRGBDevice device)
+    public DeviceRemap(RemappableDevice device)
     {
-        Name = device.DeviceInfo.DeviceName;
+        Name = device.DeviceId;
     }
 
-    /// <inheritdoc />
     public override string ToString()
     {
         return Name;
     }
 
-    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
-        if (obj is not RgbNetConfigDevice device)
+        if (obj is not DeviceRemap device)
             return false;
 
         return Name == device.Name;
     }
 
-    /// <inheritdoc />
     public override int GetHashCode()
     {
         return Name.GetHashCode();

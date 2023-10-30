@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Common.Devices;
-using AurorDeviceManager.Devices.RGBNet.Config;
 using AurorDeviceManager.Settings;
 using Common;
 using Common.Devices.RGBNet;
@@ -156,7 +155,7 @@ public abstract class RgbNetDevice : DefaultDevice
         });
     }
 
-    private void RemapDeviceKeys(IReadOnlyDictionary<string, RgbNetConfigDevice> rgbNetConfigDevices, IRGBDevice rgbDevice)
+    private void RemapDeviceKeys(IReadOnlyDictionary<string, DeviceRemap> rgbNetConfigDevices, IRGBDevice rgbDevice)
     {
         if (rgbNetConfigDevices.TryGetValue(rgbDevice.DeviceInfo.DeviceName, out var configDevice))
         {

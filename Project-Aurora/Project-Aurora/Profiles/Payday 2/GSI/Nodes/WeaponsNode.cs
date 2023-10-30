@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using Aurora.Nodes;
 
 namespace Aurora.Profiles.Payday_2.GSI.Nodes
 {

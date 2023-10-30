@@ -19,6 +19,12 @@
           "System.ValueTuple": "4.5.0"
         }
       },
+      "CoordinateSharp": {
+        "type": "Direct",
+        "requested": "[2.20.1.1, )",
+        "resolved": "2.20.1.1",
+        "contentHash": "Tc7NzVicXaVeT2wt9aYg0cuyuIpO+oPhJ5NRlJghP9KrlOJEtuQyLyWnBQyjVbestuntTSzQYvjKbIYdLexQ5Q=="
+      },
       "Dubya.WindowsMediaController": {
         "type": "Direct",
         "requested": "[2.5.0, )",
@@ -119,9 +125,9 @@
       },
       "Octokit": {
         "type": "Direct",
-        "requested": "[8.1.1, )",
-        "resolved": "8.1.1",
-        "contentHash": "qrRUuJSkmCht+kG4Gf01jtbzNhYbUssy99VsUYlk9d/Z3vFCRpLn7Iulh3V3OWhpWaeHfHUKTMx9VbOB1uoo/A=="
+        "requested": "[7.1.0, )",
+        "resolved": "7.1.0",
+        "contentHash": "v2qhKBe1Zlssa4XOmpOXNDFBrOAMw2tBmr8L8YMSrEi+PlF/L/PboZcXHSkZuhIxIeOGxEFiwkuJLkvG4aHNHQ=="
       },
       "PropertyChanged.Fody": {
         "type": "Direct",

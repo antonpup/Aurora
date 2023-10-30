@@ -1,4 +1,6 @@
-﻿namespace Aurora.Profiles.CSGO.GSI.Nodes
+﻿using Aurora.Nodes;
+
+namespace Aurora.Profiles.CSGO.GSI.Nodes
 {
     /// <summary>
     /// Information about the provider of this GameState

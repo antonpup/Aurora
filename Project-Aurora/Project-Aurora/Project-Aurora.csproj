@@ -73,6 +73,13 @@
     <PackageReference Include="System.Threading.AccessControl" Version="7.0.1" />
     <PackageReference Include="TaskScheduler" Version="2.10.1" />
     <PackageReference Include="WPFToolkits" Version="3.5.50211.1" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <PackageReference Include="CoordinateSharp" Version="2.20.1.1" />
+
+    <Reference Include="RGB.NET.Core, Version=2.0.1.2">
+      <HintPath>.\RGB.NET.Core.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
     <!-- temporary, waiting for manual event reset fix
     <PackageReference Include="RazerSdkReader" Version="1.5.0" />
      -->
@@ -88,14 +95,9 @@
   <ItemGroup>
     <ProjectReference Include="..\AuroraCommon\AuroraCommon.csproj" />
     <ProjectReference Include="..\ColorBox\ColorBox.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="x64\LogitechLedEnginesWrapper.dll">
-    <PackageReference Include="SharpZipLib" Version="1.4.2" />
-    <ProjectReference Include="..\AuroraCommon\AuroraCommon.csproj" />
+    <ProjectReference Include="..\AuroraCommon\AuroraCommon.csproj" >
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
