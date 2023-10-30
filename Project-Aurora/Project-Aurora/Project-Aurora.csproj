@@ -119,7 +119,6 @@
 
   <ItemGroup>
     <Resource Include="Profiles\CSGO\GSI\gamestate_integration_aurora.cfg" />
-    <Resource Include="Profiles\Discord\GSI\AuroraGSI.plugin.js" />
     <Resource Include="Profiles\Dota 2\GSI\gamestate_integration_aurora.cfg" />
     <Resource Include="Profiles\ETS2\GSI\ets2-telemetry-server-x64.dll" />
     <Resource Include="Profiles\ETS2\GSI\ets2-telemetry-server-x86.dll" />

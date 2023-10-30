@@ -85,25 +85,25 @@ namespace Aurora.Profiles.Discord
             }
         }
 
-        private void WriteFile(string pluginFile)
+        private async void WriteFile(string pluginFile)
         {
-            if (File.Exists(pluginFile))
-            {
-                MessageBox.Show("Plugin already installed");
-                return;
-            }
-
             try
             {
-                using (FileStream pluginStream = File.Create(pluginFile))
-                {
-                    pluginStream.Write(Properties.Resources.DiscordGSIPlugin, 0, Properties.Resources.DiscordGSIPlugin.Length);
-                }
+                const string url = "https://raw.githubusercontent.com/Aurora-RGB/Discord-GSI/master/AuroraGSI.plugin.js";
+                using var httpClient = new HttpClient();
+
+                var response = await httpClient.GetAsync(url);
+
+                await using var contentStream = await response.Content.ReadAsStreamAsync();
+                await using var fileStream = File.Create(pluginFile);
+
+                await contentStream.CopyToAsync(fileStream);
+
                 MessageBox.Show("Plugin installed successfully");
             }
             catch (Exception e)
             {
-                MessageBox.Show("Error installng plugin: " + e.Message);
+                MessageBox.Show("Error installing plugin: " + e.Message);
             }
         }
     }

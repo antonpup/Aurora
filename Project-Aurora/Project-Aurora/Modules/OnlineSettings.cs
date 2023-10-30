@@ -20,7 +20,6 @@ public sealed partial class OnlineSettings : AuroraModule
 {
     private readonly Task<DeviceManager> _deviceManager;
     private Dictionary<string, ShutdownProcess> _shutdownProcesses = new();
-    private readonly GitHubClient _gClient = new(new ProductHeaderValue("Aurora"));
     private readonly TaskCompletionSource _layoutUpdateTaskSource = new();
 
     public Task LayoutsUpdate => _layoutUpdateTaskSource.Task;
@@ -47,7 +46,7 @@ public sealed partial class OnlineSettings : AuroraModule
         {
             await WaitGithubAccess(TimeSpan.FromSeconds(60));
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Global.logger.Error(e, "Skipped Online Settings update because of internet problem");
             return;
@@ -55,16 +54,21 @@ public sealed partial class OnlineSettings : AuroraModule
 
         try
         {
-            var masterBranch = await _gClient.Repository.Branch.Get("Aurora-RGB", "Online-Settings", "master");
-            var lastCommit = await _gClient.Repository.Commit.Get("Aurora-RGB", "Online-Settings", masterBranch.Commit.Sha);
-            var commitDate = lastCommit.Commit.Author.Date;
+            var settingsMeta = await OnlineConfigsRepository.GetOnlineSettingsOnline();
+            var commitDate = settingsMeta.OnlineSettingsTime;
 
-            if (commitDate <= Global.Configuration.OnlineSettingsTime)
-            {
-                return;
-            }
-        
-            Global.logger.Information("Updating Online Settings");
+        var localSettings = await OnlineConfigsRepository.GetOnlineSettingsLocal();
+        var localSettingsDate = localSettings.OnlineSettingsTime;
+
+        if (commitDate <= localSettingsDate)
+        {
+            return;
+        }
+
+        Global.logger.Information("Updating Online Settings");
+
+        try
+        {
             await ExtractSettings();
 
             Global.Configuration.OnlineSettingsTime = commitDate;
@@ -135,6 +139,7 @@ public sealed partial class OnlineSettings : AuroraModule
         {
             return;
         }
+
         await DownloadAndExtract();
         await Refresh();
     }
