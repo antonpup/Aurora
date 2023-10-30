@@ -663,8 +663,6 @@ namespace Aurora.Settings
         public string GsiAudioRenderDevice { get; set; } = AudioDevices.DefaultDeviceId;
         [JsonProperty("GSIAudioCaptureDevice", NullValueHandling = NullValueHandling.Ignore)]
         public string GsiAudioCaptureDevice { get; set; } = AudioDevices.DefaultDeviceId;
-        
-        public DateTimeOffset OnlineSettingsTime { get; set; } = DateTimeOffset.MinValue;
 
         private readonly List<Type> _defaultEnabledDevices = new()
         {
