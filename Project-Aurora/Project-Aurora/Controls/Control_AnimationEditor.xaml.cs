@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using Aurora.Settings.Controls.Keycaps;
 using Common.Devices;
 using static Aurora.Controls.Control_AnimationMixPresenter;
 
@@ -86,7 +87,7 @@ namespace Aurora.Controls
             //Generate a new mapping
             foreach (FrameworkElement Child in virtial_kb.Children)
             {
-                if (Child is Settings.Keycaps.IKeycap && (Child as Settings.Keycaps.IKeycap).GetKey() != DeviceKeys.NONE)
+                if (Child is IKeycap && (Child as IKeycap).GetKey() != DeviceKeys.NONE)
                 {
                     Child.PreviewMouseLeftButtonDown += KeyboardKey_PreviewMouseLeftButtonDown;
                     Child.PreviewMouseRightButtonDown += KeyboardKey_PreviewMouseRightButtonDown;
@@ -96,9 +97,9 @@ namespace Aurora.Controls
 
         private void KeyboardKey_PreviewMouseLeftButtonDown(object? sender, MouseButtonEventArgs e)
         {
-            if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame && sender is Settings.Keycaps.IKeycap)
+            if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame && sender is IKeycap)
             {
-                SetKeyColor((sender as Settings.Keycaps.IKeycap).GetKey(), _PrimaryManualColor);
+                SetKeyColor((sender as IKeycap).GetKey(), _PrimaryManualColor);
 
                 this.animMixer.UpdatePlaybackTime();
             }
@@ -106,9 +107,9 @@ namespace Aurora.Controls
 
         private void KeyboardKey_PreviewMouseRightButtonDown(object? sender, MouseButtonEventArgs e)
         {
-            if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame && sender is Settings.Keycaps.IKeycap)
+            if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame && sender is IKeycap)
             {
-                SetKeyColor((sender as Settings.Keycaps.IKeycap).GetKey(), _SecondaryManualColor);
+                SetKeyColor((sender as IKeycap).GetKey(), _SecondaryManualColor);
 
                 this.animMixer.UpdatePlaybackTime();
             }

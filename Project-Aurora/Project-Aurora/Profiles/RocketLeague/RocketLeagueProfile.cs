@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using Aurora.Profiles.RocketLeague.Layers;
-using Aurora.Settings.Overrides.Logic.Builder;
 using Aurora.Settings.Overrides.Logic;
+using Aurora.Settings.Overrides.Logic.Boolean;
 using Common.Devices;
 
 namespace Aurora.Profiles.RocketLeague

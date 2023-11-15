@@ -52,7 +52,14 @@ public abstract class AuroraModule : IDisposable
 
     private async Task InitButWait()
     {
-        await Initialize();
+        try
+        {
+            await Initialize();
+        }
+        catch (Exception e)
+        {
+            Global.logger.Fatal(e, "Module {Type} failed to initialize", GetType());
+        }
     }
 
     protected abstract Task Initialize();

@@ -10,6 +10,11 @@ public static class DesktopUtils
 
     private static readonly int SessionId = Process.GetCurrentProcess().SessionId;
 
+    static DesktopUtils()
+    {
+        StartSessionWatch();
+    }
+
     private static TaskCompletionSource<bool> CreateLazyUnlockSource()
     {
         var taskCompletionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -24,8 +29,9 @@ public static class DesktopUtils
         }
     }
 
-    public static void StartSessionWatch()  //TODO static constructor
+    public static void StartSessionWatch()
     {
+        SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
         SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
     }
 

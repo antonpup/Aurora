@@ -9,8 +9,8 @@ namespace Aurora.Utils;
 
 public static class BitmapUtils
 {
-    //B, G, R
-    private static readonly long[] ColorData = {0L, 0L, 0L};
+    //B, G, R, A
+    private static readonly long[] ColorData = {0L, 0L, 0L, 0L};
     private static readonly Dictionary<Size, BitmapData> Bitmaps = new();
     // ReSharper disable once CollectionNeverQueried.Local //to keep reference
     private static readonly Dictionary<Size, int[]> BitmapBuffers = new();
@@ -29,6 +29,7 @@ public static class BitmapUtils
         color[0] = 0L;
         color[1] = 0L;
         color[2] = 0L;
+        color[3] = 0L;
 
         if (!Bitmaps.TryGetValue(rectangle.Size, out var buff))
         {
@@ -70,13 +71,17 @@ public static class BitmapUtils
                     color[0] += p[j++];
                     color[1] += p[j++];
                     color[2] += p[j++];
-                    j++; //not going to use color[3], devices don't need Alpha
+                    color[3] += p[j++];
                 }
             }
         }
         map.UnlockBits(srcData);
 
-        var area = rectangle.Width * rectangle.Height;
+        var area = color[3] / 255;
+        if (area == 0)
+        {
+            return Color.Transparent;
+        }
         return CommonColorUtils.FastColor(
             (byte) (color[2] / area), (byte) (color[1] / area), (byte) (color[0] / area)
         );

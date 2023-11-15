@@ -10,11 +10,11 @@ namespace Aurora.Profiles;
 /// </summary>
 public class GameState_Wrapper : GameState
 {
-    private Provider_Wrapper _Provider;
-    private string _Command;
-    private Command_Wrapper _Command_Data;
-    private int[] _Bitmap;
-    private Extra_Keys_Wrapper _Extra_Keys;
+    private Provider_Wrapper? _Provider;
+    private string? _Command;
+    private Command_Wrapper? _Command_Data;
+    private int[]? _Bitmap;
+    private Extra_Keys_Wrapper? _Extra_Keys;
 
     /// <summary>
     /// Information about the provider of this GameState

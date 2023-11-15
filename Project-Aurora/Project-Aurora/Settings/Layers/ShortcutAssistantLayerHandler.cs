@@ -11,219 +11,240 @@ using Aurora.Settings.Layers.Controls;
 using Aurora.Utils;
 using Common.Devices;
 
-namespace Aurora.Settings.Layers
-{
-    public enum ShortcutAssistantPresentationType
-    {
-        [Description("Show All Keys")]
-        Default = 0,
+namespace Aurora.Settings.Layers;
 
-        [Description("Progressive Suggestion")]
-        ProgressiveSuggestion = 1
+public enum ShortcutAssistantPresentationType
+{
+    [Description("Show All Keys")]
+    Default = 0,
+
+    [Description("Progressive Suggestion")]
+    ProgressiveSuggestion = 1
+}
+
+public class ShortcutAssistantLayerHandlerProperties : LayerHandlerProperties<ShortcutAssistantLayerHandlerProperties>
+{
+    [JsonIgnore]
+    private bool? _dimBackground;
+
+    [JsonProperty("_DimBackground")]
+    [Overrides.LogicOverridable("Dim Background")]
+    public bool DimBackground
+    {
+        get => (Logic._dimBackground ?? _dimBackground) ?? false;
+        set => _dimBackground = value;
     }
 
-    public class ShortcutAssistantLayerHandlerProperties : LayerHandlerProperties<ShortcutAssistantLayerHandlerProperties>
+    [JsonIgnore]
+    private bool? _mergeModifierKey;
+
+    [JsonProperty("_MergeModifierKey")]
+    public bool MergeModifierKey {
+        get => (Logic._mergeModifierKey ?? _mergeModifierKey) ?? false;
+        set { _mergeModifierKey = value; _shortcutKeysInvalidated = true; }
+    }
+
+    [JsonIgnore]
+    private bool? _leafShortcutAlwaysOn;
+
+    [JsonProperty("_LeafShortcutAlwaysOn")]
+    public bool? LeafShortcutAlwaysOn
     {
-        [Overrides.LogicOverridable("Dim Background")]
-        public bool? _DimBackground { get; set; }
+        get => (Logic._leafShortcutAlwaysOn ?? _leafShortcutAlwaysOn) ?? false;
+        set { _leafShortcutAlwaysOn = value; _shortcutKeysInvalidated = true; }
+    }
 
-        [JsonIgnore]
-        public bool DimBackground { get { return (Logic._DimBackground ?? _DimBackground) ?? false; } }
+    [JsonIgnore]
+    private Color? _dimColor;
 
-        [JsonIgnore]
-        public bool? __MergeModifierKey { get; set; }
+    [JsonProperty("_DimColor")]
+    [Overrides.LogicOverridable("Dim Color")]
+    public Color DimColor
+    {
+        get => (Logic._dimColor ?? _dimColor) ?? Color.Empty;
+        set => _dimColor = value;
+    }
 
-        public bool? _MergeModifierKey { get { return __MergeModifierKey; } set { __MergeModifierKey = value; ShortcutKeysInvalidated = true; } }
+    [JsonIgnore]
+    private Keybind[] _shortcutKeys = Array.Empty<Keybind>();
 
-        [JsonIgnore]
-        public bool MergeModifierKey { get { return (Logic._MergeModifierKey ?? _MergeModifierKey) ?? default(bool); } }
+    [JsonProperty("_ShortcutKeys")]
+    public Keybind[] ShortcutKeys
+    {
+        get => _shortcutKeys;
+        set { _shortcutKeys = value; _shortcutKeysInvalidated = true; }
+    }
 
-        [JsonIgnore]
-        public bool? __LeafShortcutAlwaysOn { get; set; }
+    [JsonIgnore]
+    private bool _shortcutKeysInvalidated = true;
 
-        public bool? _LeafShortcutAlwaysOn { get { return __LeafShortcutAlwaysOn; } set { __LeafShortcutAlwaysOn = value; ShortcutKeysInvalidated = true; } }
+    [JsonIgnore]
+    private Tree<Keys> _shortcutKeysTree = new(Keys.None);
 
-        [JsonIgnore]
-        public bool LeafShortcutAlwaysOn { get { return (Logic._LeafShortcutAlwaysOn ?? _LeafShortcutAlwaysOn) ?? default(bool); } }
-
-        [Overrides.LogicOverridable("Dim Color")]
-        public Color? _DimColor { get; set; }
-
-        [JsonIgnore]
-        public Color DimColor { get { return (Logic._DimColor ?? _DimColor) ?? Color.Empty; } }
-
-        [JsonIgnore]
-        private Keybind[] __ShortcutKeys = new Keybind[] { };
-
-        public Keybind[] _ShortcutKeys
+    [JsonIgnore]
+    public Tree<Keys> ShortcutKeysTree
+    {
+        get
         {
-            get { return __ShortcutKeys; }
-            set { __ShortcutKeys = value; ShortcutKeysInvalidated = true; }
-        }
-
-        [JsonIgnore]
-        public Keybind[] ShortcutKeys { get { return _ShortcutKeys; } }
-
-        [JsonIgnore]
-        public bool ShortcutKeysInvalidated = true;
-
-        [JsonIgnore]
-        private Tree<Keys> _ShortcutKeysTree = new Tree<Keys>(Keys.None);
-
-        [JsonIgnore]
-        public Tree<Keys> ShortcutKeysTree
-        {
-            get
+            if (_shortcutKeysInvalidated)
             {
-                if (ShortcutKeysInvalidated)
+                _shortcutKeysTree = new Tree<Keys>(Keys.None);
+
+                foreach (var keyb in ShortcutKeys)
                 {
-                    _ShortcutKeysTree = new Tree<Keys>(Keys.None);
+                    var keys = keyb.ToArray();
 
-                    foreach (Keybind keyb in ShortcutKeys)
+                    if (MergeModifierKey)
                     {
-                        Keys[] keys = keyb.ToArray();
-
-                        if (MergeModifierKey)
-                        {
-                            for (int i = 0; i < keys.Length; i++)
-                                keys[i] = KeyUtils.GetStandardKey(keys[i]);
-                        }
-
-                        _ShortcutKeysTree.AddBranch(keys);
+                        for (var i = 0; i < keys.Length; i++)
+                            keys[i] = KeyUtils.GetStandardKey(keys[i]);
                     }
 
-                    ShortcutKeysInvalidated = false;
+                    _shortcutKeysTree.AddBranch(keys);
                 }
 
-                return _ShortcutKeysTree;
+                _shortcutKeysInvalidated = false;
             }
-        }
 
-        public ShortcutAssistantPresentationType? _PresentationType { get; set; }
-
-        [JsonIgnore]
-        public ShortcutAssistantPresentationType PresentationType { get { return Logic._PresentationType ?? _PresentationType ?? ShortcutAssistantPresentationType.Default; } }
-
-        public ShortcutAssistantLayerHandlerProperties() : base() { }
-
-        public ShortcutAssistantLayerHandlerProperties(bool empty = false) : base(empty) { }
-
-        public override void Default()
-        {
-            base.Default();
-            _DimBackground = true;
-            _DimColor = Color.FromArgb(169, 0, 0, 0);
-            _PresentationType = ShortcutAssistantPresentationType.Default;
-            _MergeModifierKey = false;
+            return _shortcutKeysTree;
         }
     }
 
-    public class ShortcutAssistantLayerHandler : LayerHandler<ShortcutAssistantLayerHandlerProperties>
+    [JsonIgnore]
+    private ShortcutAssistantPresentationType? _presentationType;
+
+    [JsonProperty("_PresentationType")]
+    public ShortcutAssistantPresentationType PresentationType
     {
+        get => Logic._presentationType ?? _presentationType ?? ShortcutAssistantPresentationType.ProgressiveSuggestion;
+        set => _presentationType = value;
+    }
 
-        public ShortcutAssistantLayerHandler() : base("Shortcut Assistant")
+    public ShortcutAssistantLayerHandlerProperties() { }
+
+    public ShortcutAssistantLayerHandlerProperties(bool empty = false) : base(empty) { }
+
+    public override void Default()
+    {
+        base.Default();
+        _dimBackground = true;
+        DimColor = Color.FromArgb(169, 0, 0, 0);
+        PresentationType = ShortcutAssistantPresentationType.Default;
+        _mergeModifierKey = false;
+    }
+}
+
+public class ShortcutAssistantLayerHandler : LayerHandler<ShortcutAssistantLayerHandlerProperties>
+{
+
+    public ShortcutAssistantLayerHandler() : base("Shortcut Assistant")
+    {
+    }
+
+    protected override System.Windows.Controls.UserControl CreateControl()
+    {
+        return new ControlShortcutAssistantLayer(this);
+    }
+
+    /// <summary>
+    /// Check if layer effect is active based on what keys are pressed. 
+    /// Layer is considered active if the first pressed key is a child of the root of Properties.ShortcutKeysTree
+    /// </summary>
+    /// <returns>true if layer is active</returns>
+    private bool IsLayerActive()
+    {
+        var heldKeys = Global.InputEvents.PressedKeys;
+
+        var keyToCheck = heldKeys.FirstOrDefault();
+
+        var key = Properties.MergeModifierKey ? KeyUtils.GetStandardKey(keyToCheck) : keyToCheck;
+        return Properties.ShortcutKeysTree.ContainsItem(key) != null;
+    }
+
+    private Keys[] MatchHeldKeysToShortcutTree(IEnumerable<Keys> heldKeys, Tree<Keys> shortcuts)
+    {
+        var currentShortcutNode = shortcuts;
+        var heldKeysToHighlight = Array.Empty<Keys>();
+
+        foreach (var key in heldKeys)
         {
-        }
-
-        protected override System.Windows.Controls.UserControl CreateControl()
-        {
-            return new ControlShortcutAssistantLayer(this);
-        }
-
-        /// <summary>
-        /// Check if layer effect is active based on what keys are pressed. 
-        /// Layer is considered active if the first pressed key is a child of the root of Properties.ShortcutKeysTree
-        /// </summary>
-        /// <returns>true if layer is active</returns>
-        protected bool IsLayerActive()
-        {
-            var heldKeys = Global.InputEvents.PressedKeys;
-
-            var keyToCheck = heldKeys.FirstOrDefault();
-
-            return Properties.ShortcutKeysTree.ContainsItem(Properties.MergeModifierKey ? KeyUtils.GetStandardKey(keyToCheck) : keyToCheck) != null;
-        }
-
-        public Keys[] MatchHeldKeysToShortcutTree(IEnumerable<Keys> heldKeys, Tree<Keys> shortcuts)
-        {
-            Tree<Keys> currentShortcutNode = shortcuts;
-            Keys[] heldKeysToHighlight = { };
-
-            foreach (var key in heldKeys)
+            var child = currentShortcutNode.ContainsItem(key);
+            if (child != null)
             {
-                Tree<Keys> child = currentShortcutNode.ContainsItem(key);
-                if (child != null)
-                {
-                    currentShortcutNode = child;
-                    heldKeysToHighlight = heldKeysToHighlight.Append(key).ToArray();
-                }
-                else
-                {
-                    break;
-                }
+                currentShortcutNode = child;
+                heldKeysToHighlight = heldKeysToHighlight.Append(key).ToArray();
             }
-
-            return heldKeysToHighlight;
+            else
+            {
+                break;
+            }
         }
 
-        public override EffectLayer Render(IGameState gamestate)
+        return heldKeysToHighlight;
+    }
+
+    public override EffectLayer Render(IGameState gamestate)
+    {
+        if (IsLayerActive() == false)
         {
-            if (IsLayerActive() == false)
+            return EffectLayer.EmptyLayer;
+        }
+
+        // The layer is active. At this point we have at least 1 key to highlight
+
+        var heldKeys = Global.InputEvents.PressedKeys;
+        var heldKeysToHighlight = MatchHeldKeysToShortcutTree(heldKeys, Properties.ShortcutKeysTree); // This is also the path in shortcut tree
+
+        var currentShortcutNode = Properties.ShortcutKeysTree.GetNodeByPath(heldKeysToHighlight);
+        if (currentShortcutNode == null)
+        {
+            return EffectLayer.EmptyLayer;
+        }
+        if (Properties.LeafShortcutAlwaysOn.GetValueOrDefault(false) && currentShortcutNode.IsLeaf)
+        {
+            // Go down one level
+            currentShortcutNode = Properties.ShortcutKeysTree.GetNodeByPath(heldKeysToHighlight.Take(heldKeysToHighlight.Length - 1).ToArray());
+            if (currentShortcutNode == null)
             {
                 return EffectLayer.EmptyLayer;
             }
-
-            // The layer is active. At this point we have at least 1 key to highlight
-
-            var heldKeys = Global.InputEvents.PressedKeys;
-            Keys[] heldKeysToHighlight = MatchHeldKeysToShortcutTree(heldKeys, Properties.ShortcutKeysTree); // This is also the path in shortcut tree
-
-            Tree<Keys> currentShortcutNode = Properties.ShortcutKeysTree.GetNodeByPath(heldKeysToHighlight);
-            if (Properties.LeafShortcutAlwaysOn && currentShortcutNode.IsLeaf)
-            {
-                // Go down one level
-                currentShortcutNode = Properties.ShortcutKeysTree.GetNodeByPath(heldKeysToHighlight.Take(heldKeysToHighlight.Length - 1).ToArray());
-            }
-
-            // Convert to DeviceKeys
-            DeviceKeys[] selectedKeys = BuildSelectedKeys(currentShortcutNode, heldKeysToHighlight);
-            DeviceKeys[] backgroundKeys = KeyUtils.GetDeviceAllKeys().Except(selectedKeys).ToArray();
-
-            // Display keys
-            ApplyKeyColors(EffectLayer, selectedKeys, backgroundKeys);
-
-            return EffectLayer;
         }
 
-        protected DeviceKeys[] BuildSelectedKeys(Tree<Keys> currentShortcutNode, Keys[] previousShortcutKeys)
+        // Convert to DeviceKeys
+        var selectedKeys = BuildSelectedKeys(currentShortcutNode, heldKeysToHighlight);
+        var backgroundKeys = KeyUtils.GetDeviceAllKeys().Except(selectedKeys).ToArray();
+
+        // Display keys
+        ApplyKeyColors(EffectLayer, selectedKeys, backgroundKeys);
+
+        return EffectLayer;
+    }
+
+    private DeviceKeys[] BuildSelectedKeys(Tree<Keys> currentShortcutNode, Keys[] previousShortcutKeys)
+    {
+        Keys[] nextPossibleShortcutKeys;
+        switch (Properties.PresentationType)
         {
-            Keys[] nextPossibleShortcutKeys;
-            switch (Properties.PresentationType)
-            {
-                default:
-                case ShortcutAssistantPresentationType.Default:
-                    nextPossibleShortcutKeys = currentShortcutNode.GetAllChildren();
-                    break;
-                case ShortcutAssistantPresentationType.ProgressiveSuggestion:
-                    nextPossibleShortcutKeys = currentShortcutNode.GetChildren();
-                    break;
-            }
-
-            return KeyUtils.GetDeviceKeys(nextPossibleShortcutKeys, true, !Console.NumberLock)
-                        .Concat(KeyUtils.GetDeviceKeys(previousShortcutKeys, true)).ToArray();
+            default:
+            case ShortcutAssistantPresentationType.Default:
+                nextPossibleShortcutKeys = currentShortcutNode.GetAllChildren();
+                break;
+            case ShortcutAssistantPresentationType.ProgressiveSuggestion:
+                nextPossibleShortcutKeys = currentShortcutNode.GetChildren();
+                break;
         }
 
-        protected void ApplyKeyColors(EffectLayer layer, DeviceKeys[] selectedKeys, DeviceKeys[] backgroundKeys)
+        return KeyUtils.GetDeviceKeys(nextPossibleShortcutKeys, true, !Console.NumberLock)
+            .Concat(KeyUtils.GetDeviceKeys(previousShortcutKeys, true)).ToArray();
+    }
+
+    private void ApplyKeyColors(EffectLayer layer, DeviceKeys[] selectedKeys, DeviceKeys[] backgroundKeys)
+    {
+        if (Properties.DimBackground)
         {
-            if (backgroundKeys != null && Properties.DimBackground)
-            {
-                layer.Set(backgroundKeys, Properties.DimColor);
-            }
-
-            if (selectedKeys != null)
-            {
-                layer.Set(selectedKeys, Properties.PrimaryColor);
-            }
+            layer.Set(backgroundKeys, Properties.DimColor);
         }
+
+        layer.Set(selectedKeys, Properties.PrimaryColor);
     }
 }

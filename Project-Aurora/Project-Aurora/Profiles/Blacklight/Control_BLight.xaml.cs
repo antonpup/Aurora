@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Aurora.Controls;
 using Aurora.Settings;
+using Aurora.Utils.Steam;
 
 namespace Aurora.Profiles.Blacklight
 {
@@ -79,7 +80,7 @@ namespace Aurora.Profiles.Blacklight
         private bool InstallWrapper(string installpath = "")
         {
             if (String.IsNullOrWhiteSpace(installpath))
-                installpath = Utils.SteamUtils.GetGamePath(209870);
+                installpath = SteamUtils.GetGamePath(209870);
 
             if (!String.IsNullOrWhiteSpace(installpath))
             {
@@ -105,7 +106,7 @@ namespace Aurora.Profiles.Blacklight
         private bool UninstallWrapper(string installpath = "")
         {
             if (String.IsNullOrWhiteSpace(installpath))
-                installpath = Utils.SteamUtils.GetGamePath(209870);
+                installpath = SteamUtils.GetGamePath(209870);
 
             if (!String.IsNullOrWhiteSpace(installpath))
             {

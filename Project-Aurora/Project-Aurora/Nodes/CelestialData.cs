@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Aurora.Settings;
 using CoordinateSharp;
 
 namespace Aurora.Nodes;
@@ -14,12 +15,30 @@ public class CelestialData : Node
     {
         Extensions = new EagerLoad_Extensions(EagerLoad_ExtensionsType.Solar_Cycle)
     };
-    private Coordinate Coordinate { get; set; } = new(52.4928, 13.4039, El);
+    private Coordinate Coordinate { get; set; } = new(0, 0, El);
+    private bool _invalidated = true;
+
+    public CelestialData()
+    {
+        Global.Configuration.PropertyChanged += (_, propertyChangedEvent) =>
+        {
+            if (propertyChangedEvent.PropertyName is not (nameof(Configuration.Lat) or nameof(Configuration.Lon))) return;
+
+            _currentHour = -1;
+            _invalidated = true;
+        };
+    }
 
     public double SolarNoonPercentage
     {
         get
         {
+            if (_invalidated)
+            {
+                Coordinate = new Coordinate(Global.Configuration.Lat, Global.Configuration.Lon, DateTime.Now, El);
+                _invalidated = false;
+            }
+            
             var dateTime = DateTime.Now;
 
             if (dateTime.Hour != _currentHour)

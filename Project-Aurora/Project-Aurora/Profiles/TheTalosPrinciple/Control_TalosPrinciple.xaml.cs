@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using Aurora.Utils.Steam;
 
 namespace Aurora.Profiles.TheTalosPrinciple
 {
@@ -78,7 +79,7 @@ namespace Aurora.Profiles.TheTalosPrinciple
         private bool InstallWrapper(string installpath = "")
         {
             if (String.IsNullOrWhiteSpace(installpath))
-                installpath = Utils.SteamUtils.GetGamePath(257510);
+                installpath = SteamUtils.GetGamePath(257510);
 
 
             if (!String.IsNullOrWhiteSpace(installpath))
@@ -115,7 +116,7 @@ namespace Aurora.Profiles.TheTalosPrinciple
 
         private bool UninstallWrapper()
         {
-            String installpath = Utils.SteamUtils.GetGamePath(257510);
+            String installpath = SteamUtils.GetGamePath(257510);
             if (!String.IsNullOrWhiteSpace(installpath))
             {
                 //86

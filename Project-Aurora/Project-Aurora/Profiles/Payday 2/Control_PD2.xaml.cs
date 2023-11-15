@@ -7,6 +7,7 @@ using System.IO.Compression;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Aurora.Utils.Steam;
 
 namespace Aurora.Profiles.Payday_2
 {
@@ -54,7 +55,7 @@ namespace Aurora.Profiles.Payday_2
 
         private void install_mod_button_Click(object? sender, RoutedEventArgs e)
         {
-            string pd2path = Utils.SteamUtils.GetGamePath(218620);
+            string pd2path = SteamUtils.GetGamePath(218620);
 
             if(!String.IsNullOrWhiteSpace(pd2path))
             {

@@ -1,0 +1,157 @@
+<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:a="clr-namespace:Aurora"
+             xmlns:local="clr-namespace:Aurora.Settings"
+             xmlns:Controls="clr-namespace:Aurora.Controls"
+             xmlns:utils="clr-namespace:Aurora.Utils"
+             xmlns:events="clr-namespace:Serilog.Events;assembly=Serilog"
+             xmlns:controls="clr-namespace:Aurora.Settings.Controls"
+             x:Class="Aurora.Settings.Controls.Control_Settings"
+             mc:Ignorable="d"
+             d:DesignHeight="400" d:DesignWidth="403.521"
+             Height="Auto" Width="Auto"
+             MinHeight="300" MinWidth="850"
+             Loaded="UserControl_Loaded"
+             x:Name="ctrlSettings">
+
+    <TabControl Margin="0,7,0,0" DataContext="{x:Static a:Global.Configuration}">
+        <TabItem x:Name="DevicesAndWrappersTab" Header="Devices &amp; Wrappers">
+        </TabItem>
+        <TabItem Name="DeviceManagerTab" Header="Device Manager">
+            <!-- <Controls:Control_DeviceManager Margin="10"/> Added by constructor -->
+        </TabItem>
+        <TabItem Name="RemapDevicesTab" Header="Remap Devices">
+            <!--  <config:DeviceMapping /> Added by constructor -->
+        </TabItem>
+        <TabItem Header="General Settings">
+            <controls:Control_SettingsGeneral />
+        </TabItem>
+        <TabItem Header="Plugin Management">
+            <Controls:Control_PluginManager x:Name="ctrlPluginManager" Margin="10"/>
+        </TabItem>
+        <TabItem Header="Updates">
+            <Grid>
+                <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="You can view all changelogs on Github "/>
+                    <Hyperlink NavigateUri="https://github.com/Aurora-RGB/Aurora/releases" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="here"/></Hyperlink><Run Text="."/>
+                </TextBlock>
+                <Button Content="Check for Updates" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Click="updates_check_Click"/>
+                <CheckBox Content="Automatically check for updates on program start" IsChecked="{Binding UpdatesCheckOnStartUp}" Margin="10,56,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <CheckBox Content="Automatically check for pointer updates on program start" IsChecked="{Binding GetPointerUpdates}" Margin="10,76,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <CheckBox Content="Get Pre-release updates" IsChecked="{Binding GetDevReleases}" Margin="10,96,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            </Grid>
+        </TabItem>
+        <TabItem Header="About">
+            <Grid>
+                <Label Content="Aurora" HorizontalAlignment="Left" Margin="143,10,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
+                <TextBlock HorizontalAlignment="Left" Margin="148,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top">
+                        <Run Text="This is a public Beta version of Aurora, there will be bugs and issues."/>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run Text="You can report problems and give suggestions by "/>
+                        <Hyperlink x:Name="LnkIssues" NavigateUri="https://github.com/Aurora-RGB/Aurora/issues/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="making an issue."/></Hyperlink>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run Text="The source code for this project is available on "/>
+                        <Hyperlink x:Name="LnkRepository" NavigateUri="https://github.com/Aurora-RGB/Aurora/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Github"/></Hyperlink>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run Text="Game logos and other images are owned by their respective owners."/>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run Text="Some icons are used with the free license from "/><Hyperlink NavigateUri="https://icons8.com" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Icons8"/></Hyperlink>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Hyperlink NavigateUri="https://discord.gg/YAuBmg9" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Aurora's Discord Server"/></Hyperlink>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run Text="Made by all the"/>
+                        <Hyperlink x:Name="LnkContributors" NavigateUri="https://github.com/Aurora-RGB/Aurora#contributors-" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="contributors"/></Hyperlink>
+                </TextBlock>
+                <Label x:Name="lblVersion" Content="VERSION PLACEHOLDER" HorizontalAlignment="Left" Margin="198,12,0,0" VerticalAlignment="Top"/>
+                <Image HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Source="/Aurora;component/Resources/aurora_logo.png" Width="128"/>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Debug">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" >
+                    <Button 
+                            Content="Show Bitmap Window" 
+                            Click="btnShowBitmapWindow_Click"
+                            Margin="0,50,0,0"
+                            Width="150"
+                            Height="30"
+                        />
+                    <CheckBox 
+                            Content="Always on top" 
+                            IsChecked="{Binding BitmapDebugTopMost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Margin="0,10,0,0"
+                        />
+                    <CheckBox 
+                            x:Name="chkBitmapStartUp" 
+                            Content="Open at startup"  
+                            IsChecked="{Binding BitmapWindowOnStartUp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Margin="0,10,0,0"
+                        />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <Button 
+                            Content="Show GSI HTTP requests"
+                            Click="btnShowGSILog_Click" 
+                            Margin="0,50,0,0"
+                            Width="150"
+                            Height="30"
+                        />
+                    <CheckBox 
+                            Content="Always on top" 
+                            IsChecked="{Binding HttpDebugTopMost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Margin="0,10,0,0"
+                        />
+                    <CheckBox 
+                            Content="Open at startup" 
+                            IsChecked="{Binding HttpWindowOnStartUp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                        Margin="0,10,0,0"
+
+                        />
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <Button 
+                            Content="Show Logs Folder" 
+                            Click="btnShowLogsFolder_Click"
+                            Margin="0,50,0,0"
+                            Width="150"
+                            Height="30"
+                        />
+                    <Button
+                            Margin="0,10,0,0"
+                            Width="150"
+                            Height="30"
+                            Content="Dump hardware sensors" Click="btnDumpSensors_Click"
+                        />
+                    <TextBlock
+                        Margin="0,10,0,0"
+                        >
+                        Log level:
+                    </TextBlock>
+                    <ComboBox
+                        Margin="0,10,0,0"
+                        SelectedValue="{Binding LogLevel}"
+                        ItemsSource="{utils:EnumToItemsSource {x:Type events:LogEventLevel}}" DisplayMemberPath="Text"
+                        SelectedValuePath="Value"
+                        >
+                        
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</UserControl>

@@ -12,11 +12,11 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Aurora.EffectsEngine;
-using Aurora.Modules.Plugins;
 using Aurora.Scripts.VoronScripts;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Aurora.Utils;
+using Common.Utils;
 using IronPython.Hosting;
 using IronPython.Runtime.Types;
 using JetBrains.Annotations;
@@ -27,65 +27,6 @@ using EnumConverter = Aurora.Utils.EnumConverter;
 using ErrorEventArgs = Newtonsoft.Json.Serialization.ErrorEventArgs;
 
 namespace Aurora.Profiles;
-
-public class LightEventConfig : INotifyPropertyChanged
-{
-    public string[] ProcessNames
-    {
-        get => _processNames;
-        set
-        {
-            _processNames = value.Select(s => s.ToLower()).ToArray();
-            ProcessNamesChanged?.Invoke(this, EventArgs.Empty);
-        }
-    }
-
-    public event EventHandler<EventArgs>? ProcessNamesChanged; 
-
-    /// <summary>One or more REGULAR EXPRESSIONS that can be used to match the title of an application</summary>
-    public string[]? ProcessTitles { get; set; }
-
-    public string Name { get; set; }
-
-    public string ID { get; set; }
-
-    public string AppID { get; set; }
-
-    public Type SettingsType { get; set; } = typeof(ApplicationSettings);
-
-    public Type ProfileType { get; set; } = typeof(ApplicationProfile);
-
-    public Type OverviewControlType { get; set; }
-
-    public Type? GameStateType { get; set; }
-
-    private readonly Lazy<LightEvent> _lightEvent;
-    private string[] _processNames = Array.Empty<string>();
-    public LightEvent Event => _lightEvent.Value;
-
-    public string IconURI { get; set; }
-
-    public HashSet<Type> ExtraAvailableLayers { get; } = new();
-
-    public bool EnableByDefault { get; set; } = true;
-    public bool EnableOverlaysByDefault { get; set; } = true;
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    public LightEventConfig() : this(new Lazy<LightEvent>(() => new GameEvent_Generic()))
-    {
-    }
-
-    public LightEventConfig(Lazy<LightEvent> lightEvent)
-    {
-        _lightEvent = lightEvent;
-    }
-
-    public LightEventConfig WithLayer<T>() where T : ILayerHandler {
-        ExtraAvailableLayers.Add(typeof(T));
-        return this;
-    }
-}
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature, ImplicitUseTargetFlags.WithInheritors)]
 public class Application : ObjectSettings<ApplicationSettings>, ILightEvent, INotifyPropertyChanged
@@ -286,7 +227,7 @@ public class Application : ObjectSettings<ApplicationSettings>, ILightEvent, INo
     }
 
     //hacky fix to sort out MoD profile type change
-    private readonly ISerializationBinder _binder = JSONUtils.SerializationBinder;
+    private readonly ISerializationBinder _binder = new AuroraSerializationBinder();
 
     private ApplicationProfile? LoadProfile(string path)
     {
@@ -304,11 +245,11 @@ public class Application : ObjectSettings<ApplicationSettings>, ILightEvent, INo
                 var jsonSerializerSettings = new JsonSerializerSettings
                 {
                     ObjectCreationHandling = ObjectCreationHandling.Replace,
-                    TypeNameHandling = TypeNameHandling.Objects,
+                    TypeNameHandling = TypeNameHandling.Auto,
                     //MetadataPropertyHandling = MetadataPropertyHandling.ReadAhead,
                     FloatParseHandling = FloatParseHandling.Double,
                     SerializationBinder = _binder,
-                    TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full,
+                    TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
                     Error = LoadProfilesError
                 };
                 jsonSerializerSettings.Converters.Add(new EnumConverter());
@@ -383,9 +324,6 @@ public class Application : ObjectSettings<ApplicationSettings>, ILightEvent, INo
     {
         if (e.CurrentObject != null)
         {
-            if (e.CurrentObject.GetType().Equals(typeof(ObservableCollection<Layer>)))
-                e.ErrorContext.Handled = true;
-
             if (e.CurrentObject.GetType() == typeof(Layer) && e.ErrorContext.Member.Equals("Handler"))
             {
                 ((Layer)e.ErrorContext.OriginalObject).Handler = null;
@@ -508,8 +446,10 @@ public class Application : ObjectSettings<ApplicationSettings>, ILightEvent, INo
                         }
                         break;
                     case ".cs":
-                        PluginCompiler.Compile(script).Wait();
-                            
+                        new PluginCompiler(Global.logger, Global.ExecutingDirectory)
+                            .Compile(script)
+                            .Wait();
+
                         var scriptAssembly = Assembly.LoadFrom(script + ".dll");
                         var effectType = typeof(IEffectScript);
                         foreach (var typ in scriptAssembly.ExportedTypes)
@@ -613,7 +553,7 @@ public class Application : ObjectSettings<ApplicationSettings>, ILightEvent, INo
         try
         {
             path ??= Path.Combine(GetProfileFolderPath(), profile.ProfileFilepath);
-            var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = JSONUtils.SerializationBinder };
+            var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
             var content = JsonConvert.SerializeObject(profile, Formatting.Indented, settings);
 
             Directory.CreateDirectory(Path.GetDirectoryName(path));

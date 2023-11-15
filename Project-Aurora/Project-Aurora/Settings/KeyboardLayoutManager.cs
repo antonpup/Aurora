@@ -12,7 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Aurora.Devices;
-using Aurora.Settings.Keycaps;
+using Aurora.Settings.Controls.Keycaps;
 using Aurora.Utils;
 using Common;
 using Common.Devices;

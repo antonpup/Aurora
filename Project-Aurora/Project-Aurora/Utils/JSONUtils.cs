@@ -4,90 +4,105 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text.RegularExpressions;
-using System.Collections.ObjectModel;
 using Aurora.Settings.Overrides.Logic;
 using Common.Devices;
 using Newtonsoft.Json.Linq;
 
 namespace Aurora.Utils;
 
-public static class JSONUtils
-{
-    public static AuroraSerializationBinder SerializationBinder { get; } = new();
-}
-
 public class AuroraSerializationBinder : DefaultSerializationBinder
 {
-    public override Type BindToType(string assemblyName, string typeName)
+    private readonly Dictionary<string, Dictionary<string, Type>> _assemblyTypeMap = new();
+    private readonly Dictionary<string, Type> _typeMap = new();
+    
+    public override Type BindToType(string? assemblyName, string typeName)
     {
-        switch (typeName)
+        const string pattern1 = @"\[([^\s,^\[]*), ([^\s,^\]]*)]";
+
+        Dictionary<string, Type> typeMap;
+        if (assemblyName != null)
         {
-            case "System.Collections.Generic.List`1[[System.Drawing.Color, System.Drawing]]":
-                return typeof(List<Color>);
-            case
-                "System.Collections.Generic.SortedDictionary`2[[System.Single, mscorlib],[System.Drawing.Color, System.Drawing]]"
-                :
-                return typeof(SortedDictionary<float, Color>);
-            case "System.Collections.Generic.Queue`1[[System.Windows.Forms.Keys, System.Windows.Forms]]":
-                return typeof(Queue<System.Windows.Forms.Keys>);
-            case
-                "System.Collections.Generic.Dictionary`2[[Aurora.DeviceKeys, Aurora],[System.Drawing.Color, System.Drawing]]"
-                :
-                return typeof(Dictionary<DeviceKeys, Color>);
-            //Resolve typo'd AbilityLayerHandler type
-            case "Aurora.Profiles.Dota_2.Layers.Dota2AbiltiyLayerHandler":
-                return typeof(Profiles.Dota_2.Layers.Dota2AbilityLayerHandler);
-            case "Aurora.Profiles.Dota_2.Layers.Dota2HeroAbiltiyEffectsLayerHandler":
-                return typeof(Profiles.Dota_2.Layers.Dota2HeroAbilityEffectsLayerHandler);
-            case "Aurora.Profiles.Dota_2.Layers.Dota2HeroAbiltiyEffectsLayerHandlerProperties":
-                return typeof(Profiles.Dota_2.Layers.Dota2HeroAbilityEffectsLayerHandlerProperties);
-            case "Aurora.Profiles.TheDivision.TheDivisionSettings":
-                return typeof(Settings.ApplicationProfile);
-            case "Aurora.Profiles.Overwatch.OverwatchProfile":
-            case "Aurora.Profiles.WormsWMD.WormsWMDProfile":
-            case "Aurora.Profiles.Blade_and_Soul.BnSProfile":
-            case "Aurora.Profiles.Magic_Duels_2012.MagicDuels2012Profile":
-            case "Aurora.Profiles.ColorEnhanceProfile":
-                return typeof(Profiles.WrapperProfile);
-            case "Aurora.Settings.Overrides.Logic.IEvaluatableBoolean":
-            case "Aurora.Settings.Overrides.Logic.IEvaluatable`1[[System.Boolean, mscorlib]]":
-                return typeof(Evaluatable<bool>);
-            case "Aurora.Settings.Overrides.Logic.IEvaluatableNumber":
-            case "Aurora.Settings.Overrides.Logic.IEvaluatable`1[[System.Double, mscorlib]]":
-                return typeof(Evaluatable<double>);
-            case "Aurora.Settings.Overrides.Logic.IEvaluatableString":
-            case "Aurora.Settings.Overrides.Logic.IEvaluatable`1[[System.String, mscorlib]]":
-                return typeof(Evaluatable<string>);
-            case
-                "System.Collections.ObjectModel.ObservableCollection`1[[Aurora.Settings.Overrides.Logic.IEvaluatableBoolean, Aurora]]"
-                :
-            case
-                "System.Collections.ObjectModel.ObservableCollection`1[[Aurora.Settings.Overrides.Logic.IEvaluatable`1[[System.Boolean, mscorlib]], Aurora]]"
-                :
-                return typeof(ObservableCollection<Evaluatable<bool>>);
-            case
-                "System.Collections.ObjectModel.ObservableCollection`1[[Aurora.Settings.Overrides.Logic.IEvaluatableNumber, Aurora]]"
-                :
-            case
-                "System.Collections.ObjectModel.ObservableCollection`1[[Aurora.Settings.Overrides.Logic.IEvaluatable`1[[System.Double, mscorlib]], Aurora]]"
-                :
-                return typeof(ObservableCollection<Evaluatable<double>>);
-            case
-                "System.Collections.ObjectModel.ObservableCollection`1[[Aurora.Settings.Overrides.Logic.IEvaluatableString, Aurora]]"
-                :
-            case
-                "System.Collections.ObjectModel.ObservableCollection`1[[Aurora.Settings.Overrides.Logic.IEvaluatable`1[[System.String, mscorlib]], Aurora]]"
-                :
-                return typeof(ObservableCollection<Evaluatable<string>>);
-            case "Aurora.Settings.Overrides.Logic.Boolean.Boolean_Latch":
-                return typeof(Settings.Overrides.Logic.Boolean.Boolean_FlipFlopSR);
-            case "System.Drawing.Color":
-                return typeof(System.Drawing.Color);
-            default:
-                if (!typeName.Contains("Overlays") && new Regex(@"Aurora.Profiles.\w+.\w+Settings").IsMatch(typeName))
-                    return base.BindToType(assemblyName, typeName.Replace("Settings", "Profile"));
-                return base.BindToType(assemblyName, typeName);
+            if (!_assemblyTypeMap.TryGetValue(assemblyName, out typeMap!))
+            {
+                typeMap = new Dictionary<string, Type>();
+                _assemblyTypeMap[assemblyName] = typeMap;
+            }
         }
+        else
+        {
+            typeMap = _typeMap;
+        }
+        if (typeMap.TryGetValue(typeName, out var type))
+        {
+            return type;
+        }
+
+        // Use the Regex.Replace method with a MatchEvaluator delegate
+        var convertedTypeName = Regex.Replace(typeName, pattern1, ReplaceGroups);
+
+        var boundType = convertedTypeName switch
+        {
+            "System.Windows.Forms.Keys" =>
+                typeof(System.Windows.Forms.Keys),
+            "System.Collections.Generic.Queue`1[[System.Windows.Forms.Keys, System.Windows.Forms]]" =>
+                typeof(List<System.Windows.Forms.Keys>),
+            //Resolve typo'd AbilityLayerHandler type
+            "Aurora.Profiles.Dota_2.Layers.Dota2AbiltiyLayerHandler" =>
+                typeof(Profiles.Dota_2.Layers.Dota2AbilityLayerHandler),
+            "Aurora.Profiles.Dota_2.Layers.Dota2HeroAbiltiyEffectsLayerHandler" =>
+                typeof(Profiles.Dota_2.Layers.Dota2HeroAbilityEffectsLayerHandler),
+            "Aurora.Profiles.Dota_2.Layers.Dota2HeroAbiltiyEffectsLayerHandlerProperties" =>
+                typeof(Profiles.Dota_2.Layers.Dota2HeroAbilityEffectsLayerHandlerProperties),
+            "Aurora.Profiles.TheDivision.TheDivisionSettings" =>
+                typeof(Settings.ApplicationProfile),
+            "Aurora.Profiles.Overwatch.OverwatchProfile" =>
+                typeof(Profiles.WrapperProfile),
+            "Aurora.Profiles.WormsWMD.WormsWMDProfile" =>
+                typeof(Profiles.WrapperProfile),
+            "Aurora.Profiles.Blade_and_Soul.BnSProfile" =>
+                typeof(Profiles.WrapperProfile),
+            "Aurora.Profiles.Magic_Duels_2012.MagicDuels2012Profile" =>
+                typeof(Profiles.WrapperProfile),
+            "Aurora.Profiles.ColorEnhanceProfile" =>
+                typeof(Profiles.WrapperProfile),
+            "Aurora.Settings.Overrides.Logic.IEvaluatableBoolean" =>
+                typeof(Evaluatable<bool>),
+            "Aurora.Settings.Overrides.Logic.IEvaluatable`1[[System.Boolean, mscorlib]]" =>
+                typeof(Evaluatable<bool>),
+            "Aurora.Settings.Overrides.Logic.IEvaluatableNumber" =>
+                typeof(Evaluatable<double>),
+            "Aurora.Settings.Overrides.Logic.IEvaluatable`1[[System.Double, mscorlib]]" =>
+                typeof(Evaluatable<double>),
+            "Aurora.Settings.Overrides.Logic.IEvaluatableString" =>
+                typeof(Evaluatable<string>),
+            "Aurora.Settings.Overrides.Logic.IEvaluatable`1[[System.String, mscorlib]]" =>
+                typeof(Evaluatable<string>),
+            "Aurora.Settings.Overrides.Logic.Boolean.Boolean_Latch" =>
+                typeof(Settings.Overrides.Logic.Boolean.Boolean_FlipFlopSR),
+            "System.Drawing.Color" =>
+                typeof(Color),
+            "Aurora.Devices.DeviceKeys" =>
+                typeof(DeviceKeys),
+            "Common.Devices.DeviceKeys" =>
+                typeof(DeviceKeys),
+            "Aurora.Settings.VariableRegistry" =>
+                typeof(VariableRegistry),
+            _ => base.BindToType(assemblyName, convertedTypeName),
+        };
+        typeMap[typeName] = boundType;
+
+        return boundType;
+    }
+    
+    private string ReplaceGroups(Match match)
+    {
+        var typeName = match.Groups[1].Value;
+        var assemblyName = match.Groups[2].Value;
+
+        var type = BindToType(assemblyName, typeName);
+        var ass = type.AssemblyQualifiedName;
+        var secondComma = ass.IndexOf(',', ass.IndexOf(',') + 1);
+        return string.Concat("[", ass.AsSpan(0, secondComma), "]");
     }
 }
 
@@ -95,8 +110,13 @@ public class EnumConverter : JsonConverter
 {
     public override bool CanConvert(Type objectType) => objectType.IsEnum;
 
-    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
     {
+        if (value == null)
+        {
+            writer.WriteNull();
+            return;
+        }
         writer.WriteStartObject();
         writer.WritePropertyName("$type");
         writer.WriteValue(value.GetType().AssemblyQualifiedName);
@@ -105,7 +125,7 @@ public class EnumConverter : JsonConverter
         writer.WriteEndObject();
     }
 
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
     {
         // If this is a null token, then the original value was null.
         var readerTokenType = reader.TokenType;
@@ -129,8 +149,13 @@ public class OverrideTypeConverter : JsonConverter
 {
     public override bool CanConvert(Type objectType) => objectType.FullName == typeof(Type).FullName;
 
-    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
     {
+        if (value == null)
+        {
+            writer.WriteNull();
+            return;
+        }
         writer.WriteStartObject();
         writer.WritePropertyName("$type");
         writer.WriteValue(value.GetType().AssemblyQualifiedName);
@@ -139,7 +164,7 @@ public class OverrideTypeConverter : JsonConverter
         writer.WriteEndObject();
     }
 
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
     {
         // If this is a null token, then the original value was null.
         var readerTokenType = reader.TokenType;
@@ -174,8 +199,13 @@ public class TypeAnnotatedObjectConverter : JsonConverter
     public override bool CanConvert(Type objectType) => objectType.FullName == typeof(Color).FullName ||
                                                         objectType.IsAssignableFrom(typeof(object));
 
-    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
     {
+        if (value == null)
+        {
+            writer.WriteNull();
+            return;
+        }
         writer.WriteStartObject();
         writer.WritePropertyName("$type");
         writer.WriteValue(value.GetType().AssemblyQualifiedName);
@@ -184,7 +214,7 @@ public class TypeAnnotatedObjectConverter : JsonConverter
         writer.WriteEndObject();
     }
 
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
     {
         // If this is a null token, then the original value was null.
         var readerTokenType = reader.TokenType;
@@ -211,6 +241,10 @@ public class TypeAnnotatedObjectConverter : JsonConverter
                     case JsonToken.String:
                     default:
                         var s = value.ToString();
+                        if (type == typeof(bool) || type == typeof(Color))
+                        {
+                            return JsonConvert.DeserializeObject("\"" + value + "\"", type);
+                        }
                         if (objectType.FullName != typeof(Color).FullName && type?.FullName != typeof(Color).FullName)
                             return JsonConvert.DeserializeObject(s, type);
                         if (s.StartsWith("\""))
@@ -218,6 +252,7 @@ public class TypeAnnotatedObjectConverter : JsonConverter
                             return JsonConvert.DeserializeObject(s, type);
                         }
 
+                        Global.logger.Error("Attempting to convert unknown type: {Type}", type);
                         return JsonConvert.DeserializeObject("\"" + value + "\"", type);
                 }
             case JsonToken.Boolean:
@@ -232,18 +267,18 @@ public class TypeAnnotatedObjectConverter : JsonConverter
 
 public class SingleToDoubleConverter : JsonConverter
 {
-    public override bool CanConvert(Type objectType) => objectType == typeof(Double);
+    public override bool CanConvert(Type objectType) => objectType == typeof(double);
 
     public override bool CanRead => true;
 
     public override bool CanWrite => false;
 
-    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
     {
         throw new NotImplementedException("Unnecessary because CanWrite is false. The type will skip the converter.");
     }
 
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
     {
         switch (reader.TokenType)
         {

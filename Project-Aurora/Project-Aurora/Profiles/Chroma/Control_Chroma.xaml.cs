@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -11,6 +12,8 @@ namespace Aurora.Profiles.Chroma;
 
 public partial class Control_Chroma : INotifyPropertyChanged
 {
+    private static HashSet<string> ExcludedApps = new(){ "Aurora.exe", "AuroraDeviceManager.exe" };
+    
     public ObservableCollection<string> EnabledPrograms { get; } = new();
     public ObservableCollection<string> ExcludedPrograms => _settings.ExcludedPrograms;
     public string SelectedEnabledProgram { get; set; } = "";
@@ -86,11 +89,11 @@ public partial class Control_Chroma : INotifyPropertyChanged
 
     private void ReorderChromaRegistry()
     {
-        var value = string.Join(';', EnabledPrograms.Where(NonEmpty)) + ";Aurora.exe";
+        var value = string.Join(';', EnabledPrograms.Where(NonEmpty).Concat(ExcludedApps));
         if (ExcludedPrograms.Count > 0)
         {
             value += ";";
-            value += string.Join(';', ExcludedPrograms.Where(NonEmpty).Where(s => !s.Equals("Aurora.exe")));
+            value += string.Join(';', ExcludedPrograms.Where(NonEmpty).Where(s => !ExcludedApps.Contains(s)));
         }
         
         using var registryKey = Registry.LocalMachine.OpenSubKey(ChromaApplication.AppsKey, true);

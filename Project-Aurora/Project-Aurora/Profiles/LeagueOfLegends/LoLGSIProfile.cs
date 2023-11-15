@@ -1,9 +1,9 @@
 ﻿using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Aurora.Settings.Overrides.Logic;
-using Aurora.Settings.Overrides.Logic.Builder;
 using System.Drawing;
 using Aurora.Profiles.LeagueOfLegends.GSI.Nodes;
+using Aurora.Settings.Overrides.Logic.Boolean;
 using DK = Common.Devices.DeviceKeys;
 
 namespace Aurora.Profiles.LeagueOfLegends

@@ -1,7 +1,6 @@
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides.Logic;
-using Aurora.Settings.Overrides.Logic.Builder;
 using Newtonsoft.Json;
 using PropertyChanged;
 using System;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Controls;
+using Aurora.Utils;
 
 namespace Aurora.Settings.Layers;
 
@@ -85,11 +85,16 @@ public class Layer : INotifyPropertyChanged, ICloneable, IDisposable
     }
 
     public object Clone() {
-        var str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Utils.JSONUtils.SerializationBinder });
+        var str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto });
         return JsonConvert.DeserializeObject(
             str,
             GetType(),
-            new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Utils.JSONUtils.SerializationBinder }
+            new JsonSerializerSettings
+            {
+                ObjectCreationHandling = ObjectCreationHandling.Replace,
+                TypeNameHandling = TypeNameHandling.Auto,
+                SerializationBinder = new AuroraSerializationBinder()
+            }
         )!;
     }
 

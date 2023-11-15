@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Aurora.Modules.GameStateListen;
+using Common;
 using Common.Devices;
 using Common.Devices.RGBNet;
 
@@ -17,54 +17,71 @@ namespace Aurora.Devices.RGBNet.Config;
 public partial class DeviceMapping
 {
     private readonly Task<DeviceManager> _deviceManager;
+    private readonly Task<IpcListener?> _ipcListener;
+    
     private readonly List<RemappableDevice> _devices = new();
     private readonly List<RgbNetKeyToDeviceKeyControl> _keys = new();
 
-    private DeviceMappingConfig _config;
+    private readonly Lazy<DeviceMappingConfig> _config = new(() => DeviceMappingConfig.Config);
 
-    public DeviceMapping(Task<DeviceManager> deviceManager)
+    public DeviceMapping(Task<DeviceManager> deviceManager, Task<IpcListener?> ipcListener)
     {
         _deviceManager = deviceManager;
+        _ipcListener = ipcListener;
         InitializeComponent();
         Loaded += OnLoaded;
-        Unloaded += OnClosed;
+        Unloaded += OnUnloaded;
+    }
+
+    public async Task Initialize()
+    {
+        var ipcListener = await _ipcListener;
+        if (ipcListener != null)
+        {
+            ipcListener.AuroraCommandReceived += OnAuroraCommandReceived;
+        }
+    }
+
+    private void OnAuroraCommandReceived(object? sender, string e)
+    {
+        var words = e.Split(Constants.StringSplit);
+        if (words.Length != 2)
+        {
+            return;
+        }
+
+        var command = words[0];
+        var json = words[1];
+        switch (command)
+        {
+            case DeviceCommands.RemappableDevices:
+                var remappableDevices = ReadDevices(json);
+                
+                Dispatcher.Invoke(() => LoadDevices(remappableDevices));
+                break;
+        }
     }
 
     private async void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        LoadConfigFile();
-        await LoadDevices();
+        await (await _deviceManager).RequestRemappableDevices();
     }
 
-    private void OnClosed(object? sender, EventArgs e)
+    private void OnUnloaded(object? sender, EventArgs e)
     {
-        _config.SaveConfig();
-    }
-
-    private void LoadConfigFile()
-    {
-        _config = DeviceMappingConfig.Config;
+        _config.Value.SaveConfig();
     }
 
     private async Task ReloadDevices()
     {
-        await LoadDevices();
+        await (await _deviceManager).RequestRemappableDevices();
     }
 
-    private async Task LoadDevices()
+    private void LoadDevices(CurrentDevices remappableDevices)
     {
-        await (await _deviceManager).RequestRemappableDevices();
-        Thread.Sleep(400);
-
         // clear current devices
         _devices.Clear();
 
-        var remappableDevices = ReadDevices();
-
-        if (remappableDevices == null)
-        {
-            return;
-        }
         foreach (var remappableDevicesDevice in remappableDevices.Devices)
         {
             _devices.Add(remappableDevicesDevice);
@@ -96,17 +113,9 @@ public partial class DeviceMapping
         });
     }
 
-    private static CurrentDevices? ReadDevices()
+    private static CurrentDevices ReadDevices(string json)
     { 
-        var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "CurrentDevices.json");
-
-        if (!File.Exists(filePath))
-        {
-            return null;
-        }
-        
-        using var stream = File.OpenRead(filePath);
-        return JsonSerializer.Deserialize<CurrentDevices>(stream);
+        return JsonSerializer.Deserialize<CurrentDevices>(json) ?? new CurrentDevices(new List<RemappableDevice>());
     }
 
     private void DeviceSelect(RemappableDevice remappableDevice)

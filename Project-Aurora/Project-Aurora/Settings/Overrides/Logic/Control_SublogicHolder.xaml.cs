@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using Aurora.Settings.Overrides.Logic.Boolean;
 
 namespace Aurora.Settings.Overrides.Logic {
 

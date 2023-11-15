@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using Aurora.Utils.Steam;
 
 namespace Aurora.Profiles.DiscoDodgeball
 {
@@ -92,7 +93,7 @@ namespace Aurora.Profiles.DiscoDodgeball
         private bool InstallWrapper(string installpath = "")
         {
             if (String.IsNullOrWhiteSpace(installpath))
-                installpath = Utils.SteamUtils.GetGamePath(270450);
+                installpath = SteamUtils.GetGamePath(270450);
 
 
             if (!String.IsNullOrWhiteSpace(installpath))
@@ -117,7 +118,7 @@ namespace Aurora.Profiles.DiscoDodgeball
 
         private bool UninstallWrapper()
         {
-            String installpath = Utils.SteamUtils.GetGamePath(270450);
+            String installpath = SteamUtils.GetGamePath(270450);
             if (!String.IsNullOrWhiteSpace(installpath))
             {
                 string path = System.IO.Path.Combine(installpath, "LightFX.dll");

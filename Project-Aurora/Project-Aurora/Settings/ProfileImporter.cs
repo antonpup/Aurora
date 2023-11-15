@@ -728,8 +728,8 @@ public static class ProfileImporter
             var inProf = (ApplicationProfile)JsonConvert.DeserializeObject(json, typeof(ApplicationProfile), new JsonSerializerSettings
             {
                 ObjectCreationHandling = ObjectCreationHandling.Replace,
-                TypeNameHandling = TypeNameHandling.All,
-                SerializationBinder = JSONUtils.SerializationBinder,
+                TypeNameHandling = TypeNameHandling.Auto,
+                SerializationBinder = new AuroraSerializationBinder(),
             });
 
             // Create a new profile on the current application (so that profiles can be imported from different applications)

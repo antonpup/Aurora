@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using Aurora.Utils.Steam;
 
 namespace Aurora.Profiles.ShadowOfMordor
 {
@@ -78,7 +79,7 @@ namespace Aurora.Profiles.ShadowOfMordor
         private bool InstallWrapper(string installpath = "")
         {
             if (String.IsNullOrWhiteSpace(installpath))
-                installpath = Utils.SteamUtils.GetGamePath(241930);
+                installpath = SteamUtils.GetGamePath(241930);
 
 
             if (!String.IsNullOrWhiteSpace(installpath))
@@ -103,7 +104,7 @@ namespace Aurora.Profiles.ShadowOfMordor
 
         private bool UninstallWrapper()
         {
-            String installpath = Utils.SteamUtils.GetGamePath(241930);
+            String installpath = SteamUtils.GetGamePath(241930);
             if (!String.IsNullOrWhiteSpace(installpath))
             {
                 string path = System.IO.Path.Combine(installpath, "x64", "LightFX.dll");

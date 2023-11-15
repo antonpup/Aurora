@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -35,7 +36,14 @@ public partial class UpdateCleanup : AuroraModule
             select file;
         foreach (var file in files.Skip(8))
         {
-            File.Delete(file);
+            try
+            {
+                File.Delete(file);
+            }
+            catch (Exception e)
+            {
+                Global.logger.Error(e, "Failed to delete log: {File}", file);
+            }
         }
     }
 

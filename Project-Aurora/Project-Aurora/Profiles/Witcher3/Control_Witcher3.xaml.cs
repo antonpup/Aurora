@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Windows.Navigation;
 using Aurora.Settings;
 using Aurora.Utils;
+using Aurora.Utils.Steam;
 using MessageBox = System.Windows.MessageBox;
 
 namespace Aurora.Profiles.Witcher3

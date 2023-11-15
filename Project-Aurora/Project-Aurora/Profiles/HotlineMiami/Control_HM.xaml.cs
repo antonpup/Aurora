@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using Aurora.Utils.Steam;
 
 namespace Aurora.Profiles.HotlineMiami
 {
@@ -92,7 +93,7 @@ namespace Aurora.Profiles.HotlineMiami
         private bool InstallWrapper(string installpath = "")
         {
             if (String.IsNullOrWhiteSpace(installpath))
-                installpath = Utils.SteamUtils.GetGamePath(219150);
+                installpath = SteamUtils.GetGamePath(219150);
 
 
             if (!String.IsNullOrWhiteSpace(installpath))
@@ -117,7 +118,7 @@ namespace Aurora.Profiles.HotlineMiami
 
         private bool UninstallWrapper()
         {
-            String installpath = Utils.SteamUtils.GetGamePath(219150);
+            String installpath = SteamUtils.GetGamePath(219150);
             if (!String.IsNullOrWhiteSpace(installpath))
             {
                 string path = System.IO.Path.Combine(installpath, "LightFX.dll");

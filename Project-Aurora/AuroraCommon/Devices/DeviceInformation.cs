@@ -21,6 +21,4 @@ public readonly record struct DeviceInformation(string DeviceName, string Device
     public readonly string? Devices = Devices;
 
     public readonly bool IsRemappable = IsRemappable;
-
-    //public readonly DeviceTooltips DeviceTooltips;
 }

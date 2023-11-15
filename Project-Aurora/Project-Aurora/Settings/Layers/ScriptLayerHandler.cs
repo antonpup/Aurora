@@ -6,110 +6,105 @@ using Newtonsoft.Json;
 using System.ComponentModel;
 using Aurora.Settings.Layers.Controls;
 using Aurora.Settings.Overrides;
+using Common.Devices;
 
-namespace Aurora.Settings.Layers
+namespace Aurora.Settings.Layers;
+
+public class ScriptLayerHandlerProperties : LayerHandlerProperties<ScriptLayerHandlerProperties>
 {
-    public class ScriptLayerHandlerProperties : LayerHandlerProperties<ScriptLayerHandlerProperties>
+    public string? _Script { get; set; } = null;
+
+    [JsonIgnore]
+    public string Script => Logic._Script ?? _Script ?? String.Empty;
+
+    public VariableRegistry? _ScriptProperties { get; set; }
+
+    [JsonIgnore]
+    public VariableRegistry ScriptProperties => Logic._ScriptProperties ?? _ScriptProperties;
+
+    public ScriptLayerHandlerProperties() { }
+
+    public ScriptLayerHandlerProperties(bool empty = false) : base(empty) { }
+
+    public override void Default()
     {
-        public string _Script { get; set; } = null;
+        base.Default();
+        _ScriptProperties = new VariableRegistry();
+    }
+}
 
-        [JsonIgnore]
-        public string Script { get { return Logic._Script ?? _Script ?? String.Empty; } }
+[LogicOverrideIgnoreProperty("_PrimaryColor")]
+[LogicOverrideIgnoreProperty("_Sequence")]
+public class ScriptLayerHandler : LayerHandler<ScriptLayerHandlerProperties>, INotifyPropertyChanged
+{
+    internal Application ProfileManager;
 
-        /*public ScriptSettings _ScriptSettings { get; set; } = null;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-        [JsonIgnore]
-        public ScriptSettings ScriptSettings { get { return Logic._ScriptSettings ?? _ScriptSettings; } }*/
+    [JsonIgnore]
+    public Exception ScriptException { get; private set; }
 
-        public VariableRegistry _ScriptProperties { get; set; } = null;
+    public override EffectLayer Render(IGameState gamestate)
+    {
 
-        [JsonIgnore]
-        public VariableRegistry ScriptProperties { get { return Logic._ScriptProperties ?? _ScriptProperties; } }
-
-        public ScriptLayerHandlerProperties() : base() { }
-
-        public ScriptLayerHandlerProperties(bool empty = false) : base(empty) { }
-
-        public override void Default()
+        if (!IsScriptValid) return EffectLayer.EmptyLayer;
+        try
         {
-            base.Default();
-            _ScriptProperties = new VariableRegistry();
+            var script = ProfileManager.EffectScripts[Properties.Script];
+            var scriptLayers = script.UpdateLights(Properties.ScriptProperties, gamestate);
+            EffectLayer.Clear();
+            switch (scriptLayers)
+            {
+                case EffectLayer layers:
+                    EffectLayer.Add(layers);
+                    break;
+                case EffectLayer[] effectLayers:
+                {
+                    for (var i = 1; i < effectLayers.Length; i++)
+                        EffectLayer.Add(effectLayers[i]);
+                    break;
+                }
+            }
+            ScriptException = null;
         }
+        catch(Exception exc)
+        {
+            Global.logger.Error(exc, "Effect script with key {PropertiesScript} encountered an error", Properties.Script);
+            ScriptException = exc;
+        }
+
+        return EffectLayer;
     }
 
-    [LogicOverrideIgnoreProperty("_PrimaryColor")]
-    [LogicOverrideIgnoreProperty("_Sequence")]
-    public class ScriptLayerHandler : LayerHandler<ScriptLayerHandlerProperties>, INotifyPropertyChanged
+    public VariableRegistry? GetScriptPropertyRegistry()
     {
-        internal Application ProfileManager;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [JsonIgnore]
-        public Exception ScriptException { get; private set; }
-
-        public override EffectLayer Render(IGameState gamestate)
+        if (IsScriptValid)
         {
-
-            if (!IsScriptValid) return EffectLayer.EmptyLayer;
-            try
-            {
-                var script = ProfileManager.EffectScripts[Properties.Script];
-                var scriptLayers = script.UpdateLights(Properties.ScriptProperties, gamestate);
-                EffectLayer.Clear();
-                switch (scriptLayers)
-                {
-                    case EffectLayer layers:
-                        EffectLayer.Add(layers);
-                        break;
-                    case EffectLayer[] effectLayers:
-                    {
-                        for (var i = 1; i < effectLayers.Length; i++)
-                            EffectLayer.Add(effectLayers[i]);
-                        break;
-                    }
-                }
-                ScriptException = null;
-            }
-            catch(Exception exc)
-            {
-                Global.logger.Error(exc, "Effect script with key {PropertiesScript} encountered an error", Properties.Script);
-                ScriptException = exc;
-            }
-
-            return EffectLayer;
+            return (VariableRegistry)ProfileManager.EffectScripts[Properties._Script].Properties.Clone();
         }
 
-        public VariableRegistry GetScriptPropertyRegistry()
-        {
-            if (IsScriptValid)
-            {
-                return (VariableRegistry)ProfileManager.EffectScripts[Properties._Script].Properties.Clone();
-            }
+        return null;
+    }
 
-            return null;
-        }
+    public void OnScriptChanged()
+    {
+        var varRegistry = GetScriptPropertyRegistry();
+        if (varRegistry != null)
+            Properties.ScriptProperties.Combine(varRegistry, true);
+    }
 
-        public void OnScriptChanged()
-        {
-            var varRegistry = GetScriptPropertyRegistry();
-            //if (varRegistry != null) TODO
-            //    Properties.ScriptProperties.Combine(varRegistry, true);
-        }
+    [JsonIgnore]
+    public bool IsScriptValid => ProfileManager?.EffectScripts?.ContainsKey(Properties.Script) ?? false;
 
-        [JsonIgnore]
-        public bool IsScriptValid => ProfileManager?.EffectScripts?.ContainsKey(Properties.Script) ?? false;
+    public override void SetApplication(Application profile)
+    {
+        ProfileManager = profile;
+        (_Control as Control_ScriptLayer)?.SetProfile(profile);
+        OnScriptChanged();
+    }
 
-        public override void SetApplication(Application profile)
-        {
-            ProfileManager = profile;
-            (_Control as Control_ScriptLayer)?.SetProfile(profile);
-            OnScriptChanged();
-        }
-
-        protected override UserControl CreateControl()
-        {
-            return new Control_ScriptLayer(this);
-        }
+    protected override UserControl CreateControl()
+    {
+        return new Control_ScriptLayer(this);
     }
 }

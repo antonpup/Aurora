@@ -271,6 +271,16 @@
           "System.Security.AccessControl": "5.0.0"
         }
       },
+      "VdfConverter": {
+        "type": "Direct",
+        "requested": "[1.0.3, )",
+        "resolved": "1.0.3",
+        "contentHash": "GROs7NECW58KoddnHsAfPKBw0wPPtNehx15yB6H4wrKV8TLvT+vPzeQdziJpLzeRN9kRf/3ANRncDlWFV27dNw==",
+        "dependencies": {
+          "Microsoft.CSharp": "4.7.0",
+          "System.Dynamic.Runtime": "4.3.0"
+        }
+      },
       "WPFToolkits": {
         "type": "Direct",
         "requested": "[3.5.50211.1, )",
@@ -858,6 +868,27 @@
           "Microsoft.NETCore.Platforms": "1.1.0",
           "Microsoft.NETCore.Targets": "1.1.0",
           "System.Runtime": "4.3.0"
+        }
+      },
+      "System.Dynamic.Runtime": {
+        "type": "Transitive",
+        "resolved": "4.3.0",
+        "contentHash": "SNVi1E/vfWUAs/WYKhE9+qlS6KqK0YVhnlT0HQtr8pMIA8YX3lwy3uPMownDwdYISBdmAF/2holEIldVp85Wag==",
+        "dependencies": {
+          "System.Collections": "4.3.0",
+          "System.Diagnostics.Debug": "4.3.0",
+          "System.Linq": "4.3.0",
+          "System.Linq.Expressions": "4.3.0",
+          "System.ObjectModel": "4.3.0",
+          "System.Reflection": "4.3.0",
+          "System.Reflection.Emit": "4.3.0",
+          "System.Reflection.Emit.ILGeneration": "4.3.0",
+          "System.Reflection.Primitives": "4.3.0",
+          "System.Reflection.TypeExtensions": "4.3.0",
+          "System.Resources.ResourceManager": "4.3.0",
+          "System.Runtime": "4.3.0",
+          "System.Runtime.Extensions": "4.3.0",
+          "System.Threading": "4.3.0"
         }
       },
       "System.Globalization": {
@@ -1564,6 +1595,7 @@
           "Newtonsoft.Json": "[13.0.3, )",
           "RGB.NET.Devices.CorsairLegacy": "[2.0.0-prerelease.111, )",
           "RGB.NET.Devices.Logitech": "[2.0.0-prerelease.111, )",
+          "Serilog": "[2.10.0, )",
           "System.Threading.AccessControl": "[7.0.1, )"
         }
       },

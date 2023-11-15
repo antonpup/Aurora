@@ -4,7 +4,6 @@ using Aurora.Profiles.ETS2.Layers;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Aurora.Settings.Overrides.Logic;
-using Aurora.Settings.Overrides.Logic.Builder;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,6 +12,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Aurora.Settings.Overrides.Logic.Boolean;
 using Common.Devices;
 
 namespace Aurora.Profiles.ETS2 {

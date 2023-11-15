@@ -28,13 +28,11 @@ public class MemorySharedArray<T> : SignaledMemoryObject, IEnumerable<T> where T
         {
             _mmf = MemoryMappedFile.OpenExisting(fileName);
         }
-        catch (FileNotFoundException fnfe)
+        catch (FileNotFoundException)
         {
-            //TODO add timeout
             WaitForUpdate();
             _mmf = MemoryMappedFile.OpenExisting(fileName);
         }
-        //TODO wait mutex
         _accessor = _mmf.CreateViewAccessor();
 
         Count = _accessor.ReadInt32(0);

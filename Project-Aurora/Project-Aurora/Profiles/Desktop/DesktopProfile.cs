@@ -8,7 +8,7 @@ using Aurora.EffectsEngine;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Aurora.Settings.Overrides.Logic;
-using Aurora.Settings.Overrides.Logic.Builder;
+using Aurora.Settings.Overrides.Logic.Boolean;
 using Common.Devices;
 using Common.Utils;
 
@@ -190,7 +190,7 @@ public class DesktopProfile : ApplicationProfile
                 Properties = new ShortcutAssistantLayerHandlerProperties
                 {
                     _PrimaryColor = Color.Red,
-                    _ShortcutKeys = new Keybind[]
+                    ShortcutKeys = new Keybind[]
                     {
                         new(new[] { Keys.LControlKey, Keys.X }),
                         new(new[] { Keys.LControlKey, Keys.C }),
@@ -215,7 +215,8 @@ public class DesktopProfile : ApplicationProfile
                         new(new[] { Keys.LControlKey, Keys.LShiftKey, Keys.Escape }),
                         new(new[] { Keys.LControlKey, Keys.Escape }),
                         new(new[] { Keys.LControlKey, Keys.F })
-                    }
+                    },
+                    PresentationType = ShortcutAssistantPresentationType.ProgressiveSuggestion,
                 }
             }),
             new("Win Shortcuts", new ShortcutAssistantLayerHandler
@@ -223,7 +224,7 @@ public class DesktopProfile : ApplicationProfile
                 Properties = new ShortcutAssistantLayerHandlerProperties
                 {
                     _PrimaryColor = Color.Blue,
-                    _ShortcutKeys = new Keybind[]
+                    ShortcutKeys = new Keybind[]
                     {
                         new(new[] { Keys.LWin, Keys.L }),
                         new(new[] { Keys.LWin, Keys.D }),
@@ -243,7 +244,8 @@ public class DesktopProfile : ApplicationProfile
                         new(new[] { Keys.LWin, Keys.Right }),
                         new(new[] { Keys.LWin, Keys.Home }),
                         new(new[] { Keys.LWin, Keys.D })
-                    }
+                    },
+                    PresentationType = ShortcutAssistantPresentationType.ProgressiveSuggestion,
                 }
             }),
             new("Alt Shortcuts", new ShortcutAssistantLayerHandler
@@ -251,7 +253,7 @@ public class DesktopProfile : ApplicationProfile
                 Properties = new ShortcutAssistantLayerHandlerProperties
                 {
                     _PrimaryColor = Color.Yellow,
-                    _ShortcutKeys = new Keybind[]
+                    ShortcutKeys = new Keybind[]
                     {
                         new(new[] { Keys.LMenu, Keys.Tab }),
                         new(new[] { Keys.LMenu, Keys.F4 }),
@@ -261,7 +263,8 @@ public class DesktopProfile : ApplicationProfile
                         new(new[] { Keys.LMenu, Keys.PageUp }),
                         new(new[] { Keys.LMenu, Keys.PageDown }),
                         new(new[] { Keys.LMenu, Keys.Tab }),
-                    }
+                    },
+                    PresentationType = ShortcutAssistantPresentationType.ProgressiveSuggestion,
                 }
             }),
             new("CPU Usage", new PercentLayerHandler

@@ -41,10 +41,10 @@ namespace Aurora.Settings.Layers.Controls
 
         public void SetSettings()
         {
-            comboboxPresentationType.SelectedValue = ((ShortcutAssistantLayerHandler)DataContext).Properties._PresentationType;
+            comboboxPresentationType.SelectedValue = ((ShortcutAssistantLayerHandler)DataContext).Properties.PresentationType;
 
             stackPanelShortcuts.Children.Clear();
-            foreach(Keybind keyb in ((ShortcutAssistantLayerHandler)DataContext).Properties._ShortcutKeys)
+            foreach(Keybind keyb in ((ShortcutAssistantLayerHandler)DataContext).Properties.ShortcutKeys)
             {
                 AddKeybind(keyb);
             }
@@ -68,11 +68,11 @@ namespace Aurora.Settings.Layers.Controls
             IShortcut shortcut;
             if ((shortcut = (e.OriginalSource as MenuItem)?.Tag as IShortcut) == null) return;
             ShortcutAssistantLayerHandler layer = (ShortcutAssistantLayerHandler)DataContext;
-            layer.Properties._ShortcutKeys = shortcut switch
+            layer.Properties.ShortcutKeys = shortcut switch
             {
                 ShortcutNode shortcutNode => shortcutNode.GetShortcuts(),
                 ShortcutGroup shortcutGroup => shortcutGroup.Shortcuts,
-                _ => layer.Properties._ShortcutKeys
+                _ => layer.Properties.ShortcutKeys
             };
             SetSettings();
             e.Handled = true;
@@ -139,7 +139,7 @@ namespace Aurora.Settings.Layers.Controls
 
         private void ApplySettings()
         {
-            ((ShortcutAssistantLayerHandler)DataContext).Properties._ShortcutKeys = (
+            ((ShortcutAssistantLayerHandler)DataContext).Properties.ShortcutKeys = (
                 from object child in stackPanelShortcuts.Children
                 where (child as DockPanel)?.Tag is Control_Keybind
                 select ((Control_Keybind) (child as DockPanel).Tag).ContextKeybind).ToArray();
@@ -148,7 +148,7 @@ namespace Aurora.Settings.Layers.Controls
         private void comboboxPresentationType_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded && DataContext is ShortcutAssistantLayerHandler && sender is ComboBox)
-                ((ShortcutAssistantLayerHandler)DataContext).Properties._PresentationType = (ShortcutAssistantPresentationType)(sender as ComboBox).SelectedValue;
+                ((ShortcutAssistantLayerHandler)DataContext).Properties.PresentationType = (ShortcutAssistantPresentationType)(sender as ComboBox).SelectedValue;
         }
 
         private void CreateDefaults()

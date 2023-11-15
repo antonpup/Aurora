@@ -18,7 +18,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project-Aurora", "Project-A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MemoryAccessProfiles", "MemoryAccessProfiles\MemoryAccessProfiles.csproj", "{DD71932E-8E70-4733-AD2B-4BA3C2BA2409}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AurorDeviceManager", "AurorDeviceManager\AurorDeviceManager.csproj", "{86F15079-BB2C-499D-ACD7-A7086CEB8720}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuroraDeviceManager", "AuroraDeviceManager\AuroraDeviceManager.csproj", "{86F15079-BB2C-499D-ACD7-A7086CEB8720}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuroraCommon", "AuroraCommon\AuroraCommon.csproj", "{743820FF-0E94-4EDC-A75E-BFCD5B2DD9BA}"
 EndProject

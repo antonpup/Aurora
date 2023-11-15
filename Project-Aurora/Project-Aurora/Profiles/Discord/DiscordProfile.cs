@@ -1,62 +1,56 @@
-﻿using Aurora.Devices;
-using Aurora.EffectsEngine.Animations;
-using Aurora.Profiles.Minecraft.Layers;
-using Aurora.Settings;
+﻿using Aurora.Settings;
 using Aurora.Settings.Layers;
-using Aurora.Settings.Overrides;
 using Aurora.Settings.Overrides.Logic;
-using Aurora.Settings.Overrides.Logic.Builder;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Aurora.Settings.Overrides.Logic.Boolean;
 using Common.Devices;
 
-namespace Aurora.Profiles.Discord {
-    public class DiscordProfile : ApplicationProfile {
-        public override void Reset() {
-            base.Reset();
+namespace Aurora.Profiles.Discord;
 
-            OverlayLayers = new System.Collections.ObjectModel.ObservableCollection<Layer>()
+public class DiscordProfile : ApplicationProfile
+{
+    public override void Reset()
+    {
+        base.Reset();
+
+        //makes the color red when mic is muted
+        var overrideLookupTableBuilder = new OverrideLookupTableBuilder<Color>();
+        overrideLookupTableBuilder.AddEntry(Color.Red, new BooleanGSIBoolean("User/SelfMute"));
+
+        OverlayLayers = new System.Collections.ObjectModel.ObservableCollection<Layer>
+        {
+            new("Mic Status", new SolidColorLayerHandler
             {
-                new Layer("Mic Mute", new SolidColorLayerHandler()
+                Properties = new LayerHandlerProperties
                 {
-                    Properties = new LayerHandlerProperties()
-                    {
-                        _PrimaryColor = Color.Red,
-                        _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.F1, DeviceKeys.F2, DeviceKeys.F3, DeviceKeys.F4 })
-                    }
-                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("User/SelfMute"))),
+                    _PrimaryColor = Color.Lime,
+                    _Sequence = new KeySequence(new[] { DeviceKeys.PAUSE_BREAK })
+                }
+            }, new OverrideLogicBuilder()
+                .SetDynamicBoolean("_Enabled", new StringComparison
+                {
+                    Operand1 = new StringGSIString { VariablePath = "Voice/Name" },
+                    Operand2 = new StringConstant { Value = "" },
+                    Operator = StringComparisonOperator.NotEqual,
+                }).SetLookupTable("_PrimaryColor", overrideLookupTableBuilder)),
 
-                new Layer("Deafen", new SolidColorLayerHandler()
+            new("Mentions", new SolidColorLayerHandler
+            {
+                Properties = new LayerHandlerProperties
                 {
-                    Properties = new LayerHandlerProperties()
-                    {
-                        _PrimaryColor = Color.LimeGreen,
-                        _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.F5, DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8 })
-                    }
-                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("User/SelfDeafen"))),
+                    _PrimaryColor = Color.Yellow,
+                    _Sequence = new KeySequence(new[] { DeviceKeys.PRINT_SCREEN })
+                }
+            }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("User/Mentions"))),
 
-                new Layer("Mentions", new SolidColorLayerHandler()
+            new("Unread Messages", new SolidColorLayerHandler
+            {
+                Properties = new LayerHandlerProperties
                 {
-                    Properties = new LayerHandlerProperties()
-                    {
-                        _PrimaryColor = Color.Yellow,
-                        _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.F9, DeviceKeys.F10, DeviceKeys.F11, DeviceKeys.F12 })
-                    }
-                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("User/Mentions"))),
-
-                new Layer("Unread Messages", new SolidColorLayerHandler()
-                {
-                    Properties = new LayerHandlerProperties()
-                    {
-                        _PrimaryColor = Color.LightBlue,
-                        _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.PRINT_SCREEN, DeviceKeys.SCROLL_LOCK, DeviceKeys.PAUSE_BREAK })
-                    }
-                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("User/UnreadMessages"))),
-            };
-        }
+                    _PrimaryColor = Color.LightBlue,
+                    _Sequence = new KeySequence(new[] { DeviceKeys.PRINT_SCREEN, DeviceKeys.SCROLL_LOCK, DeviceKeys.PAUSE_BREAK })
+                }
+            }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("User/UnreadMessages"))),
+        };
     }
 }

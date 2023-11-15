@@ -8,16 +8,19 @@ using System.Threading.Tasks;
 using Aurora.Devices;
 using Aurora.Modules.Blacklist.Model;
 using Aurora.Modules.OnlineConfigs;
+using Aurora.Modules.OnlineConfigs.Model;
 using Aurora.Modules.ProcessMonitor;
+using Aurora.Utils.IpApi;
 using ICSharpCode.SharpZipLib.Zip;
 using Lombok.NET;
 using Microsoft.Win32;
-using Octokit;
 
 namespace Aurora.Modules;
 
 public sealed partial class OnlineSettings : AuroraModule
 {
+    public static Dictionary<string, DeviceTooltips> DeviceTooltips = new();
+    
     private readonly Task<DeviceManager> _deviceManager;
     private Dictionary<string, ShutdownProcess> _shutdownProcesses = new();
     private readonly TaskCompletionSource _layoutUpdateTaskSource = new();
@@ -31,13 +34,35 @@ public sealed partial class OnlineSettings : AuroraModule
 
     protected override async Task Initialize()
     {
+        var localSettings = await OnlineConfigsRepository.GetOnlineSettingsLocal();
+        var localSettingsDate = localSettings.OnlineSettingsTime;
+        if (localSettingsDate > DateTimeOffset.MinValue)
+        {
+            _layoutUpdateTaskSource.TrySetResult();
+        }
+        
         SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
 
         await DownloadAndExtract();
         _layoutUpdateTaskSource.TrySetResult();
+        //TODO update layouts
         await Refresh();
 
         RunningProcessMonitor.Instance.RunningProcessesChanged += OnRunningProcessesChanged;
+
+        if (Global.Configuration.Lat == 0 && Global.Configuration.Lon == 0)
+        {
+            try
+            {
+                var ipData = await IpApiClient.GetIpData();
+                Global.Configuration.Lat = ipData.Lat;
+                Global.Configuration.Lon = ipData.Lon;
+            }
+            catch (Exception e)
+            {
+                Global.logger.Error(e, "Failed getting geographic data");
+            }
+        }
     }
 
     private async Task DownloadAndExtract()
@@ -52,10 +77,17 @@ public sealed partial class OnlineSettings : AuroraModule
             return;
         }
 
+        DateTimeOffset commitDate;
         try
         {
             var settingsMeta = await OnlineConfigsRepository.GetOnlineSettingsOnline();
-            var commitDate = settingsMeta.OnlineSettingsTime;
+            commitDate = settingsMeta.OnlineSettingsTime;
+        }
+        catch (Exception e)
+        {
+            Global.logger.Error(e, "Error fetching online settings");
+            return;
+        }
 
         var localSettings = await OnlineConfigsRepository.GetOnlineSettingsLocal();
         var localSettingsDate = localSettings.OnlineSettingsTime;
@@ -70,8 +102,6 @@ public sealed partial class OnlineSettings : AuroraModule
         try
         {
             await ExtractSettings();
-
-            Global.Configuration.OnlineSettingsTime = commitDate;
         }
         catch (Exception e)
         {
@@ -154,10 +184,10 @@ public sealed partial class OnlineSettings : AuroraModule
 
     private async Task UpdateDeviceInfos()
     {
-        var deviceTooltips = await OnlineConfigsRepository.GetDeviceTooltips();
+        DeviceTooltips = await OnlineConfigsRepository.GetDeviceTooltips();
         foreach (var device in (await _deviceManager).DeviceContainers.Select(dc => dc.Device))
         {
-            if (deviceTooltips.TryGetValue(device.DeviceName, out var tooltips))
+            if (DeviceTooltips.TryGetValue(device.DeviceName, out var tooltips))
             {
                 device.Tooltips = tooltips;
             }

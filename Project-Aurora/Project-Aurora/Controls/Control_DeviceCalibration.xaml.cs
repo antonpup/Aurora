@@ -27,7 +27,7 @@ public partial class Control_DeviceCalibration
 
         ComboBox.ItemsSource = devices
             .SelectMany(a => a.GetDevices())
-            .Except(Global.Configuration.DeviceCalibrations.Keys);
+            .Except(Global.DeviceConfigration.DeviceCalibrations.Keys);
         DeviceList.Items.Refresh();
     }
 
@@ -38,14 +38,14 @@ public partial class Control_DeviceCalibration
         {
             return;
         }
-        Global.Configuration.DeviceCalibrations.Add(value, Color.White);
+        Global.DeviceConfigration.DeviceCalibrations.Add(value, Color.White);
         await RefreshLists();
     }
 
     private async void Control_DeviceCalibrationItem_OnItemRemoved(object? sender, KeyValuePair<string, Color> e)
     {
-        Global.Configuration.DeviceCalibrations.Remove(e.Key);
-        Global.Configuration.DeviceCalibrations.TrimExcess();
+        Global.DeviceConfigration.DeviceCalibrations.Remove(e.Key);
+        Global.DeviceConfigration.DeviceCalibrations.TrimExcess();
         await RefreshLists();
     }
 

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Aurora.Controls;
@@ -20,6 +21,7 @@ using Aurora.Profiles;
 using Aurora.Profiles.Aurora_Wrapper;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Settings;
+using Aurora.Settings.Controls;
 using Aurora.Settings.Layers;
 using Aurora.Utils;
 using Hardcodet.Wpf.TaskbarNotification;
@@ -120,7 +122,7 @@ partial class ConfigUI : INotifyPropertyChanged
         _ipcListener = ipcListener;
         _deviceManager = deviceManager;
         _lightingStateManager = lightingStateManager;
-        _settingsControl = new(rzSdkManager, pluginManager, layoutManager, httpListener, deviceManager);
+        _settingsControl = new(rzSdkManager, pluginManager, layoutManager, httpListener, deviceManager, ipcListener);
         
         InitializeComponent();
 
@@ -326,9 +328,9 @@ partial class ConfigUI : INotifyPropertyChanged
 
     ////Misc
 
-    private void trayicon_menu_quit_Click(object? sender, RoutedEventArgs e)
+    private async void trayicon_menu_quit_Click(object? sender, RoutedEventArgs e)
     {
-        //TODO make async
+        await ShutdownDevices();
         ExitApp();
     }
 
@@ -347,7 +349,17 @@ partial class ConfigUI : INotifyPropertyChanged
         await (await _deviceManager).ResetDevices();
     }
 
+    private void trayicon_menu_quit_aurora_Click(object? sender, RoutedEventArgs e)
+    {
+        ExitApp();
+    }
+
     private async void trayicon_menu_quit_devices_Click(object? sender, RoutedEventArgs e)
+    {
+        await ShutdownDevices();
+    }
+
+    private async Task ShutdownDevices()
     {
         await (await _deviceManager).ShutdownDevices();
     }
@@ -363,7 +375,7 @@ partial class ConfigUI : INotifyPropertyChanged
         {
             case AppExitMode.Ask:
             {
-                MessageBoxResult result = MessageBox.Show("Would you like to Exit Aurora?",
+                var result = MessageBox.Show("Would you like to Exit Aurora?",
                     "Aurora", MessageBoxButton.YesNo);
 
                 if (result == MessageBoxResult.No)
@@ -678,7 +690,7 @@ partial class ConfigUI : INotifyPropertyChanged
         ico.Dispose();
 
         lightingStateManager.RegisterEvent(genAppPm);
-        ConfigManager.Save(Global.Configuration);
+        ConfigManager.Save(Global.Configuration, Configuration.ConfigFile);
         GenerateProfileStack(filename);
     }
 

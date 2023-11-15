@@ -25,7 +25,6 @@ internal static class MemorySharedEventThread
         {
             handlesAndThread.RemoveIfExists(o);
         }
-        //TODO implement
     }
 
     private class HandlesAndThread
@@ -50,6 +49,11 @@ internal static class MemorySharedEventThread
         {
             return new Thread(() =>
             {
+                if (_handles.Length <= 1)
+                {
+                    // stop thread if only handle is cancel token
+                    return;
+                }
                 while (true)
                 {
                     var i = WaitHandle.WaitAny(_handles);
@@ -109,10 +113,10 @@ internal static class MemorySharedEventThread
 
             try
             {
-                var i1 = _handles.FindIndex(h => o.ObjectUpdatedHandle == h);
-                var i2 = _handles.FindIndex(h => o.UpdateRequestedHandle == h);
-                _actions = _actions.Where((_, i) => i != i1 && i != i2).ToArray();
-                _handles = _handles.Where((_, i) => i != i1 && i != i2).ToArray();
+                var updatedHandle = _handles.FindIndex(h => o.ObjectUpdatedHandle == h);
+                var requestedHandle = _handles.FindIndex(h => o.UpdateRequestedHandle == h);
+                _actions = _actions.Where((_, i) => i != updatedHandle && i != requestedHandle).ToArray();
+                _handles = _handles.Where((_, i) => i != updatedHandle && i != requestedHandle).ToArray();
 
                 _cancellation.Cancel();
                 _thread.Join();

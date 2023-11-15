@@ -1,149 +1,130 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace Aurora.Utils
+namespace Aurora.Utils;
+
+public class Tree<T> where T : notnull
 {
-    public class Tree<T>
+    private readonly T _item;
+
+    /// <summary>
+    /// The tree item
+    /// </summary>
+    public T Item => _item;
+
+    public bool IsLeaf => _children.Count == 0;
+
+    private readonly HashSet<Tree<T>> _children = new();
+
+    public Tree(T rootNode)
     {
-        private T _Item;
+        _item = rootNode;
+    }
 
-        /// <summary>
-        /// The tree item
-        /// </summary>
-        public T Item { get { return _Item; } }
-
-        public bool IsLeaf { get { return _Children.Count == 0; } }
-
-        private HashSet<Tree<T>> _Children = new HashSet<Tree<T>>();
-
-        public Tree(T rootNode)
+    public Tree<T> AddBranch(T[] items, int startIndex = 0)
+    {
+        if (startIndex < items.Length)
         {
-            _Item = rootNode;
-        }
+            var equalChild = ContainsItem(items[startIndex]);
 
-        public Tree(T[] items, int StartIndex = 0)
-        {
-            //First item is the rootNode
-            if (StartIndex < items.Length)
-                _Item = items[StartIndex];
-
-            if (StartIndex + 1 < items.Length)
-                _Children.Add(new Tree<T>(items, StartIndex + 1));
-        }
-
-        public Tree<T> AddBranch(T[] items, int StartIndex = 0)
-        {
-            if (StartIndex < items.Length)
+            if (equalChild == null)
             {
-                Tree<T> _equalChild = ContainsItem(items[StartIndex]);
-
-                if (_equalChild == null)
-                {
-                    _Children.Add(new Tree<T>(items[StartIndex]).AddBranch(items, StartIndex + 1));
-                }
-                else
-                {
-                    if (StartIndex + 1 < items.Length)
-                        _equalChild.AddBranch(items, StartIndex + 1);
-                }
+                _children.Add(new Tree<T>(items[startIndex]).AddBranch(items, startIndex + 1));
             }
-
-            return this;
-        }
-
-        public Tree<T> ContainsItem(T item)
-        {
-            foreach (var child in _Children)
+            else
             {
-                if (child._Item.Equals(item))
-                    return child;
+                if (startIndex + 1 < items.Length)
+                    equalChild.AddBranch(items, startIndex + 1);
             }
-
-            return null;
         }
 
-        public T[] GetChildren()
+        return this;
+    }
+
+    public Tree<T>? ContainsItem(T item)
+    {
+        foreach (var child in _children)
         {
-            List<T> _returnChildren = new List<T>();
-
-            foreach (var child in _Children)
-                _returnChildren.Add(child._Item);
-
-            return _returnChildren.ToArray();
+            if (child._item.Equals(item))
+                return child;
         }
 
-        public T[] GetAllChildren()
-        {
-            List<T> _returnChildren = new List<T>();
+        return null;
+    }
 
-            foreach (var child in _Children)
-            {
-                _returnChildren.Add(child._Item);
-                T[] _childChildren = child.GetAllChildren();
-                _returnChildren.AddRange(_childChildren);
-            }
+    public T[] GetChildren()
+    {
+        var returnChildren = new List<T>();
+
+        foreach (var child in _children)
+            returnChildren.Add(child._item);
+
+        return returnChildren.ToArray();
+    }
+
+    public T[] GetAllChildren()
+    {
+        var returnChildren = new List<T>();
+
+        foreach (var child in _children)
+        {
+            returnChildren.Add(child._item);
+            var childChildren = child.GetAllChildren();
+            returnChildren.AddRange(childChildren);
+        }
                 
-            return _returnChildren.ToArray();
-        }
+        return returnChildren.ToArray();
+    }
 
-        public Tree<T> GetNodeByPath(T[] path)
+    public Tree<T>? GetNodeByPath(IEnumerable<T> path)
+    {
+        var node = this;
+        foreach (var key in path)
         {
-            Tree<T> node = this;
-            foreach (var key in path)
+            node = node?.ContainsItem(key);
+        }
+        return node;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != GetType()) return false;
+        return Equals((Tree<T>)obj);
+    }
+
+    public bool Equals(Tree<T>? p)
+    {
+        if (ReferenceEquals(null, p)) return false;
+        if (ReferenceEquals(this, p)) return true;
+
+        var childrenEqual = false;
+
+        if(_children.Count == p._children.Count)
+        {
+            foreach(var child in _children)
             {
-                if (node != null)
+                var pTree = p.ContainsItem(child._item);
+
+                if(!child.Equals(pTree))
                 {
-                    node = node.ContainsItem(key);
+                    childrenEqual = false;
+                    break;
                 }
             }
-            return node;
         }
 
-        public override bool Equals(object obj)
+        return _item.Equals(p._item) && childrenEqual;
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((Tree<T>)obj);
-        }
-
-        public bool Equals(Tree<T> p)
-        {
-            if (ReferenceEquals(null, p)) return false;
-            if (ReferenceEquals(this, p)) return true;
-
-            bool _childrenEqual = false;
-
-            if(_Children.Count == p._Children.Count)
-            {
-                foreach(var child in _Children)
-                {
-                    Tree<T> pTree = p.ContainsItem(child._Item);
-
-                    if(!child.Equals(pTree))
-                    {
-                        _childrenEqual = false;
-                        break;
-                    }
-                }
-            }
-
-            return (_Item.Equals(p._Item)) &&
-                _childrenEqual;
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hash = 17;
-                hash = hash * 23 + _Item.GetHashCode();
-                hash = hash * 23 + _Children.GetHashCode();
-                return hash;
-            }
+            var hash = 17;
+            hash = hash * 23 + _item.GetHashCode();
+            hash = hash * 23 + _children.GetHashCode();
+            return hash;
         }
     }
 }

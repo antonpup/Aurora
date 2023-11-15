@@ -9,12 +9,16 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Threading;
 using Aurora.Modules;
 using Aurora.Modules.GameStateListen;
 using Aurora.Modules.ProcessMonitor;
 using Aurora.Settings;
+using Aurora.Settings.Controls;
 using Aurora.Utils;
+using Serilog.Core;
+using Constants = Common.Constants;
 using MessageBox = System.Windows.MessageBox;
 
 namespace Aurora;
@@ -60,6 +64,7 @@ public partial class App
         new PerformanceMonitor(),
     };
 
+    private static readonly SemaphoreSlim _preventShutdown = new(0);
 
     protected override async void OnStartup(StartupEventArgs e)
     {
@@ -82,6 +87,7 @@ public partial class App
         //Load config
         Global.logger.Information("Loading Configuration");
         Global.Configuration = ConfigManager.Load();
+        Global.DeviceConfigration = ConfigManager.LoadDeviceConfig();
 
         Global.effengine = new Effects(DevicesModule.DeviceManager);
 
@@ -115,8 +121,8 @@ public partial class App
         SessionEnding += (_, sessionEndingParams) =>
         {
             Global.logger.Information("Session ending. Reason: {Reason}", sessionEndingParams.ReasonSessionEnding);
-            sessionEndingParams.Cancel = true;
             configUi.ExitApp();
+            _preventShutdown.Wait();
         };
     }
 
@@ -128,11 +134,11 @@ public partial class App
             try
             {
                 var client = new NamedPipeClientStream(
-                    ".", IpcListener.AuroraInterfacePipe, PipeDirection.Out, PipeOptions.Asynchronous);
+                    ".", Constants.AuroraInterfacePipe, PipeDirection.Out, PipeOptions.Asynchronous);
                 client.Connect(2);
                 if (!client.IsConnected)
                     throw new InvalidOperationException();
-                var command = Encoding.ASCII.GetBytes("restore");
+                var command = "restore"u8.ToArray();
                 client.Write(command, 0, command.Length);
                 client.Close();
             }
@@ -154,6 +160,7 @@ public partial class App
     [DoesNotReturn]
     internal static void ForceShutdownApp(int exitCode)
     {
+        _preventShutdown.Release();
         Environment.ExitCode = exitCode;
         Environment.Exit(exitCode);
     }
@@ -208,17 +215,30 @@ public partial class App
         base.OnExit(e);
 
         if (Global.Configuration != null)
-            ConfigManager.Save(Global.Configuration);
+            ConfigManager.Save(Global.Configuration, Configuration.ConfigFile);
 
-        var tasks = _modules.Select(async m => await m.DisposeAsync());
+        var tasks = _modules.Select(async m =>
+        {
+            try
+            {
+                await m.DisposeAsync();
+            }
+            catch (Exception moduleException)
+            {
+                Global.logger.Fatal(moduleException,"Failed closing module {@Module}", m);
+            }
+        });
         
         var forceExitTimer = StartForceExitTimer();
 
         await Task.WhenAll(tasks);
         forceExitTimer.GetApartmentState(); //statement just to keep referenced
-        //LogManager.Flush();
+        (Global.logger as Logger)?.Dispose();
+
         Mutex.ReleaseMutex();
         Mutex.Dispose();
+
+        _preventShutdown.Release();
     }
 
     private Thread StartForceExitTimer()
@@ -227,8 +247,8 @@ public partial class App
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            Thread.Sleep(3000);
-            if (stopwatch.ElapsedMilliseconds > 2000)
+            Thread.Sleep(6000);
+            if (stopwatch.ElapsedMilliseconds > 5000)
             {
                 ForceShutdownApp(0);
             }
@@ -288,5 +308,6 @@ public partial class App
             "Aurora has stopped working");
         //Perform exit operations
         Current?.Shutdown();
+        (Global.logger as Logger)?.Dispose();
     }
 }

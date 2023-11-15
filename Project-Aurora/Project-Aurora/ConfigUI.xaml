@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Aurora"
              xmlns:tb="http://www.hardcodet.net/taskbar"
-             xmlns:Settings="clr-namespace:Aurora.Settings"
              xmlns:fluentWpf="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+             xmlns:controls="clr-namespace:Aurora.Settings.Controls"
              x:Class="Aurora.ConfigUI"
              AcrylicWindowStyle="NoIcon"
              FallbackColor="#09000000"
@@ -51,6 +51,7 @@
                     <MenuItem Header="Open Aurora" Click="trayicon_menu_settings_Click" Foreground="White" />
                     <MenuItem Header="Restart Aurora" Click="trayicon_menu_restart_aurora_Click" Foreground="White" />
                     <MenuItem Header="Restart Devices" Click="trayicon_menu_restart_devices_Click" Foreground="White" />
+                    <MenuItem Header="Quit Aurora" Click="trayicon_menu_quit_aurora_Click" Foreground="White" />
                     <MenuItem Header="Quit Devices" Click="trayicon_menu_quit_devices_Click" Foreground="White" />
                     <MenuItem Header="Quit" Click="trayicon_menu_quit_Click" Foreground="White" />
                 </ContextMenu>
@@ -94,15 +95,15 @@
                         <TextBlock TextWrapping="Wrap" Text="Overview" VerticalAlignment="Top" Margin="10,3,10,0"/>
                     </Border>
                 </Border>
-                <Settings:Control_ProfileManager x:Name="ctrlProfileManager" FocusedApplication="{Binding FocusedApplication}"
+                <controls:Control_ProfileManager x:Name="ctrlProfileManager" FocusedApplication="{Binding FocusedApplication}"
                                                  Height="25" Margin="0,3,0,0" Background="#00000000" PreviewMouseDown="ctrlProfileManager_PreviewMouseDown" />
-                <Settings:Control_LayerList x:Name="ctrlOverlayLayerManager" Margin="0,3,0,0"
+                <controls:Control_LayerList x:Name="ctrlOverlayLayerManager" Margin="0,3,0,0"
                                             SelectedLayer="{Binding SelectedLayer, Mode=TwoWay}"
                                             FocusedApplication="{Binding FocusedApplication}"
                                             LayerCollection="{Binding Path=FocusedApplication.Profile.OverlayLayers}"
                                             Background="#00000000" PreviewMouseDown="ctrlOverlayLayerManager_PreviewMouseDown"
                                             ListTitle="Overlay Layers" />
-                <Settings:Control_LayerList x:Name="ctrlLayerManager" Margin="0,3,0,0"
+                <controls:Control_LayerList x:Name="ctrlLayerManager" Margin="0,3,0,0"
                                             SelectedLayer="{Binding SelectedLayer, Mode=TwoWay}"
                                             FocusedApplication="{Binding FocusedApplication}"
                                             LayerCollection="{Binding Path=FocusedApplication.Profile.Layers}"

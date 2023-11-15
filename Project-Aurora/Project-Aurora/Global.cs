@@ -4,6 +4,7 @@ using Aurora.Modules.AudioCapture;
 using Aurora.Modules.Inputs;
 using Aurora.Profiles;
 using Aurora.Settings;
+using Common.Devices;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
 using RazerSdkReader;
@@ -48,7 +49,7 @@ public static class Global
 
     public static Configuration Configuration
     {
-        get => _configuration;
+        get => _configuration!;
         set
         {
             _configuration = value;
@@ -66,6 +67,7 @@ public static class Global
             LoggingLevelSwitch.MinimumLevel = Configuration.LogLevel;
         }
     }
+    public static DeviceConfig DeviceConfigration { get; set; }
 
     public static KeyboardLayoutManager? kbLayout { get; set; }                //TODO module access
     public static Effects effengine { get; set; }
@@ -73,9 +75,9 @@ public static class Global
     public static ChromaReader? razerSdkManager { get; set; }                  //TODO module access
     public static AudioDeviceProxy? CaptureProxy { get; set; }
     public static AudioDeviceProxy? RenderProxy { get; set; }
-    
+
     internal static readonly LoggingLevelSwitch LoggingLevelSwitch = new(LogEventLevel.Verbose);
-    private static Configuration _configuration;
+    private static Configuration? _configuration;
 
     public static void Initialize()
     {

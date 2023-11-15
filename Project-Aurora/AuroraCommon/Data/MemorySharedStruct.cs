@@ -25,12 +25,9 @@ public class MemorySharedStruct<T> : SignaledMemoryObject where T : struct
         {
             _mmf = MemoryMappedFile.OpenExisting(fileName);
         }
-        catch (FileNotFoundException fnfe)
+        catch (FileNotFoundException)
         {
             _mmf = MemoryMappedFile.CreateOrOpen(fileName, ElementSize);
-            //TODO add timeout
-            //WaitForUpdate();
-            //_mmf = MemoryMappedFile.OpenExisting(fileName);
         }
 
         _accessor = _mmf.CreateViewAccessor();

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using Aurora.Settings.Overrides.Logic.Boolean;
 
 namespace Aurora.Settings.Overrides.Logic {
 

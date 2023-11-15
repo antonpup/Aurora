@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Aurora.Modules.OnlineConfigs.Model;
-using Aurora.Settings;
 using Common;
 using Common.Data;
 using Common.Devices;
@@ -22,7 +21,6 @@ public class MemorySharedDevice : IDevice
     public bool isDoingWork => DeviceInformation.IsDoingWork;
     public bool IsInitialized => DeviceInformation.IsInitialized;
     public VariableRegistry RegisteredVariables { get; } = new();
-    public bool IsRemappable => DeviceInformation.IsRemappable;
 
     private readonly MemorySharedStruct<DeviceInformation> _sharedDeviceInfo;
     private readonly MemorySharedArray<DeviceVariable> _deviceVariables;

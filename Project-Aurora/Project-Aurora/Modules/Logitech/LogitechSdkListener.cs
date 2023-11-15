@@ -46,6 +46,11 @@ public class LogitechSdkListener
     private Dictionary<DeviceKeys, Color> _savedColors = new();
     private Color _savedBackground = Color.Empty;
 
+    private readonly HashSet<string> _blockedApps = new()
+    {
+        "Aurora.exe", "AuroraCommunity.exe", "AuroraDeviceManager.exe"
+    };
+
     public async Task Initialize()
     {
         const string runReg = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
@@ -268,7 +273,7 @@ public class LogitechSdkListener
     private void Init(ReadOnlySpan<byte> span)
     {
         var name = ReadNullTerminatedUnicodeString(span);
-        if (Path.GetFileName(name) == "Aurora.exe")
+        if (_blockedApps.Contains(Path.GetFileName(name)))
         {
             _pipeListener.Disconnect();
         }

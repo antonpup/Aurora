@@ -10,6 +10,7 @@ using Aurora.Devices;
 using Aurora.Settings;
 using Xceed.Wpf.Toolkit;
 using Aurora.Profiles.Dota_2.GSI;
+using Aurora.Utils.Steam;
 
 namespace Aurora.Profiles.Dota_2
 {
@@ -169,7 +170,7 @@ namespace Aurora.Profiles.Dota_2
 
         private bool InstallGSI()
         {
-            String installpath = Utils.SteamUtils.GetGamePath(570);
+            String installpath = SteamUtils.GetGamePath(570);
             if (!String.IsNullOrWhiteSpace(installpath))
             {
                 string path = System.IO.Path.Combine(installpath, "game", "dota", "cfg", "gamestate_integration", "gamestate_integration_aurora.cfg");
@@ -194,7 +195,7 @@ namespace Aurora.Profiles.Dota_2
 
         private bool UninstallGSI()
         {
-            String installpath = Utils.SteamUtils.GetGamePath(570);
+            String installpath = SteamUtils.GetGamePath(570);
             if (!String.IsNullOrWhiteSpace(installpath))
             {
                 string path = System.IO.Path.Combine(installpath, "game", "dota", "cfg", "gamestate_integration", "gamestate_integration_aurora.cfg");

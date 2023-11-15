@@ -8,7 +8,7 @@ namespace Aurora.Settings;
 public class Keybind
 {
     [Newtonsoft.Json.JsonProperty("_AssignedKeys")]
-    private Queue<Keys> _assignedKeys = new();
+    private List<Keys> _assignedKeys = new();
 
     public Keybind()
     {
@@ -16,12 +16,12 @@ public class Keybind
 
     public Keybind(IEnumerable<Keys> keys)
     {
-        _assignedKeys = new Queue<Keys>(keys);
+        _assignedKeys = new List<Keys>(keys);
     }
 
     public void SetKeys(IEnumerable<Keys> keys)
     {
-        _assignedKeys = new Queue<Keys>(keys);
+        _assignedKeys = new List<Keys>(keys);
     }
 
     private bool IsEmpty()

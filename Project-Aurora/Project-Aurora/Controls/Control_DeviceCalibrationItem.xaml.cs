@@ -7,7 +7,7 @@ using Aurora.Utils;
 
 namespace Aurora.Controls;
 
-public partial class Control_DeviceCalibrationItem : UserControl
+public partial class Control_DeviceCalibrationItem
 {
     public event EventHandler<KeyValuePair<string, Color>> ItemRemoved;
     private KeyValuePair<string, Color> DeviceColor => (KeyValuePair<string, Color>) DataContext;
@@ -19,9 +19,9 @@ public partial class Control_DeviceCalibrationItem : UserControl
 
     private void ColorPicker_OnSelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color?> e)
     {
-        if (e.NewValue.HasValue && Global.Configuration.DeviceCalibrations.ContainsKey(DeviceColor.Key))
+        if (e.NewValue.HasValue && Global.DeviceConfigration.DeviceCalibrations.ContainsKey(DeviceColor.Key))
         {
-            Global.Configuration.DeviceCalibrations[DeviceColor.Key] = ColorUtils.MediaColorToDrawingColor(e.NewValue.Value);
+            Global.DeviceConfigration.DeviceCalibrations[DeviceColor.Key] = ColorUtils.MediaColorToDrawingColor(e.NewValue.Value);
         }
     }
 

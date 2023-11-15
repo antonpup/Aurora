@@ -7,6 +7,7 @@ using Aurora.Profiles.CSGO.GSI;
 using Aurora.Profiles.CSGO.GSI.Nodes;
 using Aurora.Settings;
 using Aurora.Utils;
+using Aurora.Utils.Steam;
 using Timer = System.Timers.Timer;
 
 namespace Aurora.Profiles.CSGO;
@@ -304,6 +305,5 @@ public partial class Control_CSGO
             File.Delete(path);
 
         return true;
-
     }
 }

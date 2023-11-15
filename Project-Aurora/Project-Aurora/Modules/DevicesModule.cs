@@ -33,7 +33,7 @@ public sealed class DevicesModule : AuroraModule
 
     public override async Task DisposeAsync()
     {
-        await _deviceManager?.ShutdownDevices();
+        await _deviceManager?.ShutdownDevices()!;
         _deviceManager?.Dispose();
     }
 

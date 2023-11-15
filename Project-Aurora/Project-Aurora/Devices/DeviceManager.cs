@@ -4,10 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Aurora.Modules;
 using Common;
 using Common.Data;
 using Common.Devices;
@@ -19,18 +19,15 @@ namespace Aurora.Devices;
 
 public sealed class DeviceManager : IDisposable
 {
-    private const string DeviceManagerFolder = @".\AurorDeviceManager";
-    private const string DeviceManagerProcess = "AurorDeviceManager";
-    private const string DeviceManagerExe = "AurorDeviceManager.exe";
+    private const string DeviceManagerFolder = @".\AuroraDeviceManager";
+    private const string DeviceManagerProcess = "AuroraDeviceManager";
+    private const string DeviceManagerExe = "AuroraDeviceManager.exe";
 
     private bool _disposed;
 
     public event EventHandler? DevicesUpdated;
 
     public IEnumerable<DeviceContainer> DeviceContainers { get; private set; } = Enumerable.Empty<DeviceContainer>();
-
-    public IEnumerable<DeviceContainer> InitializedDeviceContainers =>
-        DeviceContainers.Where(d => d.Device.IsInitialized);
 
     private readonly CancellationTokenSource _cancel = new();
 
@@ -39,6 +36,8 @@ public sealed class DeviceManager : IDisposable
 
     private readonly MemorySharedStruct<DeviceManagerInfo> _dimma;
     private Process? _process;
+
+    private readonly byte[] _end = "\n"u8.ToArray();
 
     public DeviceManager(Task<ChromaReader?> rzSdkManager)
     {
@@ -77,9 +76,13 @@ public sealed class DeviceManager : IDisposable
         var deviceContainers = new List<DeviceContainer>(deviceNames.Length);
         deviceContainers.AddRange(deviceNames.Select(deviceName =>
         {
-            var device = new MemorySharedDevice(deviceName, Global.Configuration.VarRegistry);
-            Global.Configuration.VarRegistry.Combine(device.RegisteredVariables);
-            return new DeviceContainer(device);
+            var device = new MemorySharedDevice(deviceName, Global.DeviceConfigration.VarRegistry);
+            if (OnlineSettings.DeviceTooltips.TryGetValue(deviceName, out var tooltips))
+            {
+                device.Tooltips = tooltips;
+            }
+            Global.DeviceConfigration.VarRegistry.Combine(device.RegisteredVariables);
+            return new DeviceContainer(device, this);
         }));
 
         //TODO reuse
@@ -123,10 +126,7 @@ public sealed class DeviceManager : IDisposable
             var process = _process;
             _process = null;
 
-            var command = "stop\n"u8.ToArray();
-            
-            await SendCommand(command);
-
+            await SendCommand(DeviceCommands.Quit);
             await process.WaitForExitAsync();
         }
     }
@@ -150,8 +150,12 @@ public sealed class DeviceManager : IDisposable
     public void Dispose()
     {
         _cancel.Cancel();
+        if (_disposed)
+        {
+            return;
+        }
         _disposed = true;
-        _dimma?.Dispose();
+        _dimma.Dispose();
         _sharedDeviceColor.Dispose();
     }
 
@@ -163,7 +167,7 @@ public sealed class DeviceManager : IDisposable
         }
 
         var parameters = remappableDevice.DeviceId + Constants.StringSplit + (int)led;
-        var command = Encoding.UTF8.GetBytes("blink" + Constants.StringSplit + parameters + "\n");
+        var command = DeviceCommands.Blink + Constants.StringSplit + parameters;
         await SendCommand(command);
     }
 
@@ -177,14 +181,14 @@ public sealed class DeviceManager : IDisposable
         if (newKey == null)
         {
             var parameters = deviceId + Constants.StringSplit + (int)led;
-            var command = Encoding.UTF8.GetBytes("demap" + Constants.StringSplit + parameters + "\n");
+            var command = DeviceCommands.Unmap + Constants.StringSplit + parameters;
 
             await SendCommand(command);
         }
         else
         {
             var parameters = deviceId + Constants.StringSplit + (int)led + Constants.StringSplit + (int)newKey;
-            var command = Encoding.UTF8.GetBytes("remap" + Constants.StringSplit + parameters + "\n");
+            var command = DeviceCommands.Remap + Constants.StringSplit + parameters;
 
             await SendCommand(command);
         }
@@ -192,28 +196,36 @@ public sealed class DeviceManager : IDisposable
 
     public async Task RequestRemappableDevices()
     {
-        await SendCommand("share\n"u8.ToArray());
+        await SendCommand( DeviceCommands.Share);
     }
 
-    private readonly SemaphoreSlim _semaphore = new(1, 1);
+    public async Task EnableDevice(string deviceDeviceName)
+    {
+        var command = DeviceCommands.Enable + Constants.StringSplit + deviceDeviceName;
+        await SendCommand( command);
+    }
+
+    public async Task DisableDevice(string deviceDeviceName)
+    {
+        var command = DeviceCommands.Disable + Constants.StringSplit + deviceDeviceName;
+        await SendCommand( command);
+    }
+
+    private async Task SendCommand(string command)
+    {
+        await SendCommand(Encoding.UTF8.GetBytes(command));
+    }
+
     private async Task SendCommand(byte[] command)
     {
-        await _semaphore.WaitAsync();
-        try
-        {
-            var client = new NamedPipeClientStream(".", Constants.DeviceManagerPipe, PipeDirection.Out, PipeOptions.Asynchronous);
-            await client.ConnectAsync(2000);
-            if (!client.IsConnected)
-                throw new InvalidOperationException("Connection to DeviceManager failed");
+        await using var client = new NamedPipeClientStream(".", Constants.DeviceManagerPipe, PipeDirection.Out, PipeOptions.None);
+        await client.ConnectAsync(1000);
+        if (!client.IsConnected)
+            throw new InvalidOperationException("Connection to DeviceManager failed");
         
-            client.Write(command, 0, command.Length);
+        client.Write(command, 0, command.Length);
+        client.Write(_end, 0, _end.Length);
         
-            client.Flush();
-            client.Close();
-        }
-        finally
-        {
-            _semaphore.Release();
-        }
+        client.Flush();
     }
 }

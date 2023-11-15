@@ -383,8 +383,8 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
             Thread.Sleep(screenshotInterval);
     }
 
-    //B, G, R
-    private static readonly long[] ColorData = {0L, 0L, 0L};
+    //B, G, R, A
+    private static readonly long[] ColorData = {0L, 0L, 0L, 0L};
     private void CreateScreenBrush(Bitmap screenCapture, Rectangle cropRegion)
     {
         switch (Properties.AmbilightType)

@@ -2,9 +2,9 @@
 using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Aurora.Settings.Overrides.Logic;
-using Aurora.Settings.Overrides.Logic.Builder;
 using System.Collections.Generic;
 using System.Drawing;
+using Aurora.Settings.Overrides.Logic.Boolean;
 using DK = Common.Devices.DeviceKeys;
 
 namespace Aurora.Profiles.TModLoader {

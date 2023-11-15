@@ -16,7 +16,7 @@ public static class OnlineConfigsRepository
     private const string DeviceTooltips = "DeviceInformations.json";
     private const string OnlineSettings = "OnlineSettings.json";
 
-    private static readonly string ConflictingProcessLocalCache = Path.Combine("'", ConflictingProcesses);
+    private static readonly string ConflictingProcessLocalCache = Path.Combine(".", ConflictingProcesses);
     private static readonly string DeviceTooltipsLocalCache = Path.Combine(".", DeviceTooltips);
     private static readonly string OnlineSettingsLocalCache = Path.Combine(".", OnlineSettings);
 

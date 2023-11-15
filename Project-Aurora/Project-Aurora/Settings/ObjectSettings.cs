@@ -21,11 +21,11 @@ public class ObjectSettings<T>
             SettingsCreateHook();
         }
 
-        string dir = Path.GetDirectoryName(SettingsSavePath);
+        var dir = Path.GetDirectoryName(SettingsSavePath);
         if (!Directory.Exists(dir))
             Directory.CreateDirectory(dir);
 
-        File.WriteAllText(SettingsSavePath, JsonConvert.SerializeObject(Settings, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Formatting = Formatting.Indented }));
+        File.WriteAllText(SettingsSavePath, JsonConvert.SerializeObject(Settings, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto, Formatting = Formatting.Indented }));
     }
 
     /// <summary>A method that is called immediately after the settings being created. Can be overriden to provide specalized handling.</summary>

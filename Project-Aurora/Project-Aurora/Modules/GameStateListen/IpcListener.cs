@@ -5,13 +5,12 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Aurora.Profiles;
+using Common;
 
 namespace Aurora.Modules.GameStateListen;
 
 public class IpcListener
 {
-    public const string AuroraInterfacePipe = "aurora\\interface";
-    
     private bool _isRunning;
 
     /// <summary>
@@ -89,7 +88,7 @@ public class IpcListener
         _ipcPipeStream.BeginWaitForConnection(ReceiveGameState, null);
         Global.logger.Information("[IPCServer] Pipe created {}", _ipcPipeStream?.GetHashCode() ?? -1);
 
-        _auroraInterfacePipeStream = CreatePipe(AuroraInterfacePipe);
+        _auroraInterfacePipeStream = CreatePipe(Constants.AuroraInterfacePipe);
         _auroraInterfacePipeStream.BeginWaitForConnection(ReceiveAuroraCommand, null);
         Global.logger.Information("[AuroraCommandsServerIPC] Pipe created {}", _auroraInterfacePipeStream?.GetHashCode() ?? -1);
     }
@@ -157,7 +156,7 @@ public class IpcListener
         {
             return;
         }
-        _auroraInterfacePipeStream = CreatePipe(AuroraInterfacePipe);
+        _auroraInterfacePipeStream = CreatePipe(Constants.AuroraInterfacePipe);
         _auroraInterfacePipeStream.BeginWaitForConnection(ReceiveAuroraCommand, null);
     }
 }

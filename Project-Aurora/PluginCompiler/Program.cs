@@ -7,4 +7,15 @@ if (args.Length == 0)
 
 var path = args.JoinBy(" ");
 Console.WriteLine("Compiling...\n" + path);
-CSScript.RoslynEvaluator.CompileAssemblyFromFile(path, path + ".dll");
+
+try
+{
+    CSScript.RoslynEvaluator.CompileAssemblyFromFile(path, path + ".dll");
+}
+catch (Exception e)
+{
+    Console.Error.WriteLine(e.Message);
+
+    Console.In.ReadLine();
+    throw;
+}

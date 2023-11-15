@@ -1,18 +1,13 @@
 ﻿using Aurora.Profiles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Common.Devices;
 
-namespace Aurora.Settings
+namespace Aurora.Settings;
+
+public interface IEffectScript
 {
-    public interface IEffectScript
-    {
-        string? ID { get; }
+    string? ID { get; }
 
-        VariableRegistry Properties { get; }
+    VariableRegistry Properties { get; }
 
-        object UpdateLights(VariableRegistry properties, IGameState state = null);
-    }
+    object UpdateLights(VariableRegistry properties, IGameState state = null);
 }

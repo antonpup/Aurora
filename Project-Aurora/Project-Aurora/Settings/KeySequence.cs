@@ -36,7 +36,6 @@ public sealed class KeySequence : ICloneable, IEquatable<KeySequence>
     /// <summary>
     /// An array of DeviceKeys keys to be used with KeySequenceType.Sequence type.
     /// </summary>
-    [JsonConverter(typeof(ConcurrentListJsonConverterAdapter<DeviceKeys>))]
     [JsonProperty("keys")]
     public ObservableCollection<DeviceKeys> Keys
     {

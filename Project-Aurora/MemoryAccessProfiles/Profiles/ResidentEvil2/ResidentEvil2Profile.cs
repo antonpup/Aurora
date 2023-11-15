@@ -2,7 +2,7 @@
 using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Aurora.Settings.Overrides.Logic;
-using Aurora.Settings.Overrides.Logic.Builder;
+using Aurora.Settings.Overrides.Logic.Boolean;
 
 namespace MemoryAccessProfiles.Profiles.ResidentEvil2;
 
